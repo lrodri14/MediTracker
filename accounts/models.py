@@ -6,6 +6,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utilities.global_utilities import LOCATION_CHOICES, ORIGIN_CHOICES
+
 # Create your models here.
 
 
@@ -59,6 +60,7 @@ class CustomUser(AbstractUser):
         super(CustomUser, self).save(*args, **kwargs)
         if created:
             UsersProfile.objects.create(user=self)
+            UserSetting.objects.create(user=self)
 
 
 class UsersProfile(models.Model):
@@ -95,6 +97,18 @@ class UsersProfile(models.Model):
 
     def __str__(self):
         return str(self.user) + ' - ' + 'User Profile'
+
+
+class UserSetting(models.Model):
+    wallpaper = models.ImageField(verbose_name='Wallpaper', blank=True, null=True, help_text="User's Wallpaper")
+    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings')
+
+    class Meta:
+        verbose_name = "User Setting"
+        verbose_name_plural = "User Settings"
+
+    def __str__(self):
+        return str(self.user) + " Settings"
 
 
 class MailingCredential(models.Model):

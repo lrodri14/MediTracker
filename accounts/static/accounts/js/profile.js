@@ -61,24 +61,6 @@ if (body){
     // Mouseover events
     body.addEventListener('mouseover', (e) => {
 
-        /* This event will be fired whenever 'profile-picture', 'edit-profile-picture-modal' or 'profile-picture-edit-button' class reside in the
-           target's class list, this event will add the 'edit-profile-picture-modal-show' class to the element stored in the editProfilePicture
-           variable. */
-        if (e.target.className === 'profile-picture' || e.target === editProfilePicture || e.target.classList.contains('profile-picture-edit-button')){
-            if (editProfilePicture){
-                editProfilePicture.classList.add('edit-profile-picture-modal-show')
-            }
-        }
-
-        /* This event will be fired whenever 'background-picture', 'edit-background-picture-modal' or 'background-edit-button' class reside in the
-           target's class list, this event will add the 'edit-profile-picture-modal-show' class to the element stored in the editBackgroundPicture
-           variable. */
-        if (e.target.classList.contains('background-picture') || e.target === editBackgroundPicture || e.target.classList.contains('background-edit-button')){
-            if (editBackgroundPicture){
-                editBackgroundPicture.classList.add('background-edit-modal-show')
-            }
-        }
-
         /* This event will be fired whenever the 'fa-edit' class resides in the target's classList, the fa-edit-hover class will be added */
         if (e.target.classList.contains('fa-edit')){
             e.target.classList.add('fa-edit-hover')
@@ -102,16 +84,10 @@ if (body){
             e.target.classList.add('fa-trash-hover')
         }
 
-        /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be added */
+        /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
         if (e.target.classList.contains('fa-camera')){
             e.target.classList.add('fa-camera-hover')
-        }
-
-        /* This event will be fired whenever the 'fa-pen' class resides in the target's classList, the fa-pen-hover class will be added */
-
-        if (e.target.classList.contains('fa-pen')){
-            e.target.classList.add('fa-pen-hover')
         }
 
         /* This event will be fired whenever the target's nodeName is 'BUTTON', the button-hover class will be added */
@@ -135,23 +111,6 @@ if (body){
 
     // Mouseout events
     body.addEventListener('mouseout', (e) => {
-        /* This event will be fired whenever 'profile-picture', 'edit-profile-picture-modal' or 'profile-picture-edit-button' class reside in the
-           target's class list, this event will remove the 'edit-profile-picture-modal-show' class from the element stored in the editProfilePicture
-           variable. */
-        if (e.target.classList.contains('profile-picture') || e.target === editProfilePicture){
-            if (editProfilePicture){
-                editProfilePicture.classList.remove('edit-profile-picture-modal-show')
-            }
-        }
-
-        if (e.target.classList.contains('background-picture') ||  e.target == editBackgroundPicture){
-        /* This event will be fired whenever 'background-picture', 'edit-background-picture-modal' or 'background-edit-button' class reside in the
-           target's class list, this event will remove the 'edit-profile-picture-modal-show' class from the element stored in the editBackgroundPicture
-           variable. */
-            if (editBackgroundPicture){
-                editBackgroundPicture.classList.remove('background-edit-modal-show')
-            }
-        }
 
         /* This event will be fired whenever the 'fa-edit' class resides in the target's classList, the fa-edit-hover class will be removed */
 
@@ -183,12 +142,6 @@ if (body){
             e.target.classList.remove('fa-camera-hover')
         }
 
-        /* This event will be fired whenever the 'fa-pen' class resides in the target's classList, the fa-pen-hover class will be removed */
-
-        if (e.target.classList.contains('fa-pen')){
-            e.target.classList.remove('fa-pen-hover')
-        }
-
         /* This event will be fired whenever target is the label of either the #id_profile_pic element or the #id_background_pic, the label-hover class will be removed */
 
         if (e.target.nodeName === 'BUTTON'){
@@ -209,20 +162,27 @@ if (body){
 
     body.addEventListener('click', (e) => {
 
+        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
+            window.scrollY === 0 ? window.scrollTo({'top': body.scrollHeight, 'behavior': 'smooth'}) : window.scrollTo({'top': 0, 'behavior': 'smooth'})
+            e.target.classList.contains('arrow-rotate') ? e.target.classList.remove('arrow-rotate') : e.target.classList.add('arrow-rotate')
+        }
+
+        if (e.target.classList.contains('fa-camera')){
+            let url = e.target.getAttribute('data-url')
+            editFormAW(url).
+            then(data => {
+                modal.classList.add('modal-show')
+                modalContent.innerHTML = data['html']
+            })
+        }
+
+
         /* This event will be fired every time the target contains the fa-edit, fa-pen or fa-camera class in it's classList,
            this event will display the modal adding the modal-show class in its classList, it will collect the url from
            the data-url attribute and the type from the data-type attribute, to display the form it will collect the data
            using the editFormAW async function.*/
-        if (e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-pen') || e.target.classList.contains('fa-camera')){
-            modal.classList.add('modal-show')
-            editProfilePicture.classList.remove('edit-profile-picture-modal-show')
-            editBackgroundPicture.classList.remove('background-edit-modal-show')
-            let url = e.target.getAttribute('data-url')
-            let type = e.target.getAttribute('data-type')
-            editFormAW(url, type)
-            .then(data => {
-                modalContent.innerHTML = data['html']
-            })
+        if (e.target.classList.contains('fa-edit')){
+            window.scrollTo({'left': body.scrollWidth, 'behavior': 'smooth'})
         }
 
         /* This event will be fired every time the target's classList contains the fa-user-plus or fa-user-slash
@@ -298,7 +258,7 @@ if (body){
                 imageSelected.src = e.target.result
                 image = imageSelected
                 let cropper = new Cropper(image, {
-                  aspectRatio: 1 / 1,
+                  aspectRatio: 4 / 6,
                   background: false,
                   crop(event) {
                     x.value = event.detail.x
@@ -310,40 +270,28 @@ if (body){
             })
             reader.readAsDataURL(file)
         }
+    })
 
-        if (e.target.id === 'id_background_pic'){
-        /* This event will be fired every time a change occurs in the #id_background_pic input, this event will first
-           declare some variables, the imageInput which is the target, the imageSelected which is the .profile-pic-selected
-           element, the file which we collect from the imageInput element files. The coordinates to make the cropping
-           x, y, width, and height, we set the name of the file for the user. we will create a new FileReader Object,
-           this instance will be set a load event listener, every time this element catches this event, the imageSelected.src
-           attribute will be set to the target result. we will create a Cropper object and pass the image selected along with
-           extra parameters to the object. Every time we move the cropper the x,y, width and height values will be changed
-           dynamically. This is the data that will be sent to the server.*/
-            let imageInput = e.target
-            let imageSelected = document.querySelector('.background-pic-selected')
-            let file = imageInput.files[0]
-            let x = document.querySelector('#id_x')
-            let y = document.querySelector('#id_y')
-            let width = document.querySelector('#id_width')
-            let height = document.querySelector('#id_height')
-            document.querySelector('label[for=id_background_pic]').innerHTML = file.name
-            let reader = new FileReader();
-            reader.addEventListener('load', (e) => {
-                imageSelected.src = e.target.result
-                image = imageSelected
-                let cropper = new Cropper(image, {
-                  aspectRatio: 364 / 70,
-                  background: false,
-                  crop(event) {
-                    x.value = event.detail.x
-                    y.value = event.detail.y
-                    width.value = event.detail.width
-                    height.value  = event.detail.height
-                  },
-                });
+    body.addEventListener('submit', (e) => {
+    /* This event will be fired whenever the body catches a submit event, this event will perform various operations,
+    first, the data needed to perform the asynchronous request to the server, the url, method, csrf token and the formData,
+    the request will be done, and if the response contains the 'html' key then this means an error was raised and will
+    be rendered to the form.*/
+        e.preventDefault()
+        e.stopPropagation()
+        if (e.target.nodeName === 'FORM'){
+            let form = e.target
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            editProfileAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                if (data['success']){
+                    content.innerHTML = data['success']
+                    window.scrollTo({'left': 0, 'behavior': 'smooth'})
+                }
             })
-            reader.readAsDataURL(file)
         }
     })
 }

@@ -5,7 +5,7 @@
 from django.urls import path
 from .views import Login, Logout, ChangePassword, ChangePasswordDone, PasswordReset, PasswordResetDone, \
     PasswordResetConfirm, PasswordResetComplete, signup, profile_change,profile_picture_change, \
-    profile_background_change, profile, user_lookup, contacts, remove_contact, chats, display_chat, contact_requests, \
+    profile, user_lookup, contacts, remove_contact, chats, display_chat, contact_requests, \
     send_cancel_contact_request, contact_request_response
 
 app_name = 'accounts'
@@ -22,7 +22,6 @@ urlpatterns = [
     path('profile', profile, name='profile'),
     path('profile/<int:pk>', profile, name='profile'),
     path('profile_picture_change', profile_picture_change, name='profile_picture_change'),
-    path('profile_background_change', profile_background_change, name='profile_background_change'),
     path('profile_change', profile_change, name='profile_change'),
     path('user_lookup', user_lookup, name='user_lookup'),
     path('contacts', contacts, name='contacts'),

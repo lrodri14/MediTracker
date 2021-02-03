@@ -5,15 +5,15 @@
     <div class="form-wrapper">
         <div>
             <div class="profile-general-information">
-                <div class="profile-picture-container profile-picture-container-modal">
+                <div id="form-profile-picture-container">
                     {% if not profile.profile_pic %}
                         {% if profile.gender == 'Femenine' %}
-                            <img src="{% static 'accounts/avatars/female-avatar.png' %}" alt="" class="profile-modal-picture">
+                            <img id="current-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
                         {% else %}
-                            <img src="{% static 'accounts/avatars/male-avatar.png' %}" alt="" class="profile-modal-picture">
+                            <img id="current-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
                         {% endif %}
                     {% else %}
-                        <img src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="" class="profile-modal-picture">
+                        <img id="current-profile-picture" src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="">
                     {% endif %}
                 </div>
                 <p>@{{ user }}</p>
@@ -35,13 +35,17 @@
             <div class="personal-info-edit">
                 <div>
                     <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
-                    <p>Contact: {{ form.phone_number }}</p>
+                    <p>Contact</p>
+                    <p>{{ form.phone_number }}</p>
                     <p>Email: {{ user.email }}</p>
                 </div>
                 <div>
-                    <p>Birth Date: {{ form.birth_date }}</p>
-                    <p>Gender: {{ form.gender }}</p>
-                    <p>Origin: {{ form.origin }}</p>
+                    <p>Birth Date</p>
+                    <p>{{ form.birth_date }}</p>
+                    <p>Gender</p>
+                    <p>{{ form.gender }}</p>
+                    <p>Origin</p>
+                    <p>{{ form.origin }}</p>
                 </div>
             </div>
 

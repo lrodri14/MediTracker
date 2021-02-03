@@ -192,7 +192,8 @@ def profile(request, pk=None):
     """
     user_profile = UsersProfile.objects.get(user__pk=pk) if pk else request.user.profile
     pending_request = check_requests(user_profile.user)
-    context = {'profile': user_profile, 'pending_request': pending_request}
+    profile_edit_form = ProfileForm(instance=request.user.profile)
+    context = {'profile': user_profile, 'pending_request': pending_request, 'form': profile_edit_form}
     return render(request, 'accounts/profile.html', context)
 
 
@@ -210,29 +211,8 @@ def profile_picture_change(request):
         form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
-            context = {'profile': request.user.profile}
-            data = {'success': render_to_string('accounts/partial_profile.html', context=context, request=request)}
-            return JsonResponse(data)
-    context = {'form': form}
-    data = {'html': render_to_string(template, context, request)}
-    return JsonResponse(data)
-
-
-def profile_background_change(request):
-    """
-        DOCSTRING:
-        This profile_background_change view is used to change the user's background picture, this form will be displayed in the
-        front-end asynchronously, so the view will return this content in a JSON Format if the request.method attribute
-        is 'GET'. If the request.method attribute is 'POST' then the view will check if the form's data is valid and the
-        picture will be changed successfully.
-    """
-    form = ProfileBackgroundForm(instance=request.user.profile)
-    template = 'accounts/profile_background_change.html'
-    if request.method == 'POST':
-        form = ProfileBackgroundForm(request.POST, request.FILES, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            context = {'profile': request.user.profile}
+            profile_edit_form = ProfileForm(instance=request.user.profile)
+            context = {'profile': request.user.profile, 'form': profile_edit_form}
             data = {'success': render_to_string('accounts/partial_profile.html', context=context, request=request)}
             return JsonResponse(data)
     context = {'form': form}
@@ -254,7 +234,7 @@ def profile_change(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
-            context = {'profile': request.user.profile}
+            context = {'profile': request.user.profile, 'form': ProfileForm(instance=request.user.profile)}
             data = {'success': render_to_string('accounts/partial_profile.html', context=context, request=request)}
             return JsonResponse(data)
     context = {'form': form, 'profile': request.user.profile}

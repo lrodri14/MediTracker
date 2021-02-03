@@ -3,7 +3,7 @@
 """
 
 from django.contrib import admin
-from .models import CustomUser, UsersProfile, MailingCredential, ContactRequest, Chat
+from .models import CustomUser, UsersProfile, UserSetting, MailingCredential, ContactRequest, Chat
 from .forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(UsersProfile)
+admin.site.register(UserSetting)
 admin.site.register(MailingCredential)
 admin.site.register(ContactRequest)
 admin.site.register(Chat)

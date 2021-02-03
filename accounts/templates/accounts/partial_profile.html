@@ -1,121 +1,149 @@
 {% load static %}
 
-<!-- User Profile background image -->
-<div class="background">
-    <div class="background-container">
-        {% if not profile.background_pic %}
-            {% if user.profile == profile %}
-                <i class="fas fa-camera" data-url="{% url 'accounts:profile_background_change' %}" data-type="background-pic"></i>
-            {% endif %}
-        {% else %}
-            <img src="{{ profile.background_pic.url }}" alt="" class="background-picture">
-        {% endif %}
-    </div>
-    {% if user.profile == profile %}
-        <div class="background-edit-modal">
-            <i class="fas fa-pen background-edit-button" data-url="{% url 'accounts:profile_background_change' %}"></i>
-        </div>
-    {% endif %}
-</div>
+<img id=background src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" alt="">
 
-<!-- User Profile profile picture -->
-<div class="profile-picture-container">
-    {% if not profile.profile_pic  %}
-        {% if profile.gender == 'Femenine' %}
-            <img src="{%static 'accounts/avatars/female-avatar.png'%}" alt="" class="profile-picture">
-        {% else %}
-            <img src="{%static 'accounts/avatars/male-avatar.png'%}" alt="" class="profile-picture">
-        {% endif %}
+<div id="profile-card">
+
+    <div id="status"><span><i class="fas fa-circle"></i>Available</span></div>
+
+    <small id="activity">Last Active: {{ user.last_login }}</small>
+
+
+    <div id="profile-picture-container">
+        <i class="fas fa-camera profile-picture-edit-button" data-url="{% url 'accounts:profile_picture_change' %}"></i>
+        <img id="profile-picture" src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" alt="">
+    </div>
+
+
+    {% if user.profile == profile %}
+        <i class="fas fa-edit" data-url="{% url 'accounts:profile_change' %}" data-type="profile"></i>
     {% else %}
-        <img src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="" class="profile-picture">
+        {% if profile.user in user.profile.contacts.all %}
+            <i class="fas fa-trash" data-url="{% url 'accounts:remove_contact' profile.user.pk %}"></i>
+        {% else %}
+            {% if pending_request %}
+                <i class="fas fa-user-slash" data-url="{% url 'accounts:send_cancel_contact_request' profile.user.pk %}" data-procedure="cancel"></i>
+            {% else %}
+                <i class="fas fa-user-plus" data-url="{% url 'accounts:send_cancel_contact_request' profile.user.pk %}" data-procedure="send"></i>
+            {% endif %}
+        {% endif %}
     {% endif %}
-    {% if user.profile == profile %}
-        <div class="edit-profile-picture-modal">
-            <i class="fas fa-pen profile-picture-edit-button" data-url="{% url 'accounts:profile_picture_change' %}"></i>
-        </div>
-    {% endif %}
+
+    <div id="user-information">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <p><i class="fas fa-user-tie"></i> @{{ user }}</p>
+        <p><i class="fas fa-map-pin"></i> {{ user.profile.get_origin_display }}</p>
+        <p><i class="fas fa-stethoscope"></i> {{ user.get_speciality_display }}</p>
+        <p><i class="fas fa-clock"></i> Member Since - {{ user.date_joined|date }}</p>
+        <h2 id="contacts-count">Contacts | <i>{{ user.profile.contacts.all | length }}</i></h2>
+    </div>
+
+    <h3>About</h3>
+
+    <div id="about-user">
+        <p>{{ user.profile.bio }}</p>
+    </div>
+
 </div>
 
-<!-- User's information -->
-<div class="information">
+<i class="far fa-arrow-alt-circle-down" ></i>
 
-    <!-- User's biography -->
-    <div class="biography">
-        <h4>@{% if user.profile == profile %}{{ user }}{% else %}{{ profile.user }}{% endif %}</h4>
-        <h3>About Me</h3>
-        {% if profile.bio %}
-            <p class="biography-content">{{ profile.bio }}</p>
-        {% else %}
-            <p class="not-available-biography">Not Available</p>
-        {% endif %}
+<div id="user-details">
+    <h4>Personal Information
+    </h4>
+    <hr>
+    <div class="personal">
+    <div>
+        <ul>
+            <li><h5>Name: {{ profile.user.first_name }} {{ profile.user.last_name }}</h5></li>
+            <li><h5>Contact: {% if profile.phone_number %}{{ profile.phone_number }}{% else %}Not Available{% endif %}</h5></li>
+            <li><h5>Email: {{ profile.user.email }}</h5></li>
+        </ul>
     </div>
-
-    <!-- User's activity information -->
-    <div class="activity-information">
-        {% if user.profile != profile %}
-            <p class="last-seen"><small>Last Seen - {{ user.last_login|date:"g:i a" }}</small></p>
-        {% endif %}
-        <p class="member-since"><small>Member Since - {{ user.date_joined|date }}</small></p>
+    <div>
+        <ul>
+            <li><h5>Birth Date: {% if profile.birth_date %}{{ profile.birth_date }}{% else %}Not Available{% endif %}</h5></li>
+            <li><h5>Gender: {% if profile.gender %}{{ profile.gender }}{% else %}Not Available{% endif %}</h5></li>
+            <li><h5>Origin: {% if profile.origin %}{{ profile.get_origin_display }}{% else %}Not Available{% endif %}</h5></li>
+        </ul>
     </div>
+    </div>
+    <h4>Professional Information</h4>
+    <hr>
+    <div class="medical">
+        <ul>
+            <li>
+                <h5>Roll: {{ profile.user.roll }}</h5>
+            </li>
+            <li>
+                <h5>Speciality: {{ profile.user.get_speciality_display }}</h5>
+            </li>
+        </ul>
+    </div>
+    <h4>Addressing Information</h4>
+    <hr>
+    <div class="addressing">
+        <ul>
+            <li>
+                <h5>Location: {% if profile.location %}{{ profile.get_location_display }}{% else %}Not Available{% endif %}</h5>
+            </li>
+            <li>
+                <h5>Address: {% if profile.address %}{{ profile.address }}{% else %}No Address Available{% endif %}</h5>
+            </li>
+        </ul>
+    </div>
+</div>
 
-    <!-- User's personal information -->
-    <div class="personal-information">
-        <h4>Personal Information
-            {% if user.profile == profile %}
-                <i class="fas fa-edit" data-url="{% url 'accounts:profile_change' %}" data-type="profile"></i>
-            {% else %}
-                {% if profile.user in user.profile.contacts.all %}
-                    <i class="fas fa-trash" data-url="{% url 'accounts:remove_contact' profile.user.pk %}"></i>
-                {% else %}
-                    {% if pending_request %}
-                        <i class="fas fa-user-slash" data-url="{% url 'accounts:send_cancel_contact_request' profile.user.pk %}" data-procedure="cancel"></i>
-                    {% else %}
-                        <i class="fas fa-user-plus" data-url="{% url 'accounts:send_cancel_contact_request' profile.user.pk %}" data-procedure="send"></i>
+
+<div id="profile-edit-form">
+    <form action="{% url 'accounts:profile_change' %}" method="POST" class="edit-profile">
+        {% csrf_token %}
+        <div class="form-wrapper">
+            <div>
+                <div class="profile-general-information">
+                    <p>{{ user.first_name }} {{ user.last_name }}</p>
+                    {% if form.errors %}
+                        {% for error in form.errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
                     {% endif %}
-                {% endif %}
-            {% endif %}
-        </h4>
-        <hr>
-        <div class="personal">
-        <div>
-            <ul>
-                <li><h5>Name: {{ profile.user.first_name }} {{ profile.user.last_name }}</h5></li>
-                <li><h5>Contact: {% if profile.phone_number %}{{ profile.phone_number }}{% else %}Not Available{% endif %}</h5></li>
-                <li><h5>Email: {{ profile.user.email }}</h5></li>
-            </ul>
-        </div>
-        <div>
-            <ul>
-                <li><h5>Birth Date: {% if profile.birth_date %}{{ profile.birth_date }}{% else %}Not Available{% endif %}</h5></li>
-                <li><h5>Gender: {% if profile.gender %}{{ profile.gender }}{% else %}Not Available{% endif %}</h5></li>
-                <li><h5>Origin: {% if profile.origin %}{{ profile.get_origin_display }}{% else %}Not Available{% endif %}</h5></li>
-            </ul>
-        </div>
-        </div>
-        <h4>Professional Information</h4>
-        <hr>
-        <div class="medical">
-            <ul>
-                <li>
-                    <h5>Roll: {{ profile.user.roll }}</h5>
-                </li>
-                <li>
-                    <h5>Speciality: {{ profile.user.get_speciality_display }}</h5>
-                </li>
-            </ul>
-        </div>
-        <h4>Addressing Information</h4>
-        <hr>
-        <div class="addressing">
-            <ul>
-                <li>
-                    <h5>Location: {% if profile.location %}{{ profile.get_location_display }}{% else %}Not Available{% endif %}</h5>
-                </li>
-                <li>
-                    <h5>Address: {% if profile.address %}{{ profile.address }}{% else %}No Address Available{% endif %}</h5>
-                </li>
-            </ul>
-        </div>
-    </div>
+                    <p>Biography</p>
+                    <p>{{ form.bio }}</p>
+                    <button type="submit">Update</button>
+                </div>
+            </div>
 
+            <div class="profile-information">
+                <div class="personal-info-edit">
+                    <div>
+                        <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+                        <p>Email: {{ user.email }}</p>
+                        <p>Contact: {{ form.phone_number }}</p>
+                        <p>Gender: {{ form.gender }}</p>
+                        <p>Origin: {{ form.origin }}</p>
+                    </div>
+                    <div>
+                        <p>Birth Date</p>
+                        <p>{{ form.birth_date }}</p>
+                    </div>
+                </div>
+
+                <div class="professional-info-edit">
+                    <h4>Professional</h4>
+                    <hr>
+                    <p>Roll: {{ user.roll }}</p>
+                    <p>Speciality: {{ user.get_speciality_display }}</p>
+                </div>
+
+                <div class="addressing-info-edit">
+                    <h4>Addressing</h4>
+                    <hr>
+                    <p>Timezone: {{ form.tzone }}</p>
+                    <p>Location: {{ form.location }}</p>
+                    <p>Address: </p>
+                    <p>{{ form.address }}</p>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
