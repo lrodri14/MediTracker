@@ -23,6 +23,19 @@ async function displaySettingsAW(url){
     return data
 }
 
+async function requestGeneralSettingsAW(url){
+    const result = await fetch(url)
+    const data = await result.json()
+    return data
+}
+
+async function changeWallpaperAW(url, method, csrfmiddlewaretoken, formData){
+    const result = await fetch(url, {method : method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    const data = await result.json()
+    return data
+}
+
+
 async function requestPageAW(url){
     /* This async function will be used to collect the data from the previous or next page, this content will be
     received as a promise, so we need to return it in JSON format so we can process it, this content will be set to
@@ -147,11 +160,12 @@ body.addEventListener('click', (e) => {
             addIconLevitate(document.querySelector('.add-data'))
         })
     }
+
 })
 
 body.addEventListener('mouseover', (e) => {
     /* This event will be fired every time the target contains the 'tab' class in its classlist, it will add the tab-hover class*/
-    if (e.target.classList.contains('tab')){
+    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab')){
         e.target.classList.add('tab-hover')
     }
 
@@ -159,7 +173,7 @@ body.addEventListener('mouseover', (e) => {
 
 body.addEventListener('mouseout', (e) => {
     /* This event will be fired every time the target contains the 'tab' class in its classlist, it will remove the tab-hover class*/
-    if (e.target.classList.contains('tab')){
+    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab')){
         e.target.classList.remove('tab-hover')
     }
 
@@ -175,10 +189,6 @@ if (wrapper){
 
     wrapper.addEventListener('mouseover', (e) => {
 
-        // This event will be fired, every time the user hovers over a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be added.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.add('fa-angle-hover')
-        }
 
         /* This event will be fired every time a hover occurs in an element with the 'TD' nodeName of the childs are the
            'fa-trash' or 'fa-edit' icons, this event will change some styles in the table rows.*/
@@ -225,14 +235,13 @@ if (wrapper){
             e.target.classList.add('button-hover')
         }
 
+        if (e.target.classList.contains('wallpaper')){
+            e.target.classList.add('wallpaper-hover')
+        }
+
     })
 
     wrapper.addEventListener('mouseout', (e) => {
-
-    // This event will be fired, every time the user hover out occurs on a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be removed.
-    if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-        e.target.classList.remove('fa-angle-hover')
-    }
 
     /* This event will be fired every time a hover occurs in an element with the 'TD' nodeName of the childs are the
        'fa-trash' or 'fa-edit' icons, this event will remove some styles in the table rows.*/
@@ -279,21 +288,25 @@ if (wrapper){
             e.target.classList.remove('button-hover')
         }
 
+        if (e.target.classList.contains('wallpaper')){
+            e.target.classList.remove('wallpaper-hover')
+        }
+
     })
 
     wrapper.addEventListener('click', (e) => {
 
-        /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
-       GET request, then the response will be added to the dataTable, as well as the paginator will be deleted
-       to get the current one.*/
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            const url = e.target.getAttribute('data-url')
-            requestPageAW(url)
+        if (e.target.classList.contains('general-option-tab')){
+            let tab = e.target
+            let tabs = document.querySelectorAll('general-option-tab')
+            let url = tab.getAttribute('data-url')
+            for (let i = 0; i<tabs.length; i++){
+                tabs[i].classList.remove('tab-active')
+            }
+            tab.classList.add('tab-active')
+            requestGeneralSettingsAW(url)
             .then(data => {
-                if (data['html']){
-                    document.querySelector('#paginator') && document.querySelector('#paginator').remove()
-                    document.querySelector('tbody').innerHTML = data['html']
-                }
+                document.querySelector('#general-settings-content').innerHTML = data['html']
             })
         }
 
@@ -372,6 +385,22 @@ if (wrapper){
                 modal.classList.add('modal-show')
             })
         }
+
+        if (e.target.classList.contains('wallpaper')){
+            document.querySelector('#id_wallpaper').value = e.target.getAttribute('data-value')
+            let form = document.querySelector('#user-settings-form')
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            changeWallpaperAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                if (data['response'] === 'success'){
+                    document.querySelector('#background').src = e.target.src
+                }
+            })
+        }
+
     })
 
     wrapper.addEventListener('input', (e) => {

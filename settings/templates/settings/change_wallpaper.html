@@ -1,0 +1,22 @@
+{% load static %}
+
+<form method="POST" action="{% url 'settings:change_wallpaper' %}" id="user-settings-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+
+<div id="first-wallpaper-row">
+    <img src="{% static 'web-backgrounds/bg-1.jpg' %}" alt="" class="wallpaper" data-value="1">
+    <img src="{% static 'web-backgrounds/bg-2.jpg' %}" alt="" class="wallpaper" data-value="2">
+    <img src="{% static 'web-backgrounds/bg-3.jpg' %}" alt="" class="wallpaper" data-value="3">
+    <img src="{% static 'web-backgrounds/bg-4.jpg' %}" alt="" class="wallpaper" data-value="4">
+    <img src="{% static 'web-backgrounds/bg-5.jpg' %}" alt="" class="wallpaper" data-value="5">
+</div>
+<div id="second-wallpaper-row">
+    <img src="{% static 'web-backgrounds/bg-6.jpg' %}" alt="" class="wallpaper" data-value="6">
+    <img src="{% static 'web-backgrounds/bg-7.jpg' %}" alt="" class="wallpaper" data-value="7">
+    <img src="{% static 'web-backgrounds/bg-8.jpg' %}" alt="" class="wallpaper" data-value="8">
+    <img src="{% static 'web-backgrounds/bg-9.jpg' %}" alt="" class="wallpaper" data-value="9">
+    <img src="{% static 'web-backgrounds/bg-10.jpg' %}" alt="" class="wallpaper" data-value="10">
+</div>
+

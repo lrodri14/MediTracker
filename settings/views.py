@@ -11,7 +11,7 @@ from django.apps import apps
 from django.template.loader import render_to_string
 from patients.forms import AllergyFilterForm, AllergyForm, InsuranceCarrierFilterForm, InsuranceCarrierForm
 from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm
-from accounts.forms import MailingCredentialForm
+from accounts.forms import UserSettingsForm, MailingCredentialForm
 MailingCredential = apps.get_model('accounts', 'MailingCredential')
 InsuranceCarrier = apps.get_model('patients', 'InsuranceCarrier')
 Drugs = apps.get_model('appointments', 'Drug')
@@ -32,6 +32,29 @@ def settings(request):
     """
     template = 'settings/settings.html'
     return render(request, template)
+
+
+# General
+##############################
+
+def general(request):
+    template = 'settings/general.html'
+    data = {'html': render_to_string(template, request=request)}
+    return JsonResponse(data)
+
+
+def change_wallpaper(request):
+    if request.method == 'POST':
+        form = UserSettingsForm(request.POST, instance=request.user.settings)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'response': 'success'})
+    form = UserSettingsForm(instance=request.user.settings)
+    template = 'settings/change_wallpaper.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
 
 # Accounts
 ##############################

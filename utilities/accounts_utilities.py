@@ -8,6 +8,7 @@
 from django.core.mail.backends.smtp import EmailBackend
 from accounts.models import ContactRequest
 
+
 domains = {
     'gmail.com': {'smtp_server': 'smtp.gmail.com', 'port': 587, 'use_tls': True},
     'yahoo.com': {'smtp_server': 'smtp.mail.yahoo.com', 'port': 465, 'use_tls': True},

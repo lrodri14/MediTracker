@@ -100,8 +100,9 @@ class UsersProfile(models.Model):
 
 
 class UserSetting(models.Model):
-    wallpaper = models.ImageField(verbose_name='Wallpaper', blank=True, null=True, help_text="User's Wallpaper")
-    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings')
+
+    wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper', default='web-backgrounds/bg-4.jpg')
+    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='settings')
 
     class Meta:
         verbose_name = "User Setting"
@@ -109,6 +110,10 @@ class UserSetting(models.Model):
 
     def __str__(self):
         return str(self.user) + " Settings"
+
+    def save(self, *args, **kwargs):
+        self.wallpaper = 'web-backgrounds/bg-{}.jpg'.format(self.wallpaper)
+        super().save(*args, **kwargs)
 
 
 class MailingCredential(models.Model):

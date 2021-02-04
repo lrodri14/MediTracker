@@ -7,7 +7,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm as CreationForm
 from django.contrib.auth.forms import UserChangeForm as ChangeForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import CustomUser, UsersProfile, MailingCredential
+from .models import CustomUser, UsersProfile, UserSetting, MailingCredential
 from PIL import Image, ExifTags
 import pytz
 
@@ -142,43 +142,10 @@ class ProfilePictureForm(forms.ModelForm):
         return profile_picture
 
 
-class ProfileBackgroundForm(forms.ModelForm):
-    """
-        DOCSTRING:
-        This ProfileBackgroundForm class form is used to edit the user's background picture, we defined it's meta class and
-        set the model attribute to the UsersProfile class, we also set the fields attribute to the UsersProfile attribute
-        'background_pic',
-    """
-    x = forms.FloatField(widget=forms.widgets.HiddenInput())
-    y = forms.FloatField(widget=forms.widgets.HiddenInput())
-    width = forms.FloatField(widget=forms.widgets.HiddenInput())
-    height = forms.FloatField(widget=forms.widgets.HiddenInput())
-
+class UserSettingsForm(forms.ModelForm):
     class Meta:
-        model = UsersProfile
-        fields = ('background_pic',)
-
-    def save(self, *args, **kwargs):
-        background_image = super().save()
-
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        width = self.cleaned_data.get('width')
-        height = self.cleaned_data.get('height')
-
-        image = Image.open(background_image.background_pic)
-        try:
-            exif = dict((ExifTags.TAGS[k], v) for k, v in image._getexif().items() if k in ExifTags.TAGS)
-            if exif.get('Orientation') == 6:
-                image = image.rotate(270, expand=True)
-            elif exif.get('Orientation') == 8:
-                image = image.rotate(90, expand=True)
-        except AttributeError:
-            pass
-        cropped_image = image.crop((x, y, x + width, y + height))
-        cropped_image.save(background_image.background_pic.path)
-
-        return background_image
+        model = UserSetting
+        exclude = ('created_by', )
 
 
 class MailingCredentialForm(forms.ModelForm):

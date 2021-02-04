@@ -8,6 +8,8 @@ from .views import *
 app_name = 'settings'
 urlpatterns = [
     path('', settings, name='settings'),
+    path('general', general, name='general'),
+    path('change_wallpaper', change_wallpaper, name='change_wallpaper'),
     path('account', account, name='account'),
     path('mailing', mailing, name='mailing'),
     path('update_mailing_info', update_mailing_information, name='update_mailing_information'),
