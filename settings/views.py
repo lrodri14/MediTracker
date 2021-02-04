@@ -38,12 +38,26 @@ def settings(request):
 ##############################
 
 def general(request):
+    """
+        DOCSTRING:
+        This general view is used to present the general settings, this content will be displayed in the settings dynamically,
+        so the content will sent to the front-end in JSON format, we will use the render_to_string function to convert a content
+        into a string and send it using the JsonResponse class. It expects one single argument: 'request', it expects a
+        request object.
+    """
     template = 'settings/general.html'
     data = {'html': render_to_string(template, request=request)}
     return JsonResponse(data)
 
 
 def change_wallpaper(request):
+    """
+        DOCSTRING:
+        This change_wallpaper view is used to display the background wallpaper of the user, this view will send the
+        UserSettingsForm with the account model belonging to the user as an instance if the request's method is a GET,
+        if the method is a POST, then the form will be filled with the request data and check if it's valid if the data
+        is valid, then a success response will be sent as JSON Response.
+    """
     if request.method == 'POST':
         form = UserSettingsForm(request.POST, instance=request.user.settings)
         if form.is_valid():

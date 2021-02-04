@@ -235,6 +235,8 @@ if (wrapper){
             e.target.classList.add('button-hover')
         }
 
+        /* This event will be fired every time the target contains the 'wallpaper' class in its classList, it will add
+           the 'wallpaper-trash-hover' to the target.*/
         if (e.target.classList.contains('wallpaper')){
             e.target.classList.add('wallpaper-hover')
         }
@@ -288,6 +290,8 @@ if (wrapper){
             e.target.classList.remove('button-hover')
         }
 
+        /* This event will be fired every time the target contains the 'wallpaper' class in its classList, it will remove
+           the 'wallpaper-trash-hover' to the target.*/
         if (e.target.classList.contains('wallpaper')){
             e.target.classList.remove('wallpaper-hover')
         }
@@ -295,6 +299,7 @@ if (wrapper){
     })
 
     wrapper.addEventListener('click', (e) => {
+
 
         if (e.target.classList.contains('general-option-tab')){
             let tab = e.target

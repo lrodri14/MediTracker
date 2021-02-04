@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Profile Change Form -->
-<form action="{% url 'accounts:profile_change' %}" method="POST" class="edit-profile">
+<form action="{% url 'accounts:profile_change' %}" method="POST" class="edit-profile" autocomplete="off">
     {% csrf_token %}
     <div class="form-wrapper">
         <div>

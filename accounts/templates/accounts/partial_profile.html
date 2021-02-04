@@ -1,17 +1,28 @@
 {% load static %}
 
-<img id=background src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" alt="">
+<!--{% if profile.profile_pic %}-->
+<!--    <img id=background src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="">-->
+<!--{% endif %}-->
 
 <div id="profile-card">
 
     <div id="status"><span><i class="fas fa-circle"></i>Available</span></div>
 
-    <small id="activity">Last Active: {{ user.last_login }}</small>
+    {% if profile.user != user %}
+        <small id="activity">Last Active: {{ profile.user.last_login }}</small>
+    {% endif %}
 
 
     <div id="profile-picture-container">
-        <i class="fas fa-camera profile-picture-edit-button" data-url="{% url 'accounts:profile_picture_change' %}"></i>
-        <img id="profile-picture" src="{{ MEDIA_URL }}{{ user.profile.profile_pic }}" alt="">
+        {% if profile.user == user %}
+            <i class="fas fa-camera profile-picture-edit-button" data-url="{% url 'accounts:profile_picture_change' %}"></i>
+        {% endif %}
+        {% if profile.profile_pic %}
+            <img id="profile-picture" src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="">
+        {% else %}
+            <p id="no-profile-picture-message">No profile picture available</p>
+            <i class="fas fa-camera no-profile-picture-icon" ></i>
+        {% endif %}
     </div>
 
 
@@ -30,18 +41,18 @@
     {% endif %}
 
     <div id="user-information">
-        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-        <p><i class="fas fa-user-tie"></i> @{{ user }}</p>
-        <p><i class="fas fa-map-pin"></i> {{ user.profile.get_origin_display }}</p>
-        <p><i class="fas fa-stethoscope"></i> {{ user.get_speciality_display }}</p>
-        <p><i class="fas fa-clock"></i> Member Since - {{ user.date_joined|date }}</p>
-        <h2 id="contacts-count">Contacts | <i>{{ user.profile.contacts.all | length }}</i></h2>
+        <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+        <p><i class="fas fa-user-tie"></i> @{{ profile.user }}</p>
+        <p><i class="fas fa-map-pin"></i> {{ profile.get_origin_display }}</p>
+        <p><i class="fas fa-stethoscope"></i> {{ profile.user.get_speciality_display }}</p>
+        <p><i class="fas fa-clock"></i> Member Since - {{ profile.user.date_joined|date }}</p>
+        <h2 id="contacts-count">Contacts | <i>{{ profile.contacts.all | length }}</i></h2>
     </div>
 
     <h3>About</h3>
 
     <div id="about-user">
-        <p>{{ user.profile.bio }}</p>
+        <p>{{ profile.bio }}</p>
     </div>
 
 </div>

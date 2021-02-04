@@ -52,6 +52,29 @@ body{
     left: 96%;
 }
 
+.fa-user-plus, .fa-user-slash, .fa-trash{
+    cursor: pointer;
+    position: absolute;
+    top: 5%;
+    left: 96%;
+    transition: 0.5s;
+}
+
+.fa-user-plus-hover{
+    color: #25BB41;
+    transition: 0.5s;
+}
+
+.fa-user-slash-hover{
+    color: #A31621;
+    transition: 0.5s;
+}
+
+.fa-trash-hover{
+    color: #A31621;
+    transition: 0.5s;
+}
+
 .fa-circle{
     /* Available = #359e23 - Busy = #9e2323 */
     font-size: 12px;
@@ -78,6 +101,7 @@ body{
     top: 30%;
     left: 5%;
     margin-right: -50%;
+    border-radius: 25px;
     background-color: rgba(255, 255, 255, 0.1);
     transform: translate(-50%, -50%);
     z-index: 1;
@@ -107,6 +131,22 @@ body{
     width: 100%;
     height: auto;
 }
+
+#no-profile-picture-message{
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    z-index: 1;
+}
+
+.no-profile-picture-icon{
+    cursor: default;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    font-size: 32px;
+}
+
 
 #user-information{
     position: absolute;
@@ -157,7 +197,12 @@ h3{
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-    transition: transform 0.5s;
+    transition: color 0.5s, transform 0.5s;
+}
+
+.fa-arrow-alt-circle-down-hover{
+    color: #25BB41;
+    transition: 0.5s;
 }
 
 .arrow-rotate{

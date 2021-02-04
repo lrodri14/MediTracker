@@ -86,9 +86,16 @@ if (body){
 
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
-        if (e.target.classList.contains('fa-camera')){
+        if (e.target.classList.contains('profile-picture-edit-button')){
             e.target.classList.add('fa-camera-hover')
         }
+
+        /* This event will be fired whenever the 'fa-arrow-alt-circle-down' class resides in the target's classList, the fa-arrow-alt-circle-down-hover class will be removed */
+
+        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
+            e.target.classList.add('fa-arrow-alt-circle-down-hover')
+        }
+
 
         /* This event will be fired whenever the target's nodeName is 'BUTTON', the button-hover class will be added */
 
@@ -138,8 +145,14 @@ if (body){
 
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
-        if (e.target.classList.contains('fa-camera')){
+        if (e.target.classList.contains('profile-picture-edit-button')){
             e.target.classList.remove('fa-camera-hover')
+        }
+
+        /* This event will be fired whenever the 'fa-arrow-alt-circle-down' class resides in the target's classList, the fa-arrow-alt-circle-down-hover class will be removed */
+
+        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
+            e.target.classList.remove('fa-arrow-alt-circle-down-hover')
         }
 
         /* This event will be fired whenever target is the label of either the #id_profile_pic element or the #id_background_pic, the label-hover class will be removed */
@@ -167,7 +180,7 @@ if (body){
             e.target.classList.contains('arrow-rotate') ? e.target.classList.remove('arrow-rotate') : e.target.classList.add('arrow-rotate')
         }
 
-        if (e.target.classList.contains('fa-camera')){
+        if (e.target.classList.contains('profile-picture-edit-button')){
             let url = e.target.getAttribute('data-url')
             editFormAW(url).
             then(data => {

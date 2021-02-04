@@ -60,7 +60,7 @@ class CustomUser(AbstractUser):
         super(CustomUser, self).save(*args, **kwargs)
         if created:
             UsersProfile.objects.create(user=self)
-            UserSetting.objects.create(user=self)
+            UserSetting.objects.create(wallpaper=1, user=self)
 
 
 class UsersProfile(models.Model):
@@ -101,7 +101,7 @@ class UsersProfile(models.Model):
 
 class UserSetting(models.Model):
 
-    wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper', default='web-backgrounds/bg-4.jpg')
+    wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper')
     user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='settings')
 
     class Meta:
