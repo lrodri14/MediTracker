@@ -19,38 +19,40 @@
 
     <img id=background src="{% static user.settings.wallpaper %}" alt="">
 
-        {% block return %}<a href=""><i class="fas fa-long-arrow-alt-left" ></i></a>{% endblock %}{% block home %}<i class="fas fa-bars"></i>{% endblock %}{% block social %} <i class="fas fa-users" data-url="{% url 'accounts:contacts' %}"></i> {% endblock %}
+        {% block return %}<a href=""><i class="fas fa-long-arrow-alt-left" ></i></a>{% endblock %}
 
-        <!-- Navigator -->
-<!--        <div class="global-navigator">-->
-<!--            &lt;!&ndash; Tabs &ndash;&gt;-->
-<!--            <h2 class="global-navigator-title">Menu <span class="close-global-navigator"><i class="fas fa-times"></i></span></h2>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'home:home' %}'"><p><i class="fas fa-home"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'patients:patients' %}'"><p><i class="fas fa-user-injured"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'appointments:appointments'%}'"><p><i class="fas fa-calendar-check"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'records:records' %}'"><p><i class="fas fa-clipboard"></i></p></div>-->
-<!--            <div class="global-navigator-tab"><p><i class="fas fa-file-invoice"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'providers:providers' %}'"><p><i class="fas fa-handshake"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'settings:settings' %}'"><p><i class="fas fa-cog"></i></p></div>-->
-<!--            <div class="global-navigator-tab" onclick="window.location='{% url 'accounts:profile' %}'"><p><i class="fas fa-user"></i></p></div>-->
-<!--            <p id="watermark">Telematica</p>-->
-<!--        </div>-->
+        {% block navigation %}
+            <!-- Navigator -->
+            <div class="global-navigator">
+                <!-- Tabs -->
+                <div class="global-navigator-tab" onclick="window.location='{% url 'home:home' %}'"><i class="fas fa-home"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'patients:patients' %}'"><i class="fas fa-user-injured"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'appointments:appointments'%}'"><i class="fas fa-calendar-check"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'records:records' %}'"><i class="fas fa-clipboard"></i></div>
+                <div class="global-navigator-tab"><i class="fas fa-file-invoice"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'providers:providers' %}'"><i class="fas fa-handshake"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'settings:settings' %}'"><i class="fas fa-cog"></i></div>
+                <div class="global-navigator-tab" onclick="window.location='{% url 'accounts:profile' %}'"><i class="fas fa-user"></i></div>
+                <p id="watermark">Telematica</p>
+            </div>
+        {% endblock %}
 
-        <!-- Social Content -->
-<!--        <div class="social-section">-->
-<!--            <div><i class="fas fa-times" id="close-social-section"></i><input id="social-section-search" type="text" placeholder="Search..."></div>-->
-<!--            <div id="social-section-navigator"><div class="social-section-tab social-section-tab-active" data-url="{% url 'accounts:contacts' %}">Contacts</div><div class="social-section-tab" data-url="{% url 'accounts:chats' %}">Chats</div><div class="social-section-tab" data-url="{% url 'accounts:contact_requests' %}">Requests</div></div>-->
-<!--            <div id="social-section-data"></div>-->
-<!--        </div>-->
+        {% block social_section %}
+            <!-- Social Content -->
+            <div class="social-section">
+                <div id="social-section-navigator"><div class="social-section-tab social-section-tab-active" data-url="{% url 'accounts:contacts' %}">Contacts</div><div class="social-section-tab" data-url="{% url 'accounts:chats' %}">Chats</div><div class="social-section-tab" data-url="{% url 'accounts:contact_requests' %}">Requests</div></div>
+                <div id="social-section-data"></div>
+            </div>
+        {% endblock %}
 
         {% block body_block %}
         {% endblock %}
 
-<!--        <div class="loader-modal">-->
-<!--            <i class="fas fa-heart"></i>-->
-<!--            <div class="global-loader">-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="loader-modal">
+            <i class="fas fa-heart"></i>
+            <div class="global-loader">
+            </div>
+        </div>
 
         <script src="{% static 'base/js/base.js' %}"></script>
         <script src="https://media.twiliocdn.com/sdk/js/chat/v4.0/twilio-chat.min.js"></script>

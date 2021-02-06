@@ -1,6 +1,15 @@
 {% load static %}
 <!-- Destination Profile Picture -->
-<img id="destination-profile-picture" src="{{ destination.profile.profile_pic.url }}" alt="" onclick="window.location='{% url 'accounts:profile' destination.pk %}'"><h4 id="destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
+{% if not destination.profile.profile_pic %}
+    {% if destination.profile.gender == 'Masculine' %}
+        <img id="destination-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+    {% else %}
+        <img id="destination-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+    {% endif %}
+{% else %}
+    <img id="destination-profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
+{% endif %}
+<h4 id="destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
 <!-- Chat content area -->
 <div id="chat-content">
 

@@ -14,9 +14,15 @@
     New Colors Listing
     ------------------
     ------------------
-    #FFFFFF
-    #000000
-
+    #FFFFFF;
+    #000000;
+    #EAC234;
+    #00E083;
+    #95B6C6;
+    #D73533;
+    #12212b;
+    #CBA415;
+    #25BB41;
 
     Effects Used
     ----------------
@@ -481,15 +487,19 @@ a {
 /*////////////////////////////////////////////////// Global Navigator ////////////////////////////////////////////////*/
 
 .global-navigator{
-    background-color: #496897;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
     text-align: justify;
     position: absolute;
     margin-left: -25%;
     height: 100%;
-    width: 20%;
+    width: 10%;
     top: 0;
     left:0;
     z-index: 1;
+    display: block;
     transition: all 0.5s;
 }
 
@@ -498,27 +508,11 @@ a {
     transition: margin-left 0.5s;
 }
 
-.close-global-navigator{
-    float: right;
-    margin-right: 10px;
-    transition: 0.5s;
-}
-
-.close-global-navigator:hover{
-    color: #e85858;
-    cursor:pointer;
-    transition: 0.5s;
-}
-
-.global-navigator-title{
-    padding: 5px;
-}
-
 .global-navigator-tab{
-    border-top: 1px solid #FFFFFF;
-    border-bottom: 1px solid #FFFFFF;
     width: 100%;
-    height: 10.5%;
+    height: 12%;
+    margin-top: 0px;
+    vertical-align: top;
     text-align: justify;
     transition: 0.5s;
 }
@@ -526,7 +520,7 @@ a {
 .global-navigator-tab-hover{
     background-color: #FFFFFF;
     cursor: pointer;
-    color: #496897;
+    color: #000000;
     transition: 0.5s;
 }
 
@@ -534,12 +528,13 @@ a {
     padding: 10px;
     font-size: 25px;
     float: left;
-    margin-left: 40%;
+    margin-left: 34%;
+    margin-top: 18%;
 }
 
 #watermark{
     font-size: 10px;
-    margin-left: 40%;
+    margin-left: 33%;
 }
 
 /*//////////////////////////////////////////////////// Social Content ////////////////////////////////////////////////*/
@@ -554,7 +549,10 @@ a {
     overflow: hidden;
     overflow-y: auto;
     margin-right: -30%;
-    background-color: #496897;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
     z-index: 1;
     transition: 0.5s;
 }
@@ -564,43 +562,9 @@ a {
     transition: margin-right 0.5s;
 }
 
-#close-social-section{
-    position: absolute;
-    top: 1.5%;
-    left: 5%;
-    font-size: 24px;
-    transition: 0.5s;
-}
-
-#close-social-section:hover{
-    color: #e85858;
-    cursor:pointer;
-    transition: 0.5s;
-}
-
-#social-section-search{
-    text-align: center;
-    background-color: #496897;
-    border: none;
-    border-bottom: 1px solid #C7E8F3;
-    margin-bottom: 10px;
-    height: 35px;
-    width: 80%;
-    margin-left: 20%;
-    color: #FFFFFF;
-}
-
-#social-section-search::placeholder{
-    color: #C7E8F3;
-}
-
-#social-section-search:focus{
-    outline: none;
-}
-
 .social-section-tab{
     display: inline-block;
-    border-bottom: 1px solid #C7E8F3;
+    border-bottom: 1px solid #FFFFFF;
     width: 33.3%;
     text-align: center;
     padding: 10px 0px;
@@ -609,14 +573,14 @@ a {
 
 .social-section-tab-hover{
     background-color: #FFFFFF;
-    color: #496897;
+    color: #000000;
     cursor: pointer;
     transition: 0.5s;
 }
 
 .social-section-tab-active{
     background-color: #FFFFFF;
-    color: #496897;
+    color: #000000;
     cursor: pointer;
     transition: 0.5s;
 }
@@ -629,7 +593,7 @@ a {
     transform: translate(-50%, -50%);
 }
 
-.social-section img{
+.contact-profile-picture{
     width: 25px;
     height: 25px;
     border-radius: 50%;
@@ -668,11 +632,11 @@ a {
 }
 
 .cell:nth-child(odd){
-    background-color: #6082AD;
+    background-color: rgba(255,255,255,0.1);
 }
 
 .cell:nth-child(even){
-    background-color: #6E8DB4;
+    background-color: rgba(255,255,255,0.2);
 }
 
 .contact-profile-picture{
@@ -697,34 +661,39 @@ a {
 
 /*//////////////////////////////////////////////////////// Chat //////////////////////////////////////////////////////*/
 
-
 #destination-profile-picture{
     width: 40px;
     height: 40px;
+    border-radius: 50%;
     position: absolute;
     left: 2%;
-    top: 11.5%;
+    top: 7%;
 }
 
 #destination-user{
     position: absolute;
-    top: 10%;
+    top: 6%;
     left: 15.5%;
 }
 
 #chat-content{
     margin-top: 20%;
     width: 94%;
-    height: 630px;
-    max-height: 630px;
+    height: 670px;
+    max-height: 670px;
     overflow-y: auto;
     padding: 10px;
 }
 
 .reply{
+    position: relative;
+    display: inline;
+    padding: 10px;
+    border-radius: 5px;
     clear: both;
     float: left;
-    color: #52d43b;
+    color: #FFFFFF;
+    background-color: rgba(255,255,255,0.3);
     margin-bottom: 15px;
     font-size: 14px;
     text-align: left;
@@ -733,6 +702,8 @@ a {
 }
 
 .message{
+    position: relative;
+    display: inline;
     clear: both;
     float: right;
     margin-right: 5%;
@@ -741,13 +712,16 @@ a {
     text-align: left;
     text-justify: justify;
     max-width: 60%;
+    background-color: rgba(255,255,255,0.1);
+    color: #FFFFFF;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 #id_message{
     font-family: 'Nunito', sans-serif;
     font-size: 15px;
-    background-color: #496897;
-    border: 1px solid #C7E8F3;
+    border: 1px solid #FFFFFF;
     resize: none;
     color: #FFFFFF;
     margin-left: 10px;

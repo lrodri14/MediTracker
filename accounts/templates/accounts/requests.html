@@ -12,7 +12,7 @@
             {% else %}
                 <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ contact_request.from_user.profile.profile_pic }}" alt="">
             {% endif %}
-            <h4 class="request-identification" >{{ contact_request.from_user.first_name }} {{ contact_request.from_user.last_name }}</h4>
+            <p class="request-identification" >{{ contact_request.from_user.first_name }} {{ contact_request.from_user.last_name }}</p>
             <i class="fas fa-check accept-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="accepted"></i>
             <i class="fas fa-times deny-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="denied"></i>
         </div>

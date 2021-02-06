@@ -12,7 +12,7 @@
             {% else %}
                 <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ contact.profile_pic }}" alt="">
             {% endif %}
-            <h4 class="contact-identification">{{ contact.user.first_name }} {{ contact.user.last_name }}</h4>
+            <p class="contact-identification">{{ contact.user.first_name }} {{ contact.user.last_name }}</p>
         </div>
     {% endfor %}
 <!-- If no contacts in existence, this message will be displayed -->

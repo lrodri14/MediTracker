@@ -266,8 +266,7 @@ def contacts(request):
         which expects a request object, this request object contains a 'query' key we must extract to proceed with the
         filtering, independently if the searching was successful or not, the response will be returned in JSON Format.
     """
-    query = request.GET.get('query')
-    contacts_list = UsersProfile.objects.filter(Q(user__first_name__startswith=query) | Q(user__last_name__startswith=query), contacts__in=[request.user])
+    contacts_list = UsersProfile.objects.filter(contacts__in=[request.user]).order_by('user__first_name')
     template = 'accounts/contacts.html'
     context = {'contacts': contacts_list}
     data = {'html': render_to_string(template, context, request)}

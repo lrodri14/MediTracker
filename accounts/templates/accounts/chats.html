@@ -15,7 +15,7 @@
             {% else %}
                 <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
             {% endif %}
-            <h4 class="chat-identification">{{ destination.first_name }} {{ destination.last_name }}</h4>
+            <p class="chat-identification">{{ destination.first_name }} {{ destination.last_name }}</p>
         </div>
     {% endfor %}
 <!-- If no chats in existence, this message will be displayed -->

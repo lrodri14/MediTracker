@@ -189,5 +189,6 @@ class Chat(models.Model):
             authenticated user's point of view. In the user's interface a Chat window will be displayed in the social
             section, the destination will be the user to whom the authenticated user is linked to.
         """
+
         destination = self.participants.all()[1] if user == self.participants.all()[0] else self.participants.all()[0]
         return destination

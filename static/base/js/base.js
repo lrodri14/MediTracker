@@ -6,11 +6,8 @@
 ///////////////////////////////////////////////// Variables ////////////////////////////////////////////////////////////
 
 var loaderModal = document.querySelector('.loader-modal')
-var bars = document.querySelector('.fa-bars')
 var globalNavigator = document.querySelector('.global-navigator')
-var contacts = document.querySelector('.fa-users')
 var socialSection = document.querySelector('.social-section')
-var socialSectionSearch = document.querySelector('#social-section-search')
 var socialSectionData = document.querySelector('#social-section-data')
 var socialSectionTabs = document.querySelectorAll('.social-section-tab')
 var closeSocialSection = document.querySelector('#close-social-section')
@@ -20,11 +17,6 @@ let identity
 let chatWindow
 let chatClient
 let chatChannel
-
-//if (document.querySelector('.navigator') !== 'undefined' || document.querySelector('.navigator') !== 'null'){
-//}
-//if (document.querySelector('.social-section') !== 'undefined' && document.querySelector('.social-section') !== 'null'){
-//}
 
 ///////////////////////////////////////////////// Functions ////////////////////////////////////////////////////////////
 
@@ -149,34 +141,34 @@ function createOrJoinChannel(){
 
 ///////////////////////////////////////////////// Event Listeners //////////////////////////////////////////////////////
 
-// Bars Event Listeners
-if (bars){
+window.addEventListener('mousemove', (e) => {
 
-    // Bars Click Event
-    // This event will be triggered every time a click over the bars occur, this will open the global navigator section.
-    bars.addEventListener('click', () => {
-       globalNavigator.classList.add('global-navigator-show')
-    })
+    if (globalNavigator){
+        if ((e.clientY >= 50) && (e.clientX <= 5)){
+        globalNavigator.classList.add('global-navigator-show')
+        }else if (e.clientX > globalNavigator.offsetWidth){
+            globalNavigator.classList.remove('global-navigator-show')
+        }
+    }
 
-}
+    if (socialSection){
+        if (e.clientX >= (window.screen.width - 10) && !socialSection.classList.contains('social-section-show')){
+            socialSection.classList.add('social-section-show')
+            let url = socialSectionTabs[0].getAttribute('data-url')
+            displayContactsAW(url)
+            .then(data => {
+                socialSectionData.innerHTML = data['html']
+            })
+        }else if (e.clientX <= (window.screen.width - socialSection.offsetWidth)){
+            socialSection.classList.remove('social-section-show')
+            for (let i = 0; i<socialSectionTabs.length; i++){
+                socialSectionTabs[i].classList.remove('social-section-tab-active')
+            }
+            socialSectionTabs[0].classList.add('social-section-tab-active')
+        }
+    }
 
-// Contacts Event Listeners
-if (contacts){
-
-    // Contacts click events
-    /* This event will be triggered every time a click over the contacts occur, this will open the social section and display
-       the contacts automatically */
-    contacts.addEventListener('click', (e) => {
-       socialSectionTabs[0].classList.add('social-section-tab-active')
-       let url = e.target.getAttribute('data-url') + '?query=' + socialSectionSearch.value
-        displayContactsAW(url)
-        .then(data => {
-            socialSectionData.innerHTML = data['html']
-        })
-       socialSection.classList.add('social-section-show')
-    })
-
-}
+})
 
 // Global Navigator Event Listeners
 if (globalNavigator){
@@ -187,7 +179,7 @@ if (globalNavigator){
         /* This event will be triggered any time the target contains either the global-navigator-tab, fas or fa-times class,
            the global-navigator-tab-hover class will be added*/
         if (e.target.classList.contains('global-navigator-tab') || e.target.classList.contains('fas') && !e.target.classList.contains('fa-times')){
-            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode.parentNode
+            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode
             tab.classList.add('global-navigator-tab-hover')
         }
 
@@ -199,7 +191,7 @@ if (globalNavigator){
         /* This event will be triggered any time the target contains either the global-navigator-tab, fas or fa-times class,
            the global-navigator-tab-hover class will be removed*/
         if (e.target.classList.contains('global-navigator-tab') || e.target.classList.contains('fas') && !e.target.classList.contains('fa-times')){
-            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode.parentNode
+            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode
             tab.classList.remove('global-navigator-tab-hover')
         }
 
@@ -227,8 +219,8 @@ if (socialSection){
         /* This event will be triggered whenever the target contains the cell class, some styles will be edited and added.*/
         if (e.target.classList.contains('cell') || e.target.parentNode.classList.contains('cell')){
             let cell = e.target.classList.contains('cell') ? e.target : e.target.parentNode
-            cell.style.backgroundColor = '#C7E8F3'
-            cell.style.color = '#496897'
+            cell.style.backgroundColor = "#FFFFFF"
+            cell.style.color = "#000000"
         }
 
         // This event will be triggered every time the target contains the 'social-section-tab' class, social-section-tab-hover class will be added
@@ -298,14 +290,6 @@ if (socialSection){
     // Click Events
     socialSection.addEventListener('click', (e) => {
 
-        /* This event will be fired whenever the target contains the close-social-section classList,
-           the social section will be closed.*/
-        if (e.target.id == 'close-social-section'){
-            socialSection.classList.remove('social-section-show')
-            for (let i = 0; i<socialSectionTabs.length; i++){
-                socialSectionTabs[i].classList.remove('social-section-tab-active')
-            }
-       }
 
         /* This event will be fired whenever the target contains the social-section-tab class in it's
            classList, when the event is fired all the tabs will have the social-section-tab-active class
@@ -318,7 +302,7 @@ if (socialSection){
                 socialSectionTabs[i].classList.remove('social-section-tab-active')
             }
             e.target.classList.add('social-section-tab-active')
-            let url = e.target.getAttribute('data-url') + '?query=' + socialSectionSearch.value
+            let url = e.target.getAttribute('data-url')
             displayContactsAW(url)
             .then(data => {
                 socialSectionData.innerHTML = data['html']
