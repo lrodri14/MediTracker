@@ -72,12 +72,18 @@ class UsersProfile(models.Model):
         and finally we created the class's own __str__ dunder method.
     """
 
+    AVAILABILITY_CHOICES = (
+        ('A', 'Available'),
+        ('B', 'Busy'),
+    )
+
     GENDER_CHOICES = (
         ('Masculine', 'Masculine'),
         ('Femenine', 'Femenine'),
     )
 
     user = models.OneToOneField(CustomUser, blank=True, null=True, on_delete=models.CASCADE, verbose_name='user', related_name='profile')
+    availability = models.CharField(max_length=50, blank=False, null=True, verbose_name='Availability', help_text='User Availability', choices=AVAILABILITY_CHOICES, default='A')
     profile_pic = models.ImageField('Profile Picture', blank=True, null=True, upload_to='accounts/profile_pictures')
     background_pic = models.ImageField('Background Picture', blank=True, null=True, upload_to='accounts/background_pictures')
     bio = models.TextField('Biography', blank=True, null=True, help_text='Let us know about you')
@@ -100,6 +106,13 @@ class UsersProfile(models.Model):
 
 
 class UserSetting(models.Model):
+
+    """
+        DOCSTRING:
+        This UsersSetting class is linked through a OneToOne relationship with the CustomUser class, this class will
+        store all the user's app settings . We created the class Class Meta to provide extra functionality
+        and finally we created the class's own __str__ dunder method.
+    """
 
     wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper')
     user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='settings')

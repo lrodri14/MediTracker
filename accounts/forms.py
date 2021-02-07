@@ -97,6 +97,25 @@ class ProfileForm(forms.ModelForm):
             'birth_date': forms.widgets.SelectDateWidget(years=[x for x in range(1920, 2101)]),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['availability'].required = False
+
+
+class ChangeAvailabilityForm(forms.ModelForm):
+    """
+        This ChangeAvailabilityForm inherits from the ModelForm class, and it's used to change the user's status, we linked
+        the model in the Meta Class through the model attribute, we also wrote our own __init__ method to set the availability
+        field to required.
+    """
+    class Meta:
+        model = UsersProfile
+        fields = ('availability', )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['availability'].required = True
+
 
 class ProfilePictureForm(forms.ModelForm):
 

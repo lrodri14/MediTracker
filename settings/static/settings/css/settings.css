@@ -128,7 +128,39 @@ button{
     top: 40%;
 }
 
+/*####################################################### Profile Settings ###########################################*/
 
+#profile-options{
+    list-style: none;
+    display: inline-block;
+    width: 10%;
+    margin-left: 2%;
+    text-align: center;
+    padding-left: 0%;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
+}
+
+.profile-option-tab{
+    cursor: pointer;
+    height: 25px;
+    padding: 10px;
+    transition: background-color 0.5s;
+}
+
+#profile-settings-content{
+    width: 85%;
+    height: 73%;
+    position: absolute;
+    top: 21%;
+    left: 13%;
+}
+
+#id_availability{
+    width: 15%;
+}
 
 /*####################################################### Account Settings ###########################################*/
 

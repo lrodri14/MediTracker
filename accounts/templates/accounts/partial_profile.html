@@ -1,18 +1,27 @@
+<!-- Profile Partial Template -->
 {% load static %}
 
-<!--{% if profile.profile_pic %}-->
-<!--    <img id=background src="{{ MEDIA_URL }}{{ profile.profile_pic }}" alt="">-->
-<!--{% endif %}-->
-
+<!-- Profile Card -->
 <div id="profile-card">
 
-    <div id="status"><span><i class="fas fa-circle"></i>Available</span></div>
+    <!-- User's Status -->
+    <div id="status">
+        <span>
+            {% if profile.availability == 'A' %}
+                <i id="available" class="fas fa-circle"></i>
+            {% else %}
+                <i id="busy" class="fas fa-circle"></i>
+            {% endif %}
+            {{ profile.get_availability_display }}
+        </span>
+    </div>
 
+    <!-- User's Last Active -->
     {% if profile.user != user %}
         <small id="activity">Last Active: {{ profile.user.last_login }}</small>
     {% endif %}
 
-
+    <!-- Profile Picture -->
     <div id="profile-picture-container">
         {% if profile.user == user %}
             <i class="fas fa-camera profile-picture-edit-button" data-url="{% url 'accounts:profile_picture_change' %}"></i>
@@ -26,6 +35,7 @@
     </div>
 
 
+    <!-- Add Contant or Edit Profile Button -->
     {% if user.profile == profile %}
         <i class="fas fa-edit" data-url="{% url 'accounts:profile_change' %}" data-type="profile"></i>
     {% else %}
@@ -40,6 +50,7 @@
         {% endif %}
     {% endif %}
 
+    <!-- User's Information -->
     <div id="user-information">
         <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
         <p><i class="fas fa-user-tie"></i> @{{ profile.user }}</p>
@@ -50,13 +61,14 @@
     </div>
 
     <h3>About</h3>
-
+    <!-- User's Bio -->
     <div id="about-user">
         <p>{{ profile.bio }}</p>
     </div>
 
 </div>
 
+<!-- User's Personal Information -->
 <i class="far fa-arrow-alt-circle-down" ></i>
 
 <div id="user-details">
@@ -105,6 +117,7 @@
     </div>
 </div>
 
+<!-- User's Edit Profile Form -->
 <div id="profile-edit-form">
     <form action="{% url 'accounts:profile_change' %}" method="POST" class="edit-profile" autocomplete="off">
         {% csrf_token %}

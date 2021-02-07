@@ -75,7 +75,7 @@ function setupChannel(name){
        when we either retrieved from the subscribed channels or we created, we will check if the channel.status attribute
        is 'joined'... if this condition is fulfilled then we will directly retrieve all the messages from the channel, we
        will receive a promise object we will consume, we call the processPage function to display the messages we collected
-       from the server. If the condiiton is not fulfilled then we will call the .join() method to join the channel and
+       from the server. If the condition is not fulfilled then we will call the .join() method to join the channel and
        follow the same procedure, retrieve the messages and process them.*/
     if (chatChannel.status === 'joined'){
         chatChannel.getMessages(pageSize=30, anchor=0, direction='forward')
@@ -144,6 +144,9 @@ function createOrJoinChannel(){
 
 window.addEventListener('mousemove', (e) => {
 
+    /* This event will be fired every time the cursor is 50px or more in the Y Axis and 5px or less in the X Axis, this event
+       will display the globalNavigator, if the it does not fulfills these conditions, the navigator will not be shown or it
+       will be hidden.*/
     if (globalNavigator){
         if ((e.clientY >= 50) && (e.clientX <= 5)){
         globalNavigator.classList.add('global-navigator-show')
@@ -152,6 +155,8 @@ window.addEventListener('mousemove', (e) => {
         }
     }
 
+    /* This event will be fired every time the cursor is 10px less than the screen width this event will display the socialSection,
+       if the it does not fulfills these conditions, the socialSection will not be shown or it will be hidden.*/
     if (socialSection){
         if (e.clientX >= (window.screen.width - 10) && !socialSection.classList.contains('social-section-show')){
             socialSection.classList.add('social-section-show')
@@ -366,7 +371,8 @@ if (socialSection){
         }
     })
 
-    /*  */
+    /* This event will be fired whenever the enter key is pressed, it will collect the value inside the #id_message element
+       and pass it to the sendMessage Twilio Channel instance method for further processing.*/
     socialSection.addEventListener('keypress', (e) => {
         if (e.which === 13){
             let message = document.querySelector('#id_message').value
@@ -380,12 +386,14 @@ if (socialSection){
 }
 
 //// Window Event Listeners
-//// This event will be fired every time the DOM content has been fully loaded, the loaderModal will be hidden.
+//// This event will be fired every time the browser changes it's readyState attribute status
 
+// This event will be fired when the browser readyState attribute changes to online, the global loader will be hidden.
 window.addEventListener('online', () => {
   loaderModal.classList.remove('loader-modal-show')
 })
 
+// This event will be fired when the browser readyState attribute changes to offline, the global loader will be displayed.
 window.addEventListener('offline', () => {
   loaderModal.classList.add('loader-modal-show')
 })

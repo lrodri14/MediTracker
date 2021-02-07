@@ -76,11 +76,17 @@ body{
 }
 
 .fa-circle{
-    /* Available = #359e23 - Busy = #9e2323 */
     font-size: 12px;
-    color: #359e23;
     padding-right: 10px;
     animation: glow 1.5s linear infinite;
+}
+
+#available{
+    color: #359e23;
+}
+
+#busy{
+    color: #9e2323;
 }
 
 #status{

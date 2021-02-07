@@ -1,0 +1,7 @@
+{% load static %}
+<!-- Change Availability Form -->
+<form action="{% url 'settings:change_availability' %}" method="POST">
+    <!-- CSRF Token -->
+    {% csrf_token %}
+    <p>{{ form.availability.label }}: {{ form.availability }}</p>
+</form>

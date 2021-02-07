@@ -35,6 +35,11 @@ async function changeWallpaperAW(url, method, csrfmiddlewaretoken, formData){
     return data
 }
 
+async function changeAvailability(url, method, csrfmiddlewaretoken, formData){
+    let result = await fetch(url, {method: method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    let data = result.json()
+    return data
+}
 
 async function requestPageAW(url){
     /* This async function will be used to collect the data from the previous or next page, this content will be
@@ -165,7 +170,7 @@ body.addEventListener('click', (e) => {
 
 body.addEventListener('mouseover', (e) => {
     /* This event will be fired every time the target contains the 'tab' class in its classlist, it will add the tab-hover class*/
-    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab')){
+    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab') || e.target.classList.contains('profile-option-tab')){
         e.target.classList.add('tab-hover')
     }
 
@@ -173,7 +178,7 @@ body.addEventListener('mouseover', (e) => {
 
 body.addEventListener('mouseout', (e) => {
     /* This event will be fired every time the target contains the 'tab' class in its classlist, it will remove the tab-hover class*/
-    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab')){
+    if (e.target.classList.contains('tab') || e.target.classList.contains('general-option-tab') || e.target.classList.contains('profile-option-tab')){
         e.target.classList.remove('tab-hover')
     }
 
@@ -315,6 +320,20 @@ if (wrapper){
             })
         }
 
+        if (e.target.classList.contains('profile-option-tab')){
+            let tab = e.target
+            let tabs = document.querySelectorAll('profile-option-tab')
+            let url = tab.getAttribute('data-url')
+            for (let i = 0; i<tabs.length; i++){
+                tabs[i].classList.remove('tab-active')
+            }
+            tab.classList.add('tab-active')
+            requestGeneralSettingsAW(url)
+            .then(data => {
+                document.querySelector('#profile-settings-content').innerHTML = data['html']
+            })
+        }
+
         if (e.target.nodeName === 'TD'){
         /* This event will be fired every time the target it's a table data cell, this event will open the modal and
            display the details of the clicked object. For this we need to make a 'GET' request to the server to retrieve
@@ -422,6 +441,18 @@ if (wrapper){
                 document.querySelector('tbody').innerHTML = data['html']
             })
         }})
+
+
+    wrapper.addEventListener('change', (e) => {
+        if (e.target.id === 'id_availability'){
+            let form = document.querySelector('form')
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            changeAvailability(url, method, csrfmiddlewaretoken, formData)
+        }
+    })
 
 
     wrapper.addEventListener('submit', (e) => {

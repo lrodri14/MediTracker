@@ -11,7 +11,7 @@ from django.apps import apps
 from django.template.loader import render_to_string
 from patients.forms import AllergyFilterForm, AllergyForm, InsuranceCarrierFilterForm, InsuranceCarrierForm
 from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm
-from accounts.forms import UserSettingsForm, MailingCredentialForm
+from accounts.forms import UserSettingsForm, MailingCredentialForm, ChangeAvailabilityForm
 MailingCredential = apps.get_model('accounts', 'MailingCredential')
 InsuranceCarrier = apps.get_model('patients', 'InsuranceCarrier')
 Drugs = apps.get_model('appointments', 'Drug')
@@ -70,6 +70,39 @@ def change_wallpaper(request):
     return JsonResponse(data)
 
 
+# Profile
+#############################
+
+def profile(request):
+    """
+        DOCSTRING:
+        This profile view is used to present the profile settings, this content will be displayed in the settings dynamically,
+        so the content will sent to the front-end in JSON format, we will use the render_to_string function to convert a content
+        into a string and send it using the JsonResponse class. It expects one single argument: 'request', it expects a
+        request object.
+    """
+    template = 'settings/profile.html'
+    data = {'html': render_to_string(template, {}, request)}
+    return JsonResponse(data)
+
+
+def change_availability(request):
+    """
+        DOCSTRING:
+        This change_availability view is used to display the user status, this view will send the ChangeAvailabilityForm
+        with the UserProfile model belonging to the user as an instance if the request's method is a GET, if the method
+        is a POST, then the form will be filled with the request data and check if it's valid and updated.
+    """
+    if request.method == 'POST':
+        form = ChangeAvailabilityForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+    template = 'settings/change_availability.html'
+    form = ChangeAvailabilityForm(instance=request.user.profile)
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
 # Accounts
 ##############################
 
@@ -91,6 +124,13 @@ def account(request):
 
 
 def mailing(request):
+    """
+        DOCSTRING:
+        This mailing view is used to present the mailing settings, this content will be displayed in the settings dynamically,
+        so the content will sent to the front-end in JSON format, we will use the render_to_string function to convert a content
+        into a string and send it using the JsonResponse class. It expects one single argument: 'request', it expects a
+        request object.
+    """
     mailing_form = MailingCredentialForm(instance=MailingCredential.objects.get(user=request.user))
     template = 'settings/mailing.html'
     context = {'mailing_form': mailing_form}
@@ -99,6 +139,12 @@ def mailing(request):
 
 
 def update_mailing_information(request):
+    """
+        DOCSTRING:
+        This update_mailing_information view is used to update the mailing information of the current user, once this
+        view receives a request with a POST content, the information will be updated and sent to the client side in a
+        JSON Format.
+    """
     template = 'settings/mailing.html'
     if request.method == "POST":
         mailing_info = MailingCredentialForm(request.POST, instance=MailingCredential.objects.get(user=request.user))

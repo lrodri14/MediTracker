@@ -77,6 +77,17 @@ class Drug(models.Model):
 
 
 class MedicalTest(models.Model):
+    """
+        DOCSTRING:
+        The MedicalTest model inherits from the models.Model class, it is used to create MedicalTests instances as needed, this model
+        defines a tuple under the variable MEDICAL_TEST_CHOICES, this choices are used to specify to what branch does this
+        test belongs, we added some functionality through the META CLASS indicating that the 'test_type', 'name' and 'created_by'
+        are unique inside our instances, we also set our own __str__ dunder method and we overwrote the save method to
+        capitalize the name of the drug every time it reaches the database.
+
+        The operative method in the MedicalTest model is used in the delete_test view to check that this instance is used in
+        any registers, if it is, then the delete operation will not be performed.
+    """
     test_type = models.CharField('Test Type', max_length=100, blank=False, null=True, help_text='Medical Test Type', choices=MEDICAL_TEST_CHOICES)
     name = models.CharField('Test Name', max_length=150, blank=False, null=True, help_text='Medical Test Name')
     created_by = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, help_text='Created By', related_name='medical_test')
@@ -85,6 +96,7 @@ class MedicalTest(models.Model):
         ordering = ('name',)
         verbose_name = 'Medical Test'
         verbose_name_plural = 'Medical Tests'
+        unique_together = ['test_type', 'name', 'created_by']
 
     def __str__(self):
         return self.name
