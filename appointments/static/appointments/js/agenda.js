@@ -291,12 +291,14 @@ if (wrapper){
             const url = form.action
             const data = new FormData(form)
             const csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            document.querySelector('.create-update-appointment-loader').classList.add('create-update-appointment-loader-show')
             submitUpdateAW(url, method, csrfmiddlewaretoken, data)
             .then(data => {
                 if (data['updated_html']){
                     dataTable.innerHTML = data['updated_html']
                     modal.classList.remove('modal-show')
                 }else{
+                    document.querySelector('.create-update-appointment-loader').classList.remove('create-update-appointment-loader-show')
                     modalContent.innerHTML = data['html']
                 }
             })

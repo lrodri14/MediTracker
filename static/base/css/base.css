@@ -661,6 +661,29 @@ a {
 
 /*//////////////////////////////////////////////////////// Chat //////////////////////////////////////////////////////*/
 
+.messages-loader:first-child{
+    border: 2px solid rgba(0,0,0,0);
+    border-top: 2px solid #FFFFFF;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    top: 42%;
+    left: 45%;
+    animation: spin 1s linear infinite;
+}
+
+.messages-loader{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.messages-loader-hide{
+    display: none;
+}
+
 #destination-profile-picture{
     width: 40px;
     height: 40px;
@@ -776,39 +799,52 @@ a {
 
 .loader-modal{
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0%;
+    left: 0%;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.3);
+    display: none;
+    background-color: rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
 }
 
-.loader-modal-hide{
-    display: none;
+.loader-modal-show{
+    display: block;
 }
 
 .global-loader{
-    position: absolute;
-    top: 41%;
-    left: 44.5%;
+    position: relative;
+    top: 40%;
+    left: 45%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     height: 150px;
     width: 150px;
     border-radius: 50%;
-    border: 5px solid rgba(0,0,0,0);
-    border-top: 5px solid #FFFFFF;
-    animation: spin 2s linear infinite;
+    border: 2px solid rgba(0,0,0,0);
+    border-top: 2px solid #FFFFFF;
+    animation: spin 1s linear infinite;
 }
 
 .fa-heart{
     font-size: 32px;
     position: absolute;
-    top: 48%;
+    top: 47%;
     left: 49%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     animation: beat 1s infinite alternate;
+}
+
+#global-loader-message{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    animation: glow 1s linear infinite;
 }
 
 /*//////////////////////////////////////////////////// Animations ////////////////////////////////////////////////////*/
@@ -816,6 +852,20 @@ a {
 @keyframes show-up{
     from {opacity: 0;}
     to {opacity: 1;}
+}
+
+@keyframes glow{
+    0% {opacity: 0;}
+    10% {opacity: 0.20;}
+    20% {opacity: 0.40;}
+    30% {opacity: 0.60;}
+    40% {opacity: 0.80;}
+    50% {opacity: 1;}
+    60% {opacity: 0.80;}
+    70% {opacity: 0.60;}
+    80% {opacity: 0.40;}
+    90% {opacity: 0.20;}
+    100% {opacity: 0;}
 }
 
 @keyframes spin{

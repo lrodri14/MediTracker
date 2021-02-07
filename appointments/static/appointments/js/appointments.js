@@ -269,6 +269,7 @@ if (modal){
             const method = e.target.method
             const action = e.target.action
             const csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            document.querySelector('.create-update-appointment-loader').classList.add('create-update-appointment-loader-show')
             submitConsultAW(action, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 if (data['success']){

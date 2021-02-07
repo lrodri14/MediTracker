@@ -361,19 +361,3 @@ label[for=id_profile_pic]{
 .edit-profile-picture button{
     width: 20%;
 }
-
-/*//////////////////////////////////////////////////// Animations ////////////////////////////////////////////////////*/
-
-@keyframes glow{
-    0% {opacity: 0;}
-    10% {opacity: 0.20;}
-    20% {opacity: 0.40;}
-    30% {opacity: 0.60;}
-    40% {opacity: 0.80;}
-    50% {opacity: 1;}
-    60% {opacity: 0.80;}
-    70% {opacity: 0.60;}
-    80% {opacity: 0.40;}
-    90% {opacity: 0.20;}
-    100% {opacity: 0;}
-}

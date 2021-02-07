@@ -246,6 +246,7 @@ def appointment_date_update(request, pk):
         if consult_form.is_valid():
             try:
                 consult_form.save()
+                loop.run_until_complete(send_sms(consult))
                 consults_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
                 months_names = collect_months_names(consults_list, tzone)
                 data = {'updated_html': render_to_string('appointments/partial_agenda_list.html', {'appointments': consults_list, 'months': months_names, 'form': form}, request=request)}

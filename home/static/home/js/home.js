@@ -125,6 +125,13 @@ if (modal){
             modal.classList.remove('modal-show')
         }
 
+    // This event will be fired every time the target is a button and its textContent is 'Yes', this event will show the loader.
+        if (e.target.nodeName === 'BUTTON'){
+            if (e.target.textContent === 'Yes'){
+                document.querySelector('.logout-loader').classList.add('logout-loader-show')
+            }
+        }
+
         // This event will be fired every time the target is a button and its textContent is 'No', this event will close the modal.
         if (e.target.nodeName === 'BUTTON'){
             if (e.target.textContent === 'No'){

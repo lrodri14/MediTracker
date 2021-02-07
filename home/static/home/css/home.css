@@ -167,6 +167,23 @@ h3{
 
 /*//////////////////////////////////////////////////// Modal Content /////////////////////////////////////////////////*/
 
+.logout-loader{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0);
+    border-top: 2px solid #FFFFFF;
+    position: absolute;
+    top: 42%;
+    left: 69%;
+    visibility: hidden;
+    animation: spin 1s linear infinite;
+}
+
+.logout-loader-show{
+    visibility: visible;
+}
+
 .modal-content{
     text-align: center;
     width: 40%;
@@ -174,10 +191,7 @@ h3{
     margin-left: 28%;
     margin-top: 25%;
     border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
+    background-color: rgba(255,255,255,0.3);
 }
 
 button{

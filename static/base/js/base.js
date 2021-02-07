@@ -105,6 +105,7 @@ function processPage(page){
     /* The processPage function is used to display all the messages that have been sent previously in the channel, it
        takes one single argument: page, which expects a Paginator Object, this will print each and every single message
        sent, it will check if the Paginator contains any other pages to render them too.*/
+    document.querySelectorAll('.messages-loader').forEach(loader => loader.classList.add('messages-loader-hide'))
     page.items.forEach(message => {
         displayMessage(message.author, message.body)
     })
@@ -154,17 +155,16 @@ window.addEventListener('mousemove', (e) => {
     if (socialSection){
         if (e.clientX >= (window.screen.width - 10) && !socialSection.classList.contains('social-section-show')){
             socialSection.classList.add('social-section-show')
-            let url = socialSectionTabs[0].getAttribute('data-url')
-            displayContactsAW(url)
-            .then(data => {
-                socialSectionData.innerHTML = data['html']
-            })
+            if (socialSectionData.innerHTML == ""){
+                let url = socialSectionTabs[0].getAttribute('data-url')
+                socialSectionTabs[0].classList.add('social-section-tab-active')
+                displayContactsAW(url)
+                .then(data => {
+                    socialSectionData.innerHTML = data['html']
+                })
+            }
         }else if (e.clientX <= (window.screen.width - socialSection.offsetWidth)){
             socialSection.classList.remove('social-section-show')
-            for (let i = 0; i<socialSectionTabs.length; i++){
-                socialSectionTabs[i].classList.remove('social-section-tab-active')
-            }
-            socialSectionTabs[0].classList.add('social-section-tab-active')
         }
     }
 
@@ -364,12 +364,28 @@ if (socialSection){
                 document.querySelector('#id_message').value = ''
             }
         }
-
     })
+
+    /*  */
+    socialSection.addEventListener('keypress', (e) => {
+        if (e.which === 13){
+            let message = document.querySelector('#id_message').value
+            if (chatChannel && message.length > 0){
+                chatChannel.sendMessage(message)
+                document.querySelector('#id_message').value = ''
+            }
+        }
+    })
+
 }
 
 //// Window Event Listeners
 //// This event will be fired every time the DOM content has been fully loaded, the loaderModal will be hidden.
-window.addEventListener('DOMContentLoaded', () => {
-    loaderModal.classList.add('loader-modal-hide')
+
+window.addEventListener('online', () => {
+  loaderModal.classList.remove('loader-modal-show')
+})
+
+window.addEventListener('offline', () => {
+  loaderModal.classList.add('loader-modal-show')
 })

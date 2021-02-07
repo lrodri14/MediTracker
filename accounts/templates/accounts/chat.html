@@ -12,7 +12,8 @@
 <h4 id="destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
 <!-- Chat content area -->
 <div id="chat-content">
-
+    <div class="messages-loader"></div>
+    <p class="messages-loader">Loading messages...</p>
 </div>
 <!-- Chat message input field and send button -->
 <p>{{ chat_form.message }}</p><i id="send-message-btn" class="fas fa-paper-plane"></i>
