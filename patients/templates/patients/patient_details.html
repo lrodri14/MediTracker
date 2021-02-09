@@ -8,7 +8,6 @@
 
 <h2 id="patient-name">{{ patient.first_names }} {{ patient.last_names }}</h2>
 {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
-
 <!--Info Navigation, this is used to select what information the user wants to see.-->
 <div class="info">
     <div class="info-tab tab-active"><p>General</p></div><div class="info-tab"><p>Appointments</p></div><div class="info-tab"><p>Exams</p></div><div class="info-tab"><p>Charges</p></div>

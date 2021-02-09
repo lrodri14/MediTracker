@@ -1,6 +1,10 @@
 /*This consults_details.css stylesheet contains all the styles needed to display the consult details view, it is divided
  into   sections:*/
 
+body{
+    overflow-y: visible;
+}
+
 /*Update*/
 
 #heading{

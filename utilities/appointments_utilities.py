@@ -4,12 +4,14 @@
 """
 import calendar
 import requests
+from xhtml2pdf import pisa
 from django.db.models import Q
 from twilio.rest import Client
 from django.utils import timezone
+from django.core.files import File
+from django.template.loader import render_to_string
 from twilio.base.exceptions import TwilioRestException
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, NUMVERIFY_API_KEY
-
 
 # Twilio Client instance
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -52,6 +54,7 @@ MEDICAL_TEST_CHOICES = (
     ('M', 'Measurement'),
     ('PAVE', 'Physical and Visual Examination')
 )
+
 
 # Async Functions
 
@@ -120,7 +123,38 @@ async def send_sms(consult):
             except TwilioRestException:
                 pass
 
+
 # Sync Functions
+
+
+def generate_pdf(template, consult, user):
+    """
+        DOCSTRING:
+        This create_pdf function is used to generate pdf's based on a rendered template, a consult and a user instance,
+        after this pdf is created it will be saved to the consult.prescription file field.
+    """
+    result = open('results.pdf', "w+b")
+    context = {'consult': consult, 'user': user}
+    source_html = render_to_string(template, context)
+    pisa.CreatePDF(source_html, dest=result)
+    consult.prescription.save(str(consult.patient) + " - " + str(consult.datetime), File(result))
+
+
+def evaluate_consult(consult):
+    """
+        DOCSTRING:
+        This evaluate_consult function is used to evaluate if the consult contains any important information that must
+        be handled to the patient as a prescription, if any of these conditions is fulfilled, then we return True, else
+        False.
+    """
+    if (consult.drugs.all() or
+            consult.indications != "" or
+            consult.actions != "" or
+            consult.testing.all() or
+            consult.instructions != "" or
+            consult.lock is True):
+        return True
+    return False
 
 
 def collect_months_names(consults_list, tz):
@@ -151,20 +185,26 @@ def filter_conditional_results(user, **kwargs):
     month = int(cleaned_data.get('month'))
     year = int(cleaned_data.get('year'))
     if patient == '' and month == 0 and year == 1920:
-        return Consult.objects.filter(Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient), datetime__date__month=month, datetime__date__year=year, created_by=user)
+        return Consult.objects.filter(
+            Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
+            datetime__date__month=month, datetime__date__year=year, created_by=user)
     elif patient != '' and month == 0 and year == 1920:
-        return Consult.objects.filter(Q(patient__first_names__icontains=patient)|Q(patient__last_names__icontains=patient), created_by=user)
+        return Consult.objects.filter(
+            Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient), created_by=user)
     elif patient == '' and month != 0 and year == 1920:
         return Consult.objects.filter(datetime__date__month=month, created_by=user)
     elif patient == '' and month == 0 and year != 1920:
         return Consult.objects.filter(datetime__date__year=year, created_by=user)
     elif patient != '' and month != 0 and year == 1920:
-        return Consult.objects.filter(Q(patient__first_names__icontains=patient)|Q(patient__last_names__icontains=patient),datetime__date__month=month, created_by=user)
+        return Consult.objects.filter(
+            Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
+            datetime__date__month=month, created_by=user)
     elif patient != '' and month == 0 and year != 1920:
-        return Consult.objects.filter(Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient), datetime__date__year=year, created_by=user)
+        return Consult.objects.filter(
+            Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
+            datetime__date__year=year, created_by=user)
     else:
         return Consult.objects.filter(datetime__date__month=month, datetime__date__year=year, created_by=user)
-
 
 # def generate_pdf(user, consult):
 #     """

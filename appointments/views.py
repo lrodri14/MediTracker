@@ -9,7 +9,7 @@ import asyncio
 from datetime import datetime
 from django.db import IntegrityError
 from django.shortcuts import render
-from django.shortcuts import redirect
+
 from .models import Consult, MedicalTestResult
 from .forms import ConsultForm, DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, UpdateConsultForm, MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
 from django.utils import timezone
@@ -23,9 +23,10 @@ from django.http import HttpResponse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-from django.conf import settings
+from meditracker import settings
+from django.shortcuts import redirect
 
-from utilities.appointments_utilities import send_sms,check_delayed_consults, collect_months_names, filter_conditional_results
+from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, collect_months_names, filter_conditional_results
 
 # New Event Loop
 loop = asyncio.new_event_loop()
@@ -142,7 +143,10 @@ def update_consult(request, pk):
         the rest will be commited, for the consult we will set it's medical_status attribute to True, when this is done
         we will save the many to many relationship with the drugs if needed. If there was an error with the medical exams,
         then a custom error will be added to the context and the template will be rendered again. It takes two arguments,
-        'request' which expects a request object and 'pk' which expects a consult's pk.
+        'request' which expects a request object and 'pk' which expects a consult's pk Finally, the evaluate_consult function
+        will be called to inspect if any important indications or prescriptions for the patient where made in order to
+        handle the user a receipt for the patient, if this function returns True, then the create_pdf function will be called
+        and the prescription will be created, afterwards the prescription's path will be sent to the user in JsonFormat.
     """
     consult = Consult.objects.get(pk=pk)
     consult_form = UpdateConsultForm(request.POST or None, user=request.user, instance=consult)
@@ -169,11 +173,14 @@ def update_consult(request, pk):
                     exam.date = timezone.localtime()
                     exam.save()
             consult.medical_status = True
-            # consult.prescription = generate_pdf(request.user, consult)
             consult.save()
             consult_form.save_m2m()
-            if consult.prescription:
-                return JsonResponse({'prescription_path': settings.MEDIA_URL + consult.prescription.name})
+
+            # Consult Evaluation
+            if evaluate_consult(consult):
+                generate_pdf('appointments/consult_pdf.html', consult, request.user)
+                return JsonResponse({'prescription_path': settings.MEDIA_URL + consult.prescription})
+
             return redirect('appointments:appointments')
         elif not medical_exams_form.is_valid():
             context['error'] = '* Exams not filled correctly. "Type" & "Image" fields must be provided.'

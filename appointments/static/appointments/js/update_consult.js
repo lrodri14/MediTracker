@@ -977,30 +977,26 @@ if (modal){
            in the actions input, we will call the submitConsultAW to add the consult async to the server, this will return
            a response, it contains the prescription in PDF format, this will be displayed in the prescriptionModal, if there
            is no values in these inputs, then the form will be submitted automatically.*/
-//        if (e.target.nodeName === 'BUTTON' && e.target.textContent === 'Yes'){
-//            let url = form.action
-//            let method = form.method
-//            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
-//            let formData = new FormData(form)
-//            if (indications.value || actions.value){
-//                submitConsultAW(url, method, csrfmiddlewaretoken, formData)
-//                .then(data => {
-//                    if (data['prescription_path']){
-//                        prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
-//                        pdfPath = prescriptionModalContent.getAttribute('data-pdf')
-//                        PDFObject.embed(pdfPath, prescriptionModalContent)
-//                        prescriptionModal.classList.add('prescription-modal-show')
-//                        modal.classList.remove('modal-show')
-//                    }
-//                })
-//            }else{
-//                form.submit()
-//            }
-//        }
-
-//        form.submit()
-
-
+        if (e.target.nodeName === 'BUTTON' && e.target.textContent === 'Yes'){
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            if (indications.value || actions.value){
+                submitConsultAW(url, method, csrfmiddlewaretoken, formData)
+                .then(data => {
+                    if (data['prescription_path']){
+                        prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
+                        pdfPath = prescriptionModalContent.getAttribute('data-pdf')
+                        PDFObject.embed(pdfPath, prescriptionModalContent)
+                        prescriptionModal.classList.add('prescription-modal-show')
+                        modal.classList.remove('modal-show')
+                    }
+                })
+            }else{
+                form.submit()
+            }
+        }
    })
 }
 
