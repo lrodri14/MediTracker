@@ -137,7 +137,7 @@ def generate_pdf(template, consult, user):
     context = {'consult': consult, 'user': user}
     source_html = render_to_string(template, context)
     pisa.CreatePDF(source_html, dest=result)
-    consult.prescription.save(str(consult.patient) + " - " + str(consult.datetime), File(result))
+    consult.prescription.save(str(consult.patient) + " - " + str(consult.datetime) + ".pdf", File(result))
 
 
 def evaluate_consult(consult):
@@ -151,11 +151,13 @@ def evaluate_consult(consult):
             consult.indications != "" or
             consult.actions != "" or
             consult.testing.all() or
-            consult.instructions != "" or
-            consult.lock is True):
+            consult.instructions is not None)\
+            and consult.lock is True:
         return True
     return False
 
+
+# consult.lock is True
 
 def collect_months_names(consults_list, tz):
     """

@@ -11,6 +11,7 @@
         <div class="general-info">
             <a href="{% url 'appointments:appointments' %}"><i class="fas fa-long-arrow-alt-left"></i></a><i class="fas fa-book-medical" data-url="{% url 'records:personal_records' consult.patient.pk %}"></i>
             <h2>Consult <i class="fas fa-file-medical-alt"></i></h2>
+            {{ consult_form.lock }}
             <h4 id="patient-info">Patient</h4>
             <p>{{ consult.patient.first_names }} {{ consult.patient.last_names }}</p>
             <h4>Identification</h4>
@@ -24,7 +25,6 @@
             {% if consult_form.errors %}
                 <p class="error"><small>{{ consult_form.non_field_errors.as_text }}</small></p>
             {% endif %}
-            {{ consult_form.lock }}
             <p class="error"><small>{{ error }}</small></p>
             <h4 id="charge-label">{{ consult_form.charge.label }}</h4>
             <p>{{ consult_form.charge }}</p>

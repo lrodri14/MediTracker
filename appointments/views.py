@@ -7,26 +7,23 @@
 # Imports
 import asyncio
 from datetime import datetime
-from django.db import IntegrityError
-from django.shortcuts import render
-
-from .models import Consult, MedicalTestResult
-from .forms import ConsultForm, DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, UpdateConsultForm, MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
-from django.utils import timezone
-from django.contrib.auth.models import Group
 from django.db.models import Q
+from meditracker import settings
+from django.utils import timezone
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.db import IntegrityError
+from django.shortcuts import redirect
+from django.contrib.auth.models import Group
+from .models import Consult, MedicalTestResult
+from django.template.loader import render_to_string
+from .forms import ConsultForm, DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, \
+    UpdateConsultForm, MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
+from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, \
+    collect_months_names, filter_conditional_results
+
 # Import is unused because we will use it in a future update.
 from .tasks import save_new_drug
-# Implementing PDF Creation Functionality
-# from weasyprint import HTML
-from django.http import HttpResponse
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.template.loader import render_to_string
-from django.http import JsonResponse
-from meditracker import settings
-from django.shortcuts import redirect
-
-from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, collect_months_names, filter_conditional_results
 
 # New Event Loop
 loop = asyncio.new_event_loop()
@@ -165,6 +162,8 @@ def update_consult(request, pk):
         if consult_form.is_valid() and medical_exams_form.is_valid():
             consult = consult_form.save(commit=False)
             exam_instances = medical_exams_form.save(commit=False)
+
+            # Deleting exams instances not needed
             for exam in exam_instances:
                 if exam in medical_exams_form.deleted_objects:
                     exam.delete()
@@ -172,6 +171,8 @@ def update_consult(request, pk):
                     exam.consult = consult
                     exam.date = timezone.localtime()
                     exam.save()
+
+            # Saving Consult
             consult.medical_status = True
             consult.save()
             consult_form.save_m2m()
@@ -179,11 +180,13 @@ def update_consult(request, pk):
             # Consult Evaluation
             if evaluate_consult(consult):
                 generate_pdf('appointments/consult_pdf.html', consult, request.user)
-                return JsonResponse({'prescription_path': settings.MEDIA_URL + consult.prescription})
+                return JsonResponse({'prescription_path': settings.MEDIA_URL + consult.prescription.name})
 
             return redirect('appointments:appointments')
+
         elif not medical_exams_form.is_valid():
             context['error'] = '* Exams not filled correctly. "Type" & "Image" fields must be provided.'
+
     return render(request, template, context)
 
 

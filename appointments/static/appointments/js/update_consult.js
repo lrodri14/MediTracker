@@ -13,7 +13,6 @@ var navigation = document.querySelector('.navigation')
 var prevSlide = document.querySelector('.fa-angle-left')
 var nextSlide = document.querySelector('.fa-angle-right')
 var controllers = [prevSlide, nextSlide]
-
 // Consult Information
 
 var generalInfo = document.querySelector('.general-info')
@@ -934,19 +933,24 @@ if (form){
 
         if (unfilledInputs === 0){
         /* If there are no inputs empty, the form will be submitted and the prescription modal will be displayed with
-        the prescription in PDF Format, ready for printing.*/
+        the prescription in PDF Format, ready for printing, if the server returns errors, the pdf will be not displayed and
+        the errors will be shown.*/
             let url = e.target.action
             let method = e.target.method
             let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
             let formData = new FormData(e.target)
             submitConsultAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
+                console.log(data)
                 if (data['prescription_path']){
                     prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
                     pdfPath = prescriptionModalContent.getAttribute('data-pdf')
                     PDFObject.embed(pdfPath, prescriptionModalContent)
                     prescriptionModal.classList.add('prescription-modal-show')
                 }
+            })
+            .catch(error => {
+                form.submit()
             })
         } else{
             /*If there are, the confirmation modal will be displayed.*/
@@ -976,26 +980,26 @@ if (modal){
            afterwards, our inputs will be evalutated, if there are any indications in indications input or any indications
            in the actions input, we will call the submitConsultAW to add the consult async to the server, this will return
            a response, it contains the prescription in PDF format, this will be displayed in the prescriptionModal, if there
-           is no values in these inputs, then the form will be submitted automatically.*/
+           is no values in these inputs, then the form will be submitted automatically. if the server returns errors, the pdf
+           will be not displayed and the errors will be shown.*/
         if (e.target.nodeName === 'BUTTON' && e.target.textContent === 'Yes'){
             let url = form.action
             let method = form.method
             let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
             let formData = new FormData(form)
-            if (indications.value || actions.value){
-                submitConsultAW(url, method, csrfmiddlewaretoken, formData)
-                .then(data => {
-                    if (data['prescription_path']){
-                        prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
-                        pdfPath = prescriptionModalContent.getAttribute('data-pdf')
-                        PDFObject.embed(pdfPath, prescriptionModalContent)
-                        prescriptionModal.classList.add('prescription-modal-show')
-                        modal.classList.remove('modal-show')
-                    }
-                })
-            }else{
+            submitConsultAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                if (data['prescription_path']){
+                    prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
+                    pdfPath = prescriptionModalContent.getAttribute('data-pdf')
+                    PDFObject.embed(pdfPath, prescriptionModalContent)
+                    prescriptionModal.classList.add('prescription-modal-show')
+                    modal.classList.remove('modal-show')
+                }
+            })
+            .catch(error => {
                 form.submit()
-            }
+            })
         }
    })
 }

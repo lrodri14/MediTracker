@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='usersetting',
             name='wallpaper',
-            field=models.CharField(blank=True, default='web-backgrounds/bg-4.jpg', help_text='Choose Wallpaper', max_length=2, null=True, verbose_name='Wallpaper'),
+            field=models.CharField(blank=True, default='web-backgrounds/bg-7.jpg', help_text='Choose Wallpaper', max_length=2, null=True, verbose_name='Wallpaper'),
         ),
     ]
