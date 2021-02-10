@@ -9,11 +9,11 @@ from datetime import timedelta
 from django.core.exceptions import ValidationError
 from .models import Consult, MedicalTest, MedicalTestResult, Drug
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, inlineformset_factory
 from django.utils import timezone
 from dateutil import relativedelta
 from patients.models import Patient
-from utilities.appointments_utilities import CATEGORY_CHOICES, MEDICAL_TEST_CHOICES
+from utilities.appointments_utilities import MEDICAL_TEST_CHOICES
 
 
 class ConsultForm(forms.ModelForm):
@@ -122,7 +122,7 @@ class MedicalTestResultForm(forms.ModelForm):
         return cleaned_data
 
 
-MedicalTestResultFormset = modelformset_factory(model=MedicalTestResult, form=MedicalTestResultForm, can_delete=True)
+MedicalTestResultFormset = inlineformset_factory(parent_model=Consult, model=MedicalTestResult, form=MedicalTestResultForm, can_delete=True, extra=1)
 
 # Range of years displayed in the filter forms.
 

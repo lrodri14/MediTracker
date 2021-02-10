@@ -77,8 +77,8 @@ def add_patient(request):
         main page, it accepts one parameters, 'request'.
     """
     patient_form = PatientForm(initial={'phone_number': country_number_codes[request.user.profile.location]})
-    allergies_form = AllergyInformationFormset(queryset=AllergyInformation.objects.none())
-    antecedents_form = AntecedentFormset(queryset=Antecedent.objects.none())
+    allergies_form = AllergyInformationFormset()
+    antecedents_form = AntecedentFormset()
     insurance_form = InsuranceInformationForm()
     template = 'patients/add_patient.html'
     if request.method == 'POST':
@@ -98,19 +98,13 @@ def add_patient(request):
             patient.created_by = request.user
             patient.save()
 
-            for allergy_form in allergies_instances:
-                if allergy_form in allergies_form.deleted_objects:
-                    allergy_form.delete()
-                else:
-                    allergy_form.patient = patient
-                    allergy_form.save()
+            for allergy_instance in allergies_instances:
+                allergy_instance.patient = patient
+                allergy_instance.save()
 
-            for antecedent_form in antecedents_instances:
-                if antecedent_form in antecedents_form.deleted_objects:
-                    antecedent_form.delete()
-                else:
-                    antecedent_form.patient = patient
-                    antecedent_form.save()
+            for antecedent_instance in antecedents_instances:
+                antecedent_instance.patient = patient
+                antecedent_instance.save()
 
             insurance.patient = patient
             insurance.save()
@@ -226,8 +220,8 @@ def update_patient(request, pk):
     patient_insurance = InsuranceInformation.objects.get(patient=patient)
     patient_form = PatientForm(request.POST or None, instance=patient)
     allergies_form = AllergyInformationUpdateFormset(instance=patient)
-    insurance_form = InsuranceInformationForm(request.POST or None, instance=patient_insurance)
     antecedents_form = AntecedentUpdateFormset(instance=patient)
+    insurance_form = InsuranceInformationForm(request.POST or None, instance=patient_insurance)
     if request.method == 'POST':
         patient_form = PatientForm(request.POST or None, instance=patient)
         allergies_form = AllergyInformationUpdateFormset(request.POST, instance=patient)

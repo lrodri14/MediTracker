@@ -3,6 +3,7 @@
     views, it also contains function based views for more specific processes. It is composed of 21 views as whole.
 """
 
+import os
 from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -17,7 +18,8 @@ from .models import UsersProfile, ContactRequest, Chat
 from utilities.accounts_utilities import set_mailing_credentials, check_requests
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, ChatForm
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
+    PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, PasswordResetConfirmView
 User = get_user_model()
 
 # Create your views here.
@@ -332,7 +334,8 @@ def display_chat(request, pk):
     destination = User.objects.get(pk=pk)
     channel_name = str(Chat.objects.filter(participants__in=[request.user, destination])[0])
     context = {'chat_form': form, 'destination': destination}
-    data = {'html': render_to_string(template, context, request), 'identity': identity, 'channel_name': channel_name,'token': token.to_jwt().decode('utf-8')}
+    data = {'html': render_to_string(template, context, request), 'identity': identity, 'channel_name': channel_name,
+            'token': token.to_jwt().decode('utf-8')}
     return JsonResponse(data)
 
 

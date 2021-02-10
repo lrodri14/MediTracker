@@ -85,7 +85,6 @@ class UsersProfile(models.Model):
     user = models.OneToOneField(CustomUser, blank=True, null=True, on_delete=models.CASCADE, verbose_name='user', related_name='profile')
     availability = models.CharField(max_length=50, blank=False, null=True, verbose_name='Availability', help_text='User Availability', choices=AVAILABILITY_CHOICES, default='A')
     profile_pic = models.ImageField('Profile Picture', blank=True, null=True, upload_to='accounts/profile_pictures')
-    background_pic = models.ImageField('Background Picture', blank=True, null=True, upload_to='accounts/background_pictures')
     bio = models.TextField('Biography', blank=True, null=True, help_text='Let us know about you')
     gender = models.CharField('Gender', max_length=25, blank=False, null=True, choices=GENDER_CHOICES)
     birth_date = models.DateField('Birth Date', blank=True, null=True, help_text="Birth date")

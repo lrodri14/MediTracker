@@ -8,8 +8,8 @@
 var allergySelection
 
 // managementFormVariables
-var allergiesTotalForms = document.querySelector('.allergies_management_form > #id_form-TOTAL_FORMS')
-var antecedentsTotalForms = document.querySelector('.antecedents_management_form > #id_form-TOTAL_FORMS')
+var allergiesTotalForms = document.querySelector('.allergies_management_form > #id_allergy_info-TOTAL_FORMS')
+var antecedentsTotalForms = document.querySelector('.antecedents_management_form > #id_antecedent_info-TOTAL_FORMS')
 
 // clonedNodes Variables
 var allergiesFormBlueprint = document.querySelector('.allergies-form .form-container').cloneNode(true)
@@ -197,19 +197,19 @@ if (extraInfo){
               5. Change the Total Forms Value to the amount of forms available plus one unit.
               6. Append the cloned node to the allergies_form list.*/
             let formAmount = document.querySelectorAll('.allergies-form .form-container')
-            let allergyTotalForms = document.querySelector('.allergies_management_form #id_form-TOTAL_FORMS')
+            let allergyTotalForms = document.querySelector('.allergies_management_form #id_allergy_info-TOTAL_FORMS')
             let clonedNode = allergiesFormBlueprint.cloneNode(true)
             for (let i = 0; i<clonedNode.childNodes.length; i++){
                 if (clonedNode.childNodes[i].firstChild){
                     if (clonedNode.childNodes[i].childNodes[0].nodeName === 'SELECT'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-allergy_type'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-allergy_type'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-allergy_type'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-allergy_type'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'TEXTAREA'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-about'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-about'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-about'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-about'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'checkbox'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-DELETE'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-DELETE'
                     }
                 }
             }
@@ -244,19 +244,19 @@ if (extraInfo){
               5. Change the Total Forms Value to the amount of forms available plus one unit.
               6. Append the cloned node to the antecedents_form list.*/
             let formAmount = document.querySelectorAll('.antecedents-form .form-container')
-            let antecedentsTotalForms = document.querySelector('.antecedents_management_form #id_form-TOTAL_FORMS')
+            let antecedentsTotalForms = document.querySelector('.antecedents_management_form #id_antecedent_info-TOTAL_FORMS')
             let clonedNode = antecedentsFormBlueprint.cloneNode(true)
             for (let i = 0; i<clonedNode.childNodes.length; i++){
                 if (clonedNode.childNodes[i].firstChild){
                     if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'text'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-antecedent'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-antecedent'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-antecedent'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-antecedent'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'TEXTAREA'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-info'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-info'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-info'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-info'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'checkbox'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-DELETE'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-DELETE'
                     }
                 }
             }

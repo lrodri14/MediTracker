@@ -150,7 +150,7 @@ class AllergyInformationForm(forms.ModelForm):
         return cleaned_data
 
 
-AllergyInformationFormset = modelformset_factory(model=AllergyInformation, form=AllergyInformationForm, can_delete=True, extra=1)
+AllergyInformationFormset = inlineformset_factory(parent_model=Patient, model=AllergyInformation, form=AllergyInformationForm, can_delete=True, extra=1)
 AllergyInformationUpdateFormset = inlineformset_factory(parent_model=Patient, model=AllergyInformation, form=AllergyInformationForm, can_delete=True, extra=1)
 
 
@@ -184,7 +184,7 @@ class AntecedentForm(forms.ModelForm):
         return cleaned_data
 
 
-AntecedentFormset = modelformset_factory(model=Antecedent, form=AntecedentForm, can_delete=True)
+AntecedentFormset = inlineformset_factory(parent_model=Patient, model=Antecedent, form=AntecedentForm, can_delete=True, extra=1)
 AntecedentUpdateFormset = inlineformset_factory(parent_model=Patient, model=Antecedent, form=AntecedentForm, can_delete=True, extra=1)
 
 

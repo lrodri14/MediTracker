@@ -114,7 +114,7 @@
                     {% for form in medical_test_result_formset %}
                         <tr class="form-container">
                             <td>{{ form.type }}</td>
-                            <td>{{ form.image }}<label class="add-exam" for="id_form-{{ forloop.counter0 }}-image">Add Image</label></td>
+                            <td>{{ form.image }}<label class="add-exam" for="id_exam-{{ forloop.counter0 }}-image">Add Image</label></td>
                             <td class="filename"></td>
                             <td><i class="fas fa-trash"></i></td>
                             <td class="delete-form">{{ form.DELETE }}</td>

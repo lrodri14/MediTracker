@@ -544,23 +544,23 @@ addForm.addEventListener('click', function(){
       5. Change the Total Forms Value to the amount of forms available plus one unit.
       6. Append the cloned node to the exams_forms list.*/
     let formAmount = document.querySelectorAll('.form-container')
-    let totalAmountFormManagement = document.querySelector('#id_form-TOTAL_FORMS')
+    let totalAmountFormManagement = document.querySelector('#id_exam-TOTAL_FORMS')
     let clonedForm = formAmount[0].cloneNode(true)
     let formContainers = document.querySelector('tbody')
     for (let i = 0; i<clonedForm.childNodes.length; i++){
         if (clonedForm.childNodes[i].firstChild){
             if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'file'){
                 clonedForm.childNodes[i].childNodes[0].value = null
-                clonedForm.childNodes[i].childNodes[1].htmlFor = 'id_form-' + formAmount.length + '-image'
-                clonedForm.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-image'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-image'
+                clonedForm.childNodes[i].childNodes[1].htmlFor = 'id_exam-' + formAmount.length + '-image'
+                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-image'
+                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-image'
             }else if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'checkbox'){
-                clonedForm.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-DELETE'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-DELETE'
+                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-DELETE'
+                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-DELETE'
             }else if (clonedForm.childNodes[i].firstChild.nodeName === 'SELECT'){
                 clonedForm.childNodes[i].childNodes[0].value = null
-                clonedForm.childNodes[i].childNodes[0].name = 'form-' + formAmount.length + '-type'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_form-' + formAmount.length + '-type'
+                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-type'
+                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-type'
             }
         }
 

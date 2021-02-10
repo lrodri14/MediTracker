@@ -147,7 +147,7 @@ def update_consult(request, pk):
     """
     consult = Consult.objects.get(pk=pk)
     consult_form = UpdateConsultForm(request.POST or None, user=request.user, instance=consult)
-    medical_test_result_formset = MedicalTestResultFormset(queryset=Consult.objects.none())
+    medical_test_result_formset = MedicalTestResultFormset(instance=consult)
     drug_form = DrugForm
     drug_category_filter_form = DrugCategoryFilterForm
     medical_test_form = MedicalTestForm
@@ -158,19 +158,10 @@ def update_consult(request, pk):
                'medical_test_filter_form': medical_test_filter_form}
     if request.method == 'POST':
         consult_form = UpdateConsultForm(request.POST or None, user=request.user, instance=consult)
-        medical_exams_form = MedicalTestResultFormset(request.POST, request.FILES)
+        medical_exams_form = MedicalTestResultFormset(request.POST, request.FILES, instance=consult)
         if consult_form.is_valid() and medical_exams_form.is_valid():
             consult = consult_form.save(commit=False)
-            exam_instances = medical_exams_form.save(commit=False)
-
-            # Deleting exams instances not needed
-            for exam in exam_instances:
-                if exam in medical_exams_form.deleted_objects:
-                    exam.delete()
-                else:
-                    exam.consult = consult
-                    exam.date = timezone.localtime()
-                    exam.save()
+            medical_exams_form.save()
 
             # Saving Consult
             consult.medical_status = True

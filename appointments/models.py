@@ -207,7 +207,7 @@ class MedicalTestResult(models.Model):
         created our own dunder __str__ dunder method.
     """
 
-    consult = models.ForeignKey(Consult, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Medical Exams', help_text='Medical Exams', related_name='exam')
+    consult = models.ForeignKey(Consult, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Consult', help_text='Medical Exams', related_name='exam')
     date = models.DateField('date', blank=True, null=True, help_text='Date the exams were presented')
     type = models.CharField('type of exams', max_length=100, blank=False, null=True, help_text='Type of exams', choices=MEDICAL_TEST_CHOICES)
     image = models.ImageField('exam', blank=True, null=True, help_text='Exam IMG', upload_to='appointments/exams')
@@ -218,3 +218,7 @@ class MedicalTestResult(models.Model):
 
     def __str__(self):
         return self.type + ' ' + str(self.date)
+
+    def save(self, *args, **kwargs):
+        self.date = timezone.localtime()
+        super().save(*args, **kwargs)
