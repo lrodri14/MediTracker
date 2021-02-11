@@ -570,14 +570,13 @@ if (modal){
                 .then(data => {
                     if (data['updated_html']){
                         wrapper.innerHTML = data['updated_html']
-                        modal.classList.remove('show-modal')
+                        modal.classList.remove('modal-show')
                         // This function is called to ensure that the add icon levitates in case there are no more instances to display
                         addIconLevitate(document.querySelector('.add-data'))
                     }else{
                         modalContent.innerHTML = data["error"]
                     }
-                }
-                )
+                })
             }
 
             if (e.target.classList.contains('password-form')){

@@ -8,8 +8,8 @@
 var allergySelection
 
 // managementFormVariables
-var allergiesTotalForms = document.querySelector('.allergies_management_form > #id_allergy_info-TOTAL_FORMS')
-var antecedentsTotalForms = document.querySelector('.antecedents_management_form > #id_antecedent_info-TOTAL_FORMS')
+var allergiesTotalForms = document.querySelector('.allergies_management_form > #id_form-TOTAL_FORMS')
+var antecedentsTotalForms = document.querySelector('.antecedents_management_form > #id_form-TOTAL_FORMS')
 
 // clonedNodes Variables
 var allergiesFormBlueprint = document.querySelector('.allergies-form .form-container').cloneNode(true)
@@ -198,7 +198,7 @@ if (extraInfo){
               6. Append the cloned node to the allergies_form list.*/
             let formAmount = document.querySelectorAll('.allergies-form .form-container')
             let allergyTotalForms = document.querySelector('.allergies_management_form #id_allergy_info-TOTAL_FORMS')
-            let clonedNode = allergiesFormBlueprint.cloneNode(true)
+            let clonedNode = document.querySelector('.allergies-form .form-container:last-child').cloneNode(true)
             for (let i = 0; i<clonedNode.childNodes.length; i++){
                 if (clonedNode.childNodes[i].firstChild){
                     if (clonedNode.childNodes[i].childNodes[0].nodeName === 'SELECT'){
