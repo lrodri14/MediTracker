@@ -1,6 +1,5 @@
 <!-- Profile Partial Template -->
 {% load static %}
-
 <!-- Profile Card -->
 <div id="profile-card">
 
@@ -53,7 +52,7 @@
     <!-- User's Information -->
     <div id="user-information">
         <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
-        <p><i class="fas fa-user-tie"></i> @{{ profile.user }}</p>
+        <p id="username"><i class="fas fa-user-tie"></i> @{{ profile.user }}</p>
         <p><i class="fas fa-map-pin"></i> {{ profile.get_origin_display }}</p>
         <p><i class="fas fa-stethoscope"></i> {{ profile.user.get_speciality_display }}</p>
         <p><i class="fas fa-clock"></i> Member Since - {{ profile.user.date_joined|date }}</p>

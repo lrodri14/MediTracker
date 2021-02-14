@@ -79,6 +79,8 @@ def create_appointment(request):
                 consult.save()
                 loop.run_until_complete(send_sms(consult))
                 data['success'] = 'Consult created successfully'
+                data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
+                data['created_by'] = request.user.username
             except IntegrityError:
                 date = consults_form.cleaned_data.get('datetime').date()
                 time = consults_form.cleaned_data.get('datetime').time().strftime('%I:%M:%S %p')
@@ -251,6 +253,9 @@ def appointment_date_update(request, pk):
                 consults_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
                 months_names = collect_months_names(consults_list, tzone)
                 data = {'updated_html': render_to_string('appointments/partial_agenda_list.html', {'appointments': consults_list, 'months': months_names, 'form': form}, request=request)}
+                data['to'] = request.user.username
+                data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
+                data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
             except IntegrityError:
                 date = consult_form.cleaned_data.get('datetime').date()
                 time = consult_form.cleaned_data.get('datetime').time().strftime('%I:%M:%S %p')
@@ -276,6 +281,9 @@ def confirm_appointment(request, pk):
     consults_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
     months_names = collect_months_names(consults_list, tzone)
     data = {'html': render_to_string('appointments/partial_agenda_list.html', {'appointments': consults_list, 'months': months_names, 'form': form}, request=request)}
+    data['to'] = request.user.username
+    data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
+    data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
     return JsonResponse(data)
 
 
@@ -305,6 +313,9 @@ def cancel_appointment(request, pk):
         appointments_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
         months_names = collect_months_names(appointments_list, tzone)
         data = {'html': render_to_string('appointments/partial_agenda_list.html', {'appointments': appointments_list, 'months': months_names, 'form':form}, request=request)}
+        data['to'] = request.user.username
+        data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
+        data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
     return JsonResponse(data)
 
 

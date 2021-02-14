@@ -11,6 +11,7 @@ var socialSection = document.querySelector('.social-section')
 var socialSectionData = document.querySelector('#social-section-data')
 var socialSectionTabs = document.querySelectorAll('.social-section-tab')
 var closeSocialSection = document.querySelector('#close-social-section')
+var notificationsPopup = document.querySelector('.notifications-popup')
 
 // Variables used for the chat functionality
 let identity
@@ -139,6 +140,17 @@ function createOrJoinChannel(){
         })
     })
 }
+
+url = 'ws://' + window.location.host
+let notificationWebsocket = new WebSocket(url)
+
+notificationWebsocket.addEventListener('message', (e) => {
+    notificationsPopup.classList.add('notification-popup-show')
+    notificationsPopup.textContent = e.data
+    setTimeout(function(){
+        notificationsPopup.classList.remove('notification-popup-show')
+    }, 5000)
+})
 
 ///////////////////////////////////////////////// Event Listeners //////////////////////////////////////////////////////
 
@@ -325,7 +337,14 @@ if (socialSection){
             let url = e.target.getAttribute('data-url') + '?response=' + e.target.getAttribute('data-response')
             requestResponseAW(url)
             .then(data => {
-                socialSectionData.innerHTML = data['html']
+                if (data['html']){
+                    socialSectionData.innerHTML = data['html']
+                    if (data['accepted'] && data['sender']){
+                        notificationWebsocket.send(JSON.stringify({'to': data['sender'], 'message': ' just accepted your contact addition request', 'nf_type': 'contact_request_accepted'}))
+                    }
+                }else{
+                    e.target.parentNode.remove()
+                }
             })
         }
 

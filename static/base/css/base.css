@@ -143,6 +143,29 @@ body{
     left: 0%;
     z-index: -1;
 }
+
+/*///////////////////////////////////////////////// Notifications Popup //////////////////////////////////////////////*/
+
+.notifications-popup{
+    display: inline-block;
+    position: absolute;
+    top: -10%;
+    right: 5%;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
+    border-radius: 5px;
+    padding: 10px;
+    transition: top 0.5s;
+}
+
+.notification-popup-show{
+    top: 5%;
+    transition: top 0.5s;
+}
+
+
 /*////////////////////////////////////////////////////// Titles //////////////////////////////////////////////////////*/
 
 h1,h2,h3,h4,h5,h6{

@@ -236,6 +236,7 @@ if (wrapper){
             confirmAW(e.target.parentNode.getAttribute('data-url'))
             .then(data => {
                 dataTable.innerHTML = data['html']
+                notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} confirmed an appointment for ${data['datetime']}`, 'nf_type':'appointment_update'}))
             })
         }
 
@@ -278,6 +279,7 @@ if (wrapper){
             submitCancelAW(url, method, csrfmiddlewaretoken)
             .then(data => {
                 dataTable.innerHTML = data['html']
+                notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} cancelled an appointment for ${data['datetime']}`, 'nf_type':'appointment_update'}))
             })
             modal.classList.remove('modal-show')
         /*This event will be fired every time a submit occurs and the target contains the 'update-date-form' class in it's
@@ -297,6 +299,7 @@ if (wrapper){
                 if (data['updated_html']){
                     dataTable.innerHTML = data['updated_html']
                     modal.classList.remove('modal-show')
+                    notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} updated an appointment for ${data['datetime']}`, 'nf_type':'appointment_update'}))
                 }else{
                     document.querySelector('.create-update-appointment-loader').classList.remove('create-update-appointment-loader-show')
                     modalContent.innerHTML = data['html']

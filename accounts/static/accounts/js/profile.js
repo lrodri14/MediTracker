@@ -11,6 +11,7 @@ var editBackgroundPicture = document.querySelector('.background-edit-modal')
 var profile = document.querySelector('.profile-picture')
 var modal = document.querySelector('.modal')
 var modalContent = document.querySelector('.modal-content')
+var username = document.querySelector('#username').textContent
 
 /*////////////////////////////////////////////////////// Functions ///////////////////////////////////////////////////*/
 
@@ -212,12 +213,23 @@ if (body){
                         e.target.classList.remove('fa-user-plus-hover')
                         e.target.setAttribute('data-procedure', 'cancel')
                         e.target.classList.add('fa-user-slash')
+                        notificationWebsocket.send(JSON.stringify({'to': username.slice(2,username.length), 'message':"You've received a contact add request from ", 'nf_type': 'contact_request'}))
                     }else{
                         e.target.classList.remove('fa-user-slash')
                         e.target.classList.remove('fa-user-slash-hover')
                         e.target.setAttribute('data-procedure', 'send')
                         e.target.classList.add('fa-user-plus')
                     }
+                }else if (data['unsuccessfulSending']){
+                    // Pass
+                }else{
+                    let oldURL = e.target.getAttribute('data-url')
+                    let url = '/accounts/remove_contact/' + oldURL.slice(oldURL.lastIndexOf('/') + 1, oldURL.length)
+                    e.target.classList.remove('fa-user-slash')
+                    e.target.classList.remove('fa-user-slash-hover')
+                    e.target.classList.add('fa-trash')
+                    e.target.setAttribute('data-url', url)
+                    e.target.removeAttribute('data-procedure')
                 }
             })
         }

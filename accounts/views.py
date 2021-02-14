@@ -388,20 +388,28 @@ def contact_request_response(request, pk):
         response is key is accepeted, then the linking will be set, if the condition is not fulfilled, no linking will
         be set, finally the ContactRequest instance will be deleted.
     """
-    response = request.GET.get('response')
-    contact_request = ContactRequest.objects.get(pk=pk)
-    sender = contact_request.from_user
-    receiver = request.user
-    if response == 'accepted':
-        receiver.profile.contacts.add(contact_request.from_user)
-        sender.profile.contacts.add(request.user)
-        private_chat = Chat.objects.create()
-        private_chat.participants.add(receiver)
-        private_chat.participants.add(sender)
-    contact_request.delete()
-    contact_requests_list = ContactRequest.objects.filter(to_user=request.user)
-    template = 'accounts/requests.html'
-    context = {'contact_requests': contact_requests_list}
-    data = {'html': render_to_string(template, context, request)}
-    return JsonResponse(data)
+    try:
+        response = request.GET.get('response')
+        contact_request = ContactRequest.objects.get(pk=pk)
+        sender = contact_request.from_user
+        receiver = request.user
+        data = {}
+        if response == 'accepted':
+            receiver.profile.contacts.add(contact_request.from_user)
+            sender.profile.contacts.add(request.user)
+            private_chat = Chat.objects.create()
+            private_chat.participants.add(receiver)
+            private_chat.participants.add(sender)
+            data['accepted'] = 'Request Accepted'
+            data['sender'] = sender.username
+        contact_request.delete()
+        contact_requests_list = ContactRequest.objects.filter(to_user=request.user)
+        template = 'accounts/requests.html'
+        context = {'contact_requests': contact_requests_list}
+        data['html'] = render_to_string(template, context, request)
+        return JsonResponse(data)
+    except ContactRequest.DoesNotExist:
+        data = {'contact_request_unexistent': 'Contact request was no longer available'}
+        return JsonResponse(data)
+
 

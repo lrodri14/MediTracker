@@ -101,6 +101,10 @@ tr:nth-child(even){
 
 /*#################################################### Modal #########################################################*/
 
+.modal{
+    z-index: 1;
+}
+
 .modal-content{
     display: inline-block;
     margin-left: 25%;
@@ -174,10 +178,6 @@ button{
     transform: translate(-50%, -50%);
 }
 
-.no-consults-hide{
-    display: none;
-}
-
 #add-consult{
     position: absolute;
     top: 90%;
@@ -191,9 +191,4 @@ button{
 .add-consult-hover{
     color: #25BB41;
     transition: color 0.5s;
-}
-
-.add-consults-hide{
-    opacity: 0;
-    transition: 0.5s;
 }

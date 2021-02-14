@@ -274,16 +274,12 @@ if (modal){
             .then(data => {
                 if (data['success']){
                     modal.classList.remove('modal-show')
-                    if (noConsults && addConsult){
-                        addConsult.classList.remove('add-consults-hide')
-                        noConsults.classList.remove('no-consults-hide')
-                    }
+                    notificationWebsocket.send(JSON.stringify({'to': data['created_by'],'message': `Appointment has been created successfully for ${data['datetime']} by `, 'nf_type': 'appointment_created'}))
                 } else {
                     modalContent.innerHTML = data['html']
                 }
             })
         }
-
     })
 }
 

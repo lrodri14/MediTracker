@@ -19,6 +19,8 @@
 
     <img id=background src="{% static user.settings.wallpaper %}" alt="">
 
+        {% block notifications_popup %} <div class="notifications-popup"></div> {% endblock %}
+
         {% block return %}<a href=""><i class="fas fa-long-arrow-alt-left" ></i></a>{% endblock %}
 
         {% block navigation %}
