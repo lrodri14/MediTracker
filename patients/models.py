@@ -66,7 +66,7 @@ class Patient(models.Model):
     def save(self, *args, **kwargs):
         self.first_names = self.first_names.title()
         self.last_names = self.last_names.title()
-        super(Patient, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 # Insurance Companies Model
 
@@ -101,7 +101,7 @@ class InsuranceCarrier(models.Model):
 
     def save(self, *args, **kwargs):
         self.company = self.company.title()
-        super(InsuranceCarrier, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def operative(self, current_user):
         insurance_information_list = InsuranceInformation.objects.filter(patient__created_by=current_user)
@@ -163,7 +163,7 @@ class Allergy(models.Model):
 
     def save(self, *args, **kwargs):
         self.allergy_type = self.allergy_type.title()
-        super(Allergy, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def operative(self, current_user):
         allergy_information_list = AllergyInformation.objects.filter(patient__created_by=current_user)
@@ -195,7 +195,7 @@ class AllergyInformation(models.Model):
 
     def save(self, *args, **kwargs):
         self.about = self.about.capitalize()
-        super(AllergyInformation, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 # Patient Antecedents Information
 
@@ -222,6 +222,6 @@ class Antecedent(models.Model):
         if self.antecedent and self.info:
             self.antecedent = self.antecedent.title()
             self.info = self.info.capitalize()
-        super(Antecedent, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 

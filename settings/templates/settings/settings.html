@@ -9,7 +9,7 @@
     <h2>Settings</h2>
 
     <div id="settings-navigator">
-        <div class="tab" data-url="{% url 'settings:general' %}">General</div><div class="tab" data-url="{% url 'settings:profile' %}">Profile</div><div class="tab" data-url="{% url 'settings:account' %}">Account</div><div class="tab" data-url="">Notifications</div><div class="tab" data-url="{% url 'settings:mailing' %}">Mailing</div><div class="tab" data-url="{% url 'settings:medical_test_list' %}">Medical Testing</div><div class="tab" data-url="{% url 'settings:insurance_list' %}">Insurance</div><div class="tab" data-url="{% url 'settings:allergy_list' %}">Allergies</div><div class="tab" data-url="{% url 'settings:drugs_list' %}">Drugs</div>
+        <div class="tab" data-url="{% url 'settings:general' %}">General</div><div class="tab" data-url="{% url 'settings:account' %}">Account</div><div class="tab" data-url="{% url 'settings:linking' %}">Linking</div>{% if user.roll == 'DOCTOR' %}<div class="tab" data-url="{% url 'settings:profile' %}">Profile</div><div class="tab" data-url="">Notifications</div><div class="tab" data-url="{% url 'settings:mailing' %}">Mailing</div><div class="tab" data-url="{% url 'settings:medical_test_list' %}">Medical Testing</div><div class="tab" data-url="{% url 'settings:insurance_list' %}">Insurance</div><div class="tab" data-url="{% url 'settings:allergy_list' %}">Allergies</div><div class="tab" data-url="{% url 'settings:drugs_list' %}">Drugs</div>{% endif %}
     </div>
 
     <div class="wrapper">

@@ -72,6 +72,7 @@ MIDDLEWARE = [
     'accounts.middleware.TimezoneMiddleware',
 ]
 
+
 ROOT_URLCONF = 'meditracker.urls'
 
 TEMPLATES = [

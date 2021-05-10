@@ -18,11 +18,11 @@ class WSNotifications(SyncConsumer):
         nf_type = data['nf_type']
         to = data['to']
         if nf_type == 'contact_request':
-            message = data['message'] + self.scope['user'].username
+            message = data['message'] + data['created_by']
         elif nf_type == 'contact_request_accepted':
-            message = self.scope['user'].username + data['message']
+            message = data['created_by'] + data['message']
         elif nf_type == 'appointment_created':
-            message = data['message'] + self.scope['user'].username
+            message = data['message'] + data['created_by']
         elif nf_type == 'appointment_update':
             message = data['message']
         group_receiver = to + '_notifications_group'

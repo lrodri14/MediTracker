@@ -3,7 +3,6 @@
     views, it also contains function based views for more specific processes. It is composed of 21 views as whole.
 """
 
-import os
 from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -15,7 +14,7 @@ from twilio.jwt.access_token import AccessToken
 from django.template.loader import render_to_string
 from twilio.jwt.access_token.grants import ChatGrant
 from .models import UsersProfile, ContactRequest, Chat
-from utilities.accounts_utilities import set_mailing_credentials, check_requests
+from utilities.accounts_utilities import check_requests
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, ChatForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
@@ -45,6 +44,7 @@ class Login(LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
+        self.request.session.set_expiry(self.request.user.account_settings.session_expire_time)
         data = {'success': 'Login Successful'}
         return JsonResponse(data)
 
@@ -155,7 +155,7 @@ def signup(request):
         attribute is 'GET' then the form will be returned in JSON Format an displayed in the front-end asynchronously,
         if the request.method attribute is a "POST", then the view will check if the form data is valid, if the condi-
         tion is fulfilled, then the user will be saved but not committed, depending if the speciality field was filled,
-        the roll will be set to Doctor or to Assistant and will be added to the corresponding group, fianlly it's
+        the roll will be set to DOCTOR or to ASSISTANT and will be added to the corresponding group, fianlly it's
         mailing credentials will be created, if the form is not valid, the proper errors will be returned along with
         the form.
     """
@@ -169,12 +169,12 @@ def signup(request):
         if form.is_valid():
             user = form.save(commit=False)
             if form.cleaned_data.get('speciality'):
-                user.roll = 'Doctor'
+                user.assign_roll(speciality=True)
+                user.generate_linking_id()
                 user.save()
                 user.groups.add(doctor)
-                set_mailing_credentials(user.email, user)
             else:
-                user.roll = 'Assistant'
+                user.assign_roll(speciality=False)
                 user.save()
                 user.groups.add(assistant)
         else:
@@ -252,9 +252,7 @@ def user_lookup(request):
         filtering, independently if the searching was successful or not, the response will be returned in JSON Format.
     """
     query = request.GET.get('query')
-    close_users = User.objects.filter(Q(username__startswith=query) | Q(first_name__startswith=query) | Q(last_name__startswith=query)).order_by('first_name')
-    # other_users = User.objects.filter(Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)).order_by('first_name')
-    users = close_users
+    users = User.objects.filter(Q(username__startswith=query) | Q(first_name__startswith=query) | Q(last_name__startswith=query), roll='Doctor').order_by('first_name')
     template = 'accounts/users_lookup_results.html'
     context = {'users': users}
     data = {'html': render_to_string(template, context, request)}
@@ -367,7 +365,7 @@ def send_cancel_contact_request(request, pk):
         if procedure == 'send':
             contact_request = ContactRequest(to_user=receiver, from_user=sender)
             contact_request.save()
-            data = {'success': 'Request sent successfully'}
+            data = {'success': 'Request sent successfully', 'created_by': request.user.username, 'to': receiver.username}
         else:
             contact_request = ContactRequest.objects.get(to_user=receiver, from_user=sender)
             contact_request.delete()
@@ -401,7 +399,8 @@ def contact_request_response(request, pk):
             private_chat.participants.add(receiver)
             private_chat.participants.add(sender)
             data['accepted'] = 'Request Accepted'
-            data['sender'] = sender.username
+            data['to'] = sender.username
+            data['created_by'] = request.user.username
         contact_request.delete()
         contact_requests_list = ContactRequest.objects.filter(to_user=request.user)
         template = 'accounts/requests.html'

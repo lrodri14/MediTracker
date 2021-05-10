@@ -5,41 +5,37 @@
 """
 
 # Imports
-from datetime import timedelta
-from django.core.exceptions import ValidationError
-from .models import Consult, MedicalTest, MedicalTestResult, Drug
 from django import forms
-from django.forms import modelformset_factory, inlineformset_factory
+from datetime import timedelta
 from django.utils import timezone
 from dateutil import relativedelta
 from patients.models import Patient
+from django.forms import inlineformset_factory
+from django.core.exceptions import ValidationError
 from utilities.appointments_utilities import MEDICAL_TEST_CHOICES
+from .models import BaseConsult, GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult,\
+                    GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult,\
+                    MedicalTest, MedicalTestResult, Drug
+
+# Creation Forms
 
 
-class ConsultForm(forms.ModelForm):
+class BaseConsultCreationForm(forms.ModelForm):
     """
         DOCSTRING:
-        This ConsultForm class, inherits from the ModelForm class, and is used to the create Consults Forms
-        instances, we overwrote the __init__ method, because we need some extra parameters to perform some
-        functionality inside our forms, we need the current user to set the select options
-        inside our 'patient' attribute, we also overwrote the clean method to perform some extra
-        cleaning inside 'datetime' model attribute, every time the datetime input is before the current date and time
-        the form will raise an error indicating, the 'datetime' value can not be before the current time.
+        This BaseConsultCreationFOrm class, inherits from the ModelForm class, and serves as a base of creation model forms,
+        we overwrote the __init__ method, because we need some extra parameters to perform some functionality inside our
+        forms, we need the current user to set the select optionsinside our 'patient' attribute, we also overwrote the
+        clean method to perform some extra cleaning inside 'datetime' model attribute, every time the datetime input is
+        before the current date and time the form will raise an error indicating, the 'datetime' value can not be before
+        the current time.
     """
     datetime = forms.DateTimeField(input_formats=['%Y-%m-%dT%H:%M'], widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'), initial=timezone.localtime(timezone.now()))
 
-    class Meta:
-        model = Consult
-        fields = ('patient', 'datetime', 'motive', 'suffering',)
-        widgets = {
-            'motive': forms.Textarea(attrs={'rows': 8, 'columns': 5}),
-            'suffering': forms.Textarea(attrs={'rows': 8, 'columns': 5})
-        }
-
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
-        super(ConsultForm, self).__init__(*args, **kwargs)
-        self.fields['patient'].queryset = Patient.objects.filter(created_by=self.user)
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['patient'].queryset = Patient.objects.filter(created_by=user)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -48,23 +44,136 @@ class ConsultForm(forms.ModelForm):
             raise ValidationError('Unable to create a consult for this date and time', code='invalid_date')
         return cleaned_data
 
+    class Meta:
+        model = BaseConsult
+        fields = ('patient', 'datetime', 'motive', 'suffering',)
+        widgets = {
+            'motive': forms.Textarea(attrs={'rows': 8, 'columns': 5}),
+            'suffering': forms.Textarea(attrs={'rows': 8, 'columns': 5})
+        }
 
-class UpdateConsultForm(forms.ModelForm):
+
+class GeneralConsultCreationForm(BaseConsultCreationForm):
+
     """
-        DOCSTRING:
-        UpdateConsultForm class inherits from the forms.ModelForm class, and is used to create UpdateConsultsForm instances,
-        we defined our META Class to add functionality to our class, we created a dictionary containing all the
-        widgets needed for our input fields, we overwrote the __init__ method to provide some extra functionality
-        to our forms, we need the current user to set the select options of the drug fields, they must be only drugs created
-        by the user, finally we overwrote the clean method to do some extra cleaning in our forms, they will check thay
-        all the diagnose data is completed, nothing left behind.
+        This GeneralConsultCreationForm class is used to create General Consult Form instances,
+        it inherits from the BaseConsultCreationForm class and declares it's own Meta class.
     """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = GeneralConsult
+
+
+class AllergyAndImmunologicalConsultCreationForm(BaseConsultCreationForm):
+
+    """
+        This AllergyAndImmunologicalConsultCreationForm class is used to create Allergy and Immunological Consult Form instances,
+        it inherits from the BaseConsultCreationForm class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = AllergyAndImmunologicalConsult
+
+
+class DentalConsultCreationForm(BaseConsultCreationForm):
+    """
+        This DentalConsultCreationForm class is used to create Dental Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = DentalConsult
+
+
+class NeurologicalConsultCreationForm(BaseConsultCreationForm):
+    """
+        This NeurologicalConsultCreationForm class is used to create Neurological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = NeurologicalConsult
+
+
+class GynecologicalConsultCreationForm(BaseConsultCreationForm):
+    """
+        This GynecologicalConsultCreationForm class is used to create Gynecological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = GynecologicalConsult
+
+
+class OphthalmologyConsultCreationForm(BaseConsultCreationForm):
+    """
+        This OphthalmologyConsultCreationForm class is used to create Ophthalmology Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = OphthalmologyConsult
+
+
+class PsychiatryConsultCreationForm(BaseConsultCreationForm):
+    """
+        This PsychiatryConsultCreationForm class is used to create Psychiatry Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = PsychiatryConsult
+
+
+class SurgicalConsultCreationForm(BaseConsultCreationForm):
+    """
+        This SurgicalConsultCreationForm class is used to create Surgical Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = SurgicalConsult
+
+
+class UrologicalConsultCreationForm(BaseConsultCreationForm):
+    """
+        This UrologicalConsultCreationForm class is used to create Urological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(BaseConsultCreationForm.Meta):
+        model = UrologicalConsult
+
+
+# Updating Forms
+
+
+class UpdateBaseConsultForm(forms.ModelForm):
+    """
+        DOCSTRING: This UpdateConsultForm serves as the base model to the different speciality specific forms, this model
+        overrides the __init__ method by specifying the drugs that will be displayed in the choices, and we set a clean
+        method that checks if the CIE detail is complete, as well as our Meta class.
+    """
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['drugs'].queryset = Drug.objects.filter(created_by=user)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cie_group = cleaned_data.get('cie_10_group')
+        cie_detail = cleaned_data.get('cie_10_detail')
+        if (cie_group and not cie_detail) or (cie_detail and not cie_group):
+            raise ValidationError("CIE-10 diagnose details incomplete", code='invalid_cie_10_details')
+        return cleaned_data
 
     class Meta:
-        model = Consult
+        model = BaseConsult
         exclude = ('patient', 'datetime', 'motive', 'suffering', 'created_by', 'status', 'medical_status', 'prescription')
         widgets = {
             'charge': forms.NumberInput(attrs={'placeholder': '0.00'}),
+            'general_notes': forms.Textarea(attrs={'rows': 20, 'columns': 120}),
             'digestive_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'endocrine_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'lymphatic_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
@@ -85,18 +194,98 @@ class UpdateConsultForm(forms.ModelForm):
             'lock': forms.widgets.HiddenInput(),
         }
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
-        super(UpdateConsultForm, self).__init__(*args, **kwargs)
-        self.fields['drugs'].queryset = Drug.objects.filter(created_by=user)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        cie_group = cleaned_data.get('cie_10_group')
-        cie_detail = cleaned_data.get('cie_10_detail')
-        if (cie_group and not cie_detail) or (cie_detail and not cie_group):
-            raise ValidationError("CIE-10 diagnose details incomplete", code='invalid_cie_10_details')
-        return cleaned_data
+class UpdateGeneralConsultForm(UpdateBaseConsultForm):
+    """
+        DOCSTRING:
+        UpdateGeneralConsultForm class inherits from the UpdateBaseConsultForm class, and is used to create Update General Consult Form instances,
+        we defined our META Class to add functionality to our class, we created a dictionary containing all the
+        widgets needed for our input fields.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = GeneralConsult
+
+
+class UpdateAllergyAndImmunologicalConsultForm(UpdateBaseConsultForm):
+
+    """
+        This AllergyAndImmunologicalConsultCreationForm class is used to create Allergy and Immunological Consult Form instances,
+        it inherits from the BaseConsultCreationForm class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = AllergyAndImmunologicalConsult
+
+
+class UpdateDentalConsultForm(UpdateBaseConsultForm):
+    """
+        This DentalConsultCreationForm class is used to create Dental Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = DentalConsult
+
+
+class UpdateNeurologicalConsultForm(UpdateBaseConsultForm):
+    """
+        This NeurologicalConsultCreationForm class is used to create Neurological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = NeurologicalConsult
+
+
+class UpdateGynecologicalConsultForm(UpdateBaseConsultForm):
+    """
+        This GynecologicalConsultCreationForm class is used to create Gynecological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = GynecologicalConsult
+
+
+class UpdateOphthalmologyConsultForm(UpdateBaseConsultForm):
+    """
+        This OphthalmologyConsultCreationForm class is used to create Ophthalmology Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = OphthalmologyConsult
+
+
+class UpdatePsychiatryConsultForm(UpdateBaseConsultForm):
+    """
+        This PsychiatryConsultCreationForm class is used to create Psychiatry Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = PsychiatryConsult
+
+
+class UpdateSurgicalConsultForm(UpdateBaseConsultForm):
+    """
+        This SurgicalConsultCreationForm class is used to create Surgical Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = SurgicalConsult
+
+
+class UpdateUrologicalConsultForm(UpdateBaseConsultForm):
+    """
+        This UrologicalConsultCreationForm class is used to create Urological Consult Form instances, it inherits from the BaseConsultCreationForm
+        class and declares it's own Meta class.
+    """
+
+    class Meta(UpdateBaseConsultForm.Meta):
+        model = UrologicalConsult
 
 
 class MedicalTestResultForm(forms.ModelForm):
@@ -122,10 +311,9 @@ class MedicalTestResultForm(forms.ModelForm):
         return cleaned_data
 
 
-MedicalTestResultFormset = inlineformset_factory(parent_model=Consult, model=MedicalTestResult, form=MedicalTestResultForm, can_delete=True, extra=1)
+MedicalTestResultFormset = inlineformset_factory(parent_model=BaseConsult, model=MedicalTestResult, form=MedicalTestResultForm, can_delete=True, extra=1)
 
 # Range of years displayed in the filter forms.
-
 
 years = [y for y in range(1920, timezone.now().year+2)]
 
@@ -278,5 +466,3 @@ class MedicalTestTypeFilterForm(forms.Form):
         The MedicalTestFilterForm is used to filter medical tests and display them dynamically in our template.
     """
     test_type = forms.CharField(label='Test Type', required=False, widget=forms.Select(choices=MEDICAL_TEST_CHOICES))
-
-

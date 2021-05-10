@@ -5,8 +5,16 @@
     some initial information will be filled, this file contains two function definitions.
 """
 
-from django.core.mail.backends.smtp import EmailBackend
 from accounts.models import ContactRequest
+from django.core.mail.backends.smtp import EmailBackend
+from appointments.models import GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult, \
+                                GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult
+from appointments.forms import GeneralConsultCreationForm, AllergyAndImmunologicalConsultCreationForm, DentalConsultCreationForm, \
+                                NeurologicalConsultCreationForm, GynecologicalConsultCreationForm, OphthalmologyConsultCreationForm, \
+                                PsychiatryConsultCreationForm, SurgicalConsultCreationForm, UrologicalConsultCreationForm, \
+                                UpdateGeneralConsultForm, UpdateAllergyAndImmunologicalConsultForm, UpdateDentalConsultForm, \
+                                UpdateNeurologicalConsultForm, UpdateGynecologicalConsultForm, UpdateOphthalmologyConsultForm, \
+                                UpdatePsychiatryConsultForm, UpdateSurgicalConsultForm, UpdateUrologicalConsultForm
 
 
 domains = {
@@ -16,25 +24,37 @@ domains = {
     'outlook.com': {'smtp_server': 'smtp.live.com', 'port': 587, 'use_tls': True},
 }
 
+speciality_mapping = {
+    'A&I': {'model': AllergyAndImmunologicalConsult, 'creation_form': AllergyAndImmunologicalConsultCreationForm, 'updating_form': UpdateAllergyAndImmunologicalConsultForm},
+    'DT': {'model': DentalConsult, 'creation_form': DentalConsultCreationForm, 'updating_form': UpdateDentalConsultForm},
+    'IM': {'model': GeneralConsult, 'creation_form': GeneralConsultCreationForm, 'updating_form': UpdateGeneralConsultForm},
+    'GM': {'model': GeneralConsult, 'creation_form': GeneralConsultCreationForm, 'updating_form': UpdateGeneralConsultForm},
+    'NEU': {'model': NeurologicalConsult, 'creation_form': NeurologicalConsultCreationForm, 'updating_form': UpdateNeurologicalConsultForm},
+    'O&G': {'model': GynecologicalConsult, 'creation_form': GynecologicalConsultCreationForm, 'updating_form': UpdateGynecologicalConsultForm},
+    'OPH': {'model': OphthalmologyConsult, 'creation_form': OphthalmologyConsultCreationForm, 'updating_form': UpdateOphthalmologyConsultForm},
+    'PED': {'model': GeneralConsult, 'creation_form': GeneralConsultCreationForm, 'updating_form': UpdateGeneralConsultForm},
+    'PSY': {'model': PsychiatryConsult, 'creation_form': PsychiatryConsultCreationForm, 'updating_form': UpdatePsychiatryConsultForm},
+    'SRG': {'model': SurgicalConsult, 'creation_form': SurgicalConsultCreationForm, 'updating_form': UpdateSurgicalConsultForm},
+    'URO': {'model': UrologicalConsult, 'creation_form': UrologicalConsultCreationForm, 'updating_form': UpdateUrologicalConsultForm}
+}
 
-def set_mailing_credentials(email, user):
+
+def set_mailing_credentials(email):
     """
         DOCSTRING:
         This set_mailing_credentials function is used to create a MailingCredential instance whenever a new user is created
         independently if the email meets the requirements to fill the instance with initial data, this function only
         takes two parameters the user itself and the email which we use to fill the instance with data if needed.
     """
-    from accounts.models import MailingCredential
     domain = email.split("@")[1]
     if domains.get(domain):
         smtp_server = domains[domain]['smtp_server']
         port = domains[domain]['port']
         use_tls = domains[domain]['use_tls']
-        mailing_info = MailingCredential.objects.create(smtp_server=smtp_server, port=port, use_tls=use_tls, user=user)
-        mailing_info.save()
+        credentials = {'smtp_server': smtp_server, 'port': port, 'use_tls': use_tls}
+        return credentials
     else:
-        mailing_info = MailingCredential.objects.create(user=user)
-        mailing_info.save()
+        return False
 
 
 def open_connection(user_mailing_credentials):

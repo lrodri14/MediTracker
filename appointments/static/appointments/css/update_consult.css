@@ -358,7 +358,6 @@ select{
   transition: 0.5s;
 }
 
-
 .navigation{
     list-style: none;
     width: 10%;
@@ -384,6 +383,15 @@ select{
     height: 14px;
     background-color: #FFFFFF;
     transition: 0.5s;
+}
+
+/*#################################################### General Notes ######################################################*/
+
+#id_general_notes{
+    position: absolute;
+    left: 20%;
+    top: 30%;
+    float: left;
 }
 
 /*#################################################### Add Test Modal ################################################*/

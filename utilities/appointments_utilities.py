@@ -16,8 +16,7 @@ from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, NUMVERIF
 # Twilio Client instance
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# Variables
-CATEGORY_CHOICES = (
+DRUG_CATEGORY_CHOICES = (
     ('AP', 'Antipyretics'),
     ('AG', 'Analgesics'),
     ('AM', 'Antimalarial'),
@@ -84,10 +83,10 @@ async def check_delayed_consults(user):
         current user, it is used to collect the delayed consults. This async function will await for the close_consults()
         coroutine.
     """
-    from appointments.models import Consult
+    from appointments.models import BaseConsult
     today = timezone.localtime()
     tzone = timezone.get_current_timezone()
-    not_attended_consults = Consult.objects.filter(created_by=user, datetime__date__lte=today.date(), status="OPEN")
+    not_attended_consults = BaseConsult.objects.filter(created_by=user, datetime__date__lte=today.date(), status="OPEN")
     await close_consult(not_attended_consults, tzone, today)
 
 
@@ -181,55 +180,29 @@ def filter_conditional_results(user, **kwargs):
         three different type of individual filters: 'patient', 'month' and 'year', the same way you can mix them to get
         the results expected.
     """
-    from appointments.models import Consult
+    from appointments.models import BaseConsult
     cleaned_data = kwargs.pop('cleaned_data')
     patient = cleaned_data.get('patient')
     month = int(cleaned_data.get('month'))
     year = int(cleaned_data.get('year'))
     if patient == '' and month == 0 and year == 1920:
-        return Consult.objects.filter(
+        return BaseConsult.objects.filter(
             Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
             datetime__date__month=month, datetime__date__year=year, created_by=user)
     elif patient != '' and month == 0 and year == 1920:
-        return Consult.objects.filter(
+        return BaseConsult.objects.filter(
             Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient), created_by=user)
     elif patient == '' and month != 0 and year == 1920:
-        return Consult.objects.filter(datetime__date__month=month, created_by=user)
+        return BaseConsult.objects.filter(datetime__date__month=month, created_by=user)
     elif patient == '' and month == 0 and year != 1920:
-        return Consult.objects.filter(datetime__date__year=year, created_by=user)
+        return BaseConsult.objects.filter(datetime__date__year=year, created_by=user)
     elif patient != '' and month != 0 and year == 1920:
-        return Consult.objects.filter(
+        return BaseConsult.objects.filter(
             Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
             datetime__date__month=month, created_by=user)
     elif patient != '' and month == 0 and year != 1920:
-        return Consult.objects.filter(
+        return BaseConsult.objects.filter(
             Q(patient__first_names__icontains=patient) | Q(patient__last_names__icontains=patient),
             datetime__date__year=year, created_by=user)
     else:
-        return Consult.objects.filter(datetime__date__month=month, datetime__date__year=year, created_by=user)
-
-# def generate_pdf(user, consult):
-#     """
-#         DOCSTRING:
-#         This generate_pdf() is used to generate the pdf's for each consult if necessary, this function will check if there
-#         are any drugs, indications or actions to be followed, if so, it will generate a pdf and save it to the consult.
-#         prescription field in the model, if not it will skip this process. The process is:
-#         1. Grab the context to render the PDF
-#         2. Render the HTML as a string
-#         3. We make use of the HTML function from WeasyPrint and pass the python file object to it, this function will
-#         check what type of file we are passing and will convert it to a pdf with the write.pdf() method.
-#         4. We return the file as an HttpResponse object, and to make the browser treat this response as a file attachment
-#         we set the content_type argument to the type of file we want to attach, in this case = 'application/pdf'
-#         5. We set the Content-Disposition header to the filename of the file we want to set.
-#         6. Lastly we just create a representation of this file using the SimpleUploadedFile function that will return us
-#         a file, we set the following parameters: 'name' which is the name of the file, 'content' which is the content we
-#         he are passing to this function in this case the pdf and finally the content_type.
-#
-#     """
-#     if consult.indications != '' or consult.actions != '':
-#         context = {'user': user, 'consult': consult}
-#         template = render_to_string('appointments/pdf.html', context)
-#         pdf = HTML(string=template).write_pdf()
-#         prescription = HttpResponse(pdf, content_type='application/pdf')
-#         prescription['Content-Disposition'] = 'filename={}{}.pdf'.format(consult.patient, consult.datetime.date())
-#         return SimpleUploadedFile(name='prescrition-{}-{}.pdf'.format(consult.patient, consult.datetime.date()), content=pdf,content_type='application/pdf')
+        return BaseConsult.objects.filter(datetime__date__month=month, datetime__date__year=year, created_by=user)

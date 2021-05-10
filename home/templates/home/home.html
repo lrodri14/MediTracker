@@ -9,65 +9,96 @@
 
 <!-- Container -->
 <div class="container">
-    <!-- Title -->
-    <h1>Menu</h1>
 
-    <!-- Search Bar -->
-    <input type="text" id="search-bar" autocomplete="off" data-url="{% url 'accounts:user_lookup' %}"><i class="fas fa-search"></i>
+    {% if user.roll == 'DOCTOR' %}
 
-    <!-- Top Wrapper -->
-    <div class="wrapper-one">
-        <div class="tile" onclick="window.location='{% url 'patients:patients' %}'">
-            <i class="fas fa-user-injured tile-icon"></i>
-            <h3>Patients</h3>
+        <!-- Title -->
+        <h1>Menu</h1>
+
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" autocomplete="off" data-url="{% url 'accounts:user_lookup' %}"><i class="fas fa-search"></i>
+
+        <!-- Top Wrapper -->
+        <div class="wrapper-one">
+            <div class="tile" onclick="window.location='{% url 'patients:patients' %}'">
+                <i class="fas fa-user-injured tile-icon"></i>
+                <h3>Patients</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'appointments:appointments' %}'">
+                <i class="far fa-calendar-check tile-icon"></i>
+                <h3>Appointments</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'records:records' %}'">
+                <i class="far fa-clipboard tile-icon"></i>
+                <h3>Records</h3>
+            </div>
+            <div class="tile" onclick="window.location=''">
+                <i class="fas fa-file-invoice tile-icon"></i>
+                <h3>Reports</h3>
+            </div>
         </div>
-        <div class="tile" onclick="window.location='{% url 'appointments:appointments' %}'">
-            <i class="far fa-calendar-check tile-icon"></i>
-            <h3>Appointments</h3>
+
+        <!-- Bottom Wrapper -->
+        <div class="wrapper-two">
+            <div class="tile" onclick="window.location='{% url 'providers:providers' %}'">
+                <i class="fas fa-handshake tile-icon"></i>
+                <h3>Providers</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'settings:settings' %}'">
+                <i class="fas fa-cog tile-icon"></i>
+                <h3>Settings</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'accounts:profile' %}'">
+                <i class="fas fa-user tile-icon"></i>
+                <h3>Profile</h3>
+            </div>
+            <div class="tile" id="logout">
+                <i class="fas fa-sign-out-alt tile-icon"></i>
+                <h3>Log Out</h3>
+            </div>
         </div>
-        <div class="tile" onclick="window.location='{% url 'records:records' %}'">
-            <i class="far fa-clipboard tile-icon"></i>
-            <h3>Records</h3>
+
+    <!-- Query Results -->
+    <div class="query-results">
+
+    </div>
+
+    {% else %}
+
+        <!-- Title -->
+        <h1 id="single-wrapper-title">Menu</h1>
+
+        <div id="single-wrapper">
+
+            <div class="tile" onclick="window.location='{% url 'patients:patients' %}'">
+                <i class="fas fa-user-injured tile-icon"></i>
+                <h3>Patients</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'appointments:appointments' %}'">
+                <i class="far fa-calendar-check tile-icon"></i>
+                <h3>Appointments</h3>
+            </div>
+            <div class="tile" onclick="window.location='{% url 'settings:settings' %}'">
+                <i class="fas fa-cog tile-icon"></i>
+                <h3>Settings</h3>
+            </div>
+            <div class="tile" id="logout">
+                <i class="fas fa-sign-out-alt tile-icon"></i>
+                <h3>Log Out</h3>
+            </div>
         </div>
-        <div class="tile" onclick="window.location=''">
-            <i class="fas fa-file-invoice tile-icon"></i>
-            <h3>Reports</h3>
+
+    {% endif %}
+
+    <!-- Log Out Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <h3>Are you sure you want to log out?</h3><div class="logout-loader"></div>
+            <button type="button" onclick="window.location='{% url 'accounts:logout' %}'">Yes</button>
+            <button type="button">No</button>
         </div>
     </div>
 
-    <!-- Bottom Wrapper -->
-    <div class="wrapper-two">
-        <div class="tile" onclick="window.location='{% url 'providers:providers' %}'">
-            <i class="fas fa-handshake tile-icon"></i>
-            <h3>Providers</h3>
-        </div>
-        <div class="tile" onclick="window.location='{% url 'settings:settings' %}'">
-            <i class="fas fa-cog tile-icon"></i>
-            <h3>Settings</h3>
-        </div>
-        <div class="tile" onclick="window.location='{% url 'accounts:profile' %}'">
-            <i class="fas fa-user tile-icon"></i>
-            <h3>Profile</h3>
-        </div>
-        <div class="tile" id="logout">
-            <i class="fas fa-sign-out-alt tile-icon"></i>
-            <h3>Log Out</h3>
-        </div>
-    </div>
-</div>
-
-<!-- Query Results -->
-<div class="query-results">
-
-</div>
-
-<!-- Log Out Modal -->
-<div class="modal">
-    <div class="modal-content">
-        <h3>Are you sure you want to log out?</h3><div class="logout-loader"></div>
-        <button type="button" onclick="window.location='{% url 'accounts:logout' %}'">Yes</button>
-        <button type="button">No</button>
-    </div>
 </div>
 
 <script src="{% static 'home/js/home.js' %}"></script>

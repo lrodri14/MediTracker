@@ -299,7 +299,7 @@ if (wrapper){
                 if (data['updated_html']){
                     dataTable.innerHTML = data['updated_html']
                     modal.classList.remove('modal-show')
-                    notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} updated an appointment for ${data['datetime']}`, 'nf_type':'appointment_update'}))
+                    notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} updated an appointment date to ${data['datetime']}`, 'nf_type':'appointment_update'}))
                 }else{
                     document.querySelector('.create-update-appointment-loader').classList.remove('create-update-appointment-loader-show')
                     modalContent.innerHTML = data['html']

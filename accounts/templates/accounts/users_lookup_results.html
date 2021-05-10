@@ -14,7 +14,7 @@
                     {% endif %}
                 {% endif %}
                 <td>{{ user.first_name }} {{ user.last_name }}</td>
-                <td>{{ user.get_speciality_display }}</td>
+                <td>{{ user.doctor.get_speciality_display }}</td>
                 <td>{{ user.profile.get_origin_display }}</td>
                 <td>{{ user }}</td>
             </tr>

@@ -37,26 +37,32 @@ async function userLookupAW(url){
    from the data-url attribute, this event will evaluate a condition, if the value of the target is not empty, the
    menu will be hidden and a the results from the server will be displayed, if the condition is not fulfilled, then
    the menu will be displayed again.*/
-searchBar.addEventListener('input', (e) => {
 
-    let url = e.target.getAttribute('data-url') + '?query=' + e.target.value
-    if (e.target.value !== ''){
-        topMenuElements.classList.add('hide-menu')
-        bottomMenuElements.classList.add('hide-menu')
-        menuTitle.classList.add('hide-menu')
-        userLookupAW(url)
-        .then(data => {
-            queryResults.innerHTML = data['html']
-        })
-        queryResults.classList.add('query-results-show')
-    }else{
-        topMenuElements.classList.remove('hide-menu')
-        bottomMenuElements.classList.remove('hide-menu')
-        menuTitle.classList.remove('hide-menu')
-        queryResults.innerHTML = ''
-        queryResults.classList.remove('query-results-show')
-    }
-})
+if (searchBar){
+
+    searchBar.addEventListener('input', (e) => {
+
+        if (e.target.value !== ''){
+            let url = e.target.getAttribute('data-url') + '?query=' + e.target.value
+            topMenuElements.classList.add('hide-menu')
+            bottomMenuElements.classList.add('hide-menu')
+            menuTitle.classList.add('hide-menu')
+            userLookupAW(url)
+                .then(data => {
+                    queryResults.innerHTML = data['html']
+                })
+            queryResults.classList.add('query-results-show')
+        }else{
+            queryResults.innerHTML = "";
+            topMenuElements.classList.remove('hide-menu')
+            bottomMenuElements.classList.remove('hide-menu')
+            menuTitle.classList.remove('hide-menu')
+            queryResults.classList.remove('query-results-show')
+        }
+
+    })
+
+}
 
 // Query Results Event Listeners
 if (queryResults){

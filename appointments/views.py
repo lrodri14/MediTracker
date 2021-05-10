@@ -15,12 +15,13 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
-from .models import Consult, MedicalTestResult
+from .models import MedicalTestResult, BaseConsult
+from utilities.accounts_utilities import speciality_mapping
 from django.template.loader import render_to_string
-from .forms import ConsultForm, DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, \
-    UpdateConsultForm, MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
+from .forms import DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, \
+                    MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
 from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, \
-    collect_months_names, filter_conditional_results
+                                            collect_months_names, filter_conditional_results
 
 # Import is unused because we will use it in a future update.
 from .tasks import save_new_drug
@@ -43,11 +44,20 @@ def appointments(request):
         rendered, if not, then the context will be rendered and returned as string, so we can send it in a JSON Format.
         It expects only one argument, 'request', it waits for an object request, This view will render the content if
         the page is not a valid number, if it is, the response will be returned in JSON Format.
+
+        *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
     """
     today = timezone.localtime()
-    doctor_group = Group.objects.get(name='Doctor')
-    doctor = doctor_group in request.user.groups.all()
-    appointments_list = Consult.objects.filter(Q(created_by=request.user, datetime__date=today.date(), medical_status=False, status='CONFIRMED') | Q(created_by=request.user, lock=False)).order_by('datetime')
+    if request.user.roll == 'DOCTOR':
+        doctor_group = Group.objects.get(name='Doctor')
+        doctor = doctor_group in request.user.groups.all()
+        aimed_user = request.user
+    else:
+        doctor = False
+        aimed_user = request.user.assistant.doctors.all()[0]
+    appointments_list = BaseConsult.objects.filter(Q(created_by=aimed_user, datetime__date=today.date(), medical_status=False, status='CONFIRMED') | Q(created_by=aimed_user, lock=False)).order_by('datetime')
     template = 'appointments/appointments.html'
     context = {'appointments': appointments_list, 'doctor': doctor}
     return render(request, template, context)
@@ -65,22 +75,33 @@ def create_appointment(request):
         if it is, then the consult will be saved and added to the agenda so we can then confirm it, edit it or cancel it,
         if the form is not valid, then we will add a custom error to the context and render the template again so
         we can send it back as a JSONResponse. This view only expects an argument, 'request', should be a request object.
+
+        *Note: the collection of patients from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
     """
-    consults_form = ConsultForm(user=request.user)
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
+    creation_form = speciality_mapping[request.user.doctor.speciality]['creation_form']
+    consults_form = creation_form(user=aimed_user)
     template = 'appointments/create_appointment.html'
     context = {}
     data = {}
     if request.method == 'POST':
-        consults_form = ConsultForm(request.POST, user=request.user)
+        consults_form = creation_form(request.POST, user=aimed_user)
         if consults_form.is_valid():
             try:
                 consult = consults_form.save(commit=False)
-                consult.created_by = request.user
+                consult.created_by = aimed_user
                 consult.save()
                 loop.run_until_complete(send_sms(consult))
                 data['success'] = 'Consult created successfully'
                 data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
-                data['created_by'] = request.user.username
+                data['created_by'] = request.user.username if request.user.roll == 'ASSISTANT' else 'You'
+                data['to'] = request.user.username if request.user.roll == 'DOCTOR' else request.user.assistant.doctors.all()[0].username
             except IntegrityError:
                 date = consults_form.cleaned_data.get('datetime').date()
                 time = consults_form.cleaned_data.get('datetime').time().strftime('%I:%M:%S %p')
@@ -98,7 +119,7 @@ def consults_details(request, pk):
         to redirect if the user wants to go to the page it was before. It takes two arguments, 'request' which expects
         a request object, and 'pk', which expects the pk of a specific consult.
     """
-    consult = Consult.objects.get(pk=pk)
+    consult = BaseConsult.objects.get(pk=pk)
     exams = MedicalTestResult.objects.filter(consult=consult) if len(MedicalTestResult.objects.filter(consult=consult)) > 0 else None
     template = 'appointments/consult_details.html'
     context = {'consult': consult, 'exams': exams}
@@ -119,7 +140,7 @@ def consult_summary(request, pk):
         send the response as a JSON Response. It takes two arguments, 'request' which expects a request object, and
         'pk', which expects the pk of a specific consult.
     """
-    consult = Consult.objects.get(pk=pk)
+    consult = BaseConsult.objects.get(pk=pk)
     template = 'appointments/consult_summary.html'
     context = {'consult': consult}
     data = {'html': render_to_string(template, context, request)}
@@ -147,8 +168,9 @@ def update_consult(request, pk):
         handle the user a receipt for the patient, if this function returns True, then the create_pdf function will be called
         and the prescription will be created, afterwards the prescription's path will be sent to the user in JsonFormat.
     """
-    consult = Consult.objects.get(pk=pk)
-    consult_form = UpdateConsultForm(request.POST or None, user=request.user, instance=consult)
+    consult = BaseConsult.objects.get(pk=pk)
+    updating_form = speciality_mapping[request.user.doctor.speciality]['updating_form']
+    consult_form = updating_form(request.POST or None, user=request.user, instance=consult)
     medical_test_result_formset = MedicalTestResultFormset(instance=consult)
     drug_form = DrugForm
     drug_category_filter_form = DrugCategoryFilterForm
@@ -159,7 +181,7 @@ def update_consult(request, pk):
                'drug_form': drug_form, 'drug_category_filter_form': drug_category_filter_form, 'medical_test_form': medical_test_form,
                'medical_test_filter_form': medical_test_filter_form}
     if request.method == 'POST':
-        consult_form = UpdateConsultForm(request.POST or None, user=request.user, instance=consult)
+        consult_form = updating_form(request.POST or None, user=request.user, instance=consult)
         medical_exams_form = MedicalTestResultFormset(request.POST, request.FILES, instance=consult)
         if consult_form.is_valid() and medical_exams_form.is_valid():
             consult = consult_form.save(commit=False)
@@ -194,10 +216,19 @@ def agenda(request):
         function into a variable called 'months_names', along with the filtering form and the consults,this function will also verify that
         there is a 'page' parameter in the request.GET dict, if there is no parameter, then the first page is shown, else the
         asking page will be shown to the user. This function takes only one argument: 'request' which expects a request object.
+
+        *Note: the collection of agenda appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
     """
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     today = timezone.localtime()
     tzone = timezone.get_current_timezone()
-    appointments_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
+    appointments_list = BaseConsult.objects.filter(created_by=aimed_user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
     months_names = collect_months_names(appointments_list, tzone)
     form = AgendaDateFilterForm
     template = 'appointments/agenda.html'
@@ -212,12 +243,20 @@ def filter_agenda(request):
         them into a datetime object, this way we can filter the consults based on this values, finally we will return our response
         in JSON Format, this function also checks if the 'page' parameter is inside the querystring, if it is, then the page that
         will be rendered will be that one in the 'page' value, else the first page will be rendered.
+
+        *Note: the collection of agenda appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
     """
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     tzone = timezone.get_current_timezone()
     template = 'appointments/partial_agenda_list.html'
     query_date_from = datetime.strptime(request.GET.get('date_from'), "%Y-%m-%d")
     query_date_to = datetime.strptime(request.GET.get('date_to'), "%Y-%m-%d")
-    consults_list = Consult.objects.filter(datetime__date__gte=query_date_from, datetime__date__lte=query_date_to, created_by=request.user).order_by('datetime')
+    consults_list = BaseConsult.objects.filter(datetime__date__gte=query_date_from, datetime__date__lte=query_date_to, created_by=aimed_user).order_by('datetime')
     months = collect_months_names(consults_list, tzone)
     context = {'appointments': consults_list, 'months': months}
     data = {'html': render_to_string(template, context, request)}
@@ -235,25 +274,37 @@ def appointment_date_update(request, pk):
         error and return the response again, if it is we save this consult's new date and return in JSON Format the
         updated content, so the registers will be updated asynchronously in the front-end. It takes two arguments,
         'request' which expects a request object and 'pk' which expects a consult.pk key.
+
+        *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
+
     """
+
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     today = timezone.localtime()
     tzone = timezone.get_current_timezone()
-    consult = Consult.objects.get(pk=pk)
+    consult = BaseConsult.objects.get(pk=pk)
     form = AgendaDateFilterForm
-    consult_form = ConsultForm(request.POST or None, instance=consult, user=request.user)
+    creation_form = speciality_mapping[request.user.speciality]['creation_form']
+    consult_form = creation_form(request.POST or None, instance=consult, user=aimed_user)
     template = 'appointments/appointment_date_update.html'
     context = {'consult_form': consult_form, 'consult':consult}
     data = {'html': render_to_string(template, context, request)}
     if request.method == 'POST':
-        consult_form = ConsultForm(request.POST or None, instance=consult, user=request.user)
+        consult_form = creation_form(request.POST or None, instance=consult, user=aimed_user)
         if consult_form.is_valid():
             try:
                 consult_form.save()
                 loop.run_until_complete(send_sms(consult))
-                consults_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
+                consults_list = BaseConsult.objects.filter(created_by=aimed_user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
                 months_names = collect_months_names(consults_list, tzone)
                 data = {'updated_html': render_to_string('appointments/partial_agenda_list.html', {'appointments': consults_list, 'months': months_names, 'form': form}, request=request)}
-                data['to'] = request.user.username
+                data['to'] = request.user.username if request.user.roll == 'DOCTOR' else request.user.assistant.doctors.all()[0].username
                 data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
                 data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
             except IntegrityError:
@@ -271,17 +322,27 @@ def confirm_appointment(request, pk):
         to confirmed, once the consult is confirmed, it will collect all the updated data from the database and return
         it in a JSON Response, since the agenda will be updated asynchronously.It takes two arguments,
         'request' which expects a request object and 'pk' which expects a consult.pk key.
+
+        *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
     """
-    consult = Consult.objects.get(pk=pk)
+
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
+    consult = BaseConsult.objects.get(pk=pk)
     consult.status = 'CONFIRMED'
     consult.save()
     today = timezone.localtime()
     tzone = timezone.get_current_timezone()
     form = AgendaDateFilterForm
-    consults_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
+    consults_list = BaseConsult.objects.filter(created_by=aimed_user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
     months_names = collect_months_names(consults_list, tzone)
     data = {'html': render_to_string('appointments/partial_agenda_list.html', {'appointments': consults_list, 'months': months_names, 'form': form}, request=request)}
-    data['to'] = request.user.username
+    data['to'] = request.user.username if request.user.roll == 'DOCTOR' else request.user.assistant.doctors.all()[0].username
     data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
     data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
     return JsonResponse(data)
@@ -299,9 +360,19 @@ def cancel_appointment(request, pk):
         response object. The agenda is divided into months, so we need to collect all the months in which there are
         consults pending for us, how can we do that? We call our collected_months function and we pass the updated_consults
         and tzone as parameters, finally we send our response in JSON Format so the agenda view can update this data.
+
+        *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
     """
+
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     today = timezone.localtime(timezone.now())
-    consult = Consult.objects.get(pk=pk)
+    consult = BaseConsult.objects.get(pk=pk)
     tzone = timezone.get_current_timezone()
     form = AgendaDateFilterForm
     template = 'appointments/cancel_appointment.html'
@@ -310,10 +381,10 @@ def cancel_appointment(request, pk):
     if request.method == 'POST':
         consult.status = 'CANCELLED'
         consult.save()
-        appointments_list = Consult.objects.filter(created_by=request.user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
+        appointments_list = BaseConsult.objects.filter(created_by=aimed_user, datetime__date__gte=today.date(), medical_status=False).order_by('datetime')
         months_names = collect_months_names(appointments_list, tzone)
         data = {'html': render_to_string('appointments/partial_agenda_list.html', {'appointments': appointments_list, 'months': months_names, 'form':form}, request=request)}
-        data['to'] = request.user.username
+        data['to'] = request.user.username if request.user.roll == 'DOCTOR' else request.user.assistant.doctors.all()[0].username
         data['patient'] = consult.patient.first_names + ' ' + consult.patient.last_names
         data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
     return JsonResponse(data)
@@ -330,10 +401,21 @@ def registers(request):
         and if the filters were changed, it will perform the filtering, else it will return a custom error, as well if the
         filtering did not found any matches. The registers page will be updated asynchronously, so we will need to return
         these values in JSON Format. It takes a single argument: 'request' and expects a request object.
+
+        *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+
+
     """
-    loop.run_until_complete(check_delayed_consults(request.user))
+    # loop.run_until_complete(check_delayed_consults(request.user))
+
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     today = timezone.localtime()
-    consults_list = Consult.objects.filter(created_by=request.user).order_by('-datetime')
+    consults_list = BaseConsult.objects.filter(created_by=aimed_user).order_by('-datetime')
     template = 'appointments/registers.html'
     form = RegisterFilterForm
     context = {'registers': consults_list, 'form': form, 'items': len(consults_list), 'today': today}
@@ -348,10 +430,16 @@ def filter_registers(request):
         in JSON Format, this function also checks if the 'page' parameter is inside the querystring, if it is, then the page that
         will be rendered will be that one in the 'page' value, else the first page will be rendered.
     """
+
+    if request.user.roll == 'DOCTOR':
+        aimed_user = request.user
+    else:
+        aimed_user = request.user.assistant.doctors.all()[0]
+
     patient_query = request.GET.get('patient')
     month_query = request.GET.get('month')
     year_query = request.GET.get('year')
-    consults_list = filter_conditional_results(request.user, cleaned_data={'patient': patient_query, 'month': month_query, 'year': year_query}).order_by('datetime')
+    consults_list = filter_conditional_results(aimed_user, cleaned_data={'patient': patient_query, 'month': month_query, 'year': year_query}).order_by('datetime')
     context = {'registers': consults_list}
     data = {'html': render_to_string('appointments/partial_registers.html', context, request)}
     return JsonResponse(data)

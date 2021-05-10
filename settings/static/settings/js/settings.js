@@ -24,18 +24,32 @@ async function displaySettingsAW(url){
 }
 
 async function requestGeneralSettingsAW(url){
+    /* This requestGeneralSettings async function is used to display the general settings, this async func will
+       retrieve the content of that particular settings and display it inside the wrapper container, this async func
+       accepts one single parameter: 'url' which we retrieve from the tab 'data-url' attribute, to make the 'GET'
+       request. The response will be converted into JSON and returned for further processing.*/
     const result = await fetch(url)
     const data = await result.json()
     return data
 }
 
 async function changeWallpaperAW(url, method, csrfmiddlewaretoken, formData){
+    /* This changeWallpaperAW function is used update the users wallpaper of choice, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
     const result = await fetch(url, {method : method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
     const data = await result.json()
     return data
 }
 
 async function changeAvailability(url, method, csrfmiddlewaretoken, formData){
+    /* This changeWallpaperAW function is used update the users availability, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
     let result = await fetch(url, {method: method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
     let data = result.json()
     return data
@@ -112,8 +126,24 @@ async function updatePasswordAW(url, method, csrfmiddlewaretoken, formData){
     return data
 }
 
+async function updateSessionExpiryTime(url, method, csrfmiddlewaretoken, formData){
+    /* This updateSessionExpiry function is used update the users session expire time, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    const data = result.json()
+    return data
+}
+
 async function updateSettingsAW(url, method, csrfmiddlewaretoken, formData){
-    const result = await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body: formData})
+    /* This updateSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
+    await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
     const data = result.json()
     return data
 }
@@ -197,7 +227,7 @@ if (wrapper){
 
         /* This event will be fired every time a hover occurs in an element with the 'TD' nodeName of the childs are the
            'fa-trash' or 'fa-edit' icons, this event will change some styles in the table rows.*/
-        if (e.target.nodeName === 'TD' || ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit')))){
+        if (e.target.nodeName === 'TD' || ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-unlink')))){
             let row
             e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
             row.style.backgroundColor = '#FFFFFF'
@@ -228,6 +258,19 @@ if (wrapper){
             e.target.classList.add('fa-trash-hover')
         }
 
+        /* This event will be fired every time the target contains the 'fa-unlink' class in its classList, it will add
+           the 'fa-unlink-hover' to the target.*/
+        if (e.target.classList.contains('fa-unlink')){
+            e.target.classList.add('fa-unlink-hover')
+        }
+
+        /* This event will be fired every time the target contains the link class or the targets parent, this will add the
+           link-hover class.*/
+        if (e.target.classList.contains('link') || e.target.parentNode.classList.contains('link')){
+           let linkItem = e.target.classList.contains('link') ? e.target : e.target.parentNode
+           linkItem.classList.add('link-hover')
+        }
+
         if (e.target.nodeName === 'INPUT'){
         /* This event will be fired every time the target's nodeName is INPUT it will add
            the 'input-hover' class to the target.*/
@@ -252,7 +295,7 @@ if (wrapper){
 
     /* This event will be fired every time a hover occurs in an element with the 'TD' nodeName of the childs are the
        'fa-trash' or 'fa-edit' icons, this event will remove some styles in the table rows.*/
-      if (e.target.nodeName === 'TD' || ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit')))){
+      if (e.target.nodeName === 'TD' || ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-unlink')))){
         let row
         e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
             row.style.backgroundColor = ''
@@ -282,6 +325,20 @@ if (wrapper){
         if (e.target.classList.contains('fa-trash')){
             e.target.classList.remove('fa-trash-hover')
         }
+
+        /* This event will be fired every time the target contains the 'fa-unlink' class in its classList, it will remove
+           the 'fa-unlink-hover' to the target.*/
+        if (e.target.classList.contains('fa-unlink')){
+            e.target.classList.remove('fa-unlink-hover')
+        }
+
+        /* This event will be fired every time the target contains the link class or the targets parent, this will remove the
+           link-hover class.*/
+        if (e.target.classList.contains('link') || e.target.parentNode.classList.contains('link')){
+           let linkItem = e.target.classList.contains('link') ? e.target : e.target.parentNode
+           linkItem.classList.remove('link-hover')
+        }
+
 
         /* This event will be fired every time the target's nodeName is INPUT it will remove
            the 'input-hover' class to the target.*/
@@ -398,6 +455,21 @@ if (wrapper){
             })
         }
 
+        if (e.target.classList.contains('fa-unlink')){
+        /* This event will be fired every time the target contains the 'fa-unlink' class in it's classList, this event
+           will display the deletion form for the current type of object displayed. The form presented depends on the
+           'url' collected from the 'data-url' attribute from the target, finally, the modal is displayed and the form
+           is presented.*/
+            e.preventDefault()
+            e.stopPropagation()
+            const url = e.target.getAttribute('data-url')
+            showForm(url)
+            .then(data => {
+                modal.classList.add('modal-show')
+                modalContent.innerHTML = data['html']
+            })
+        }
+
         if (e.target.nodeName === 'BUTTON' && e.target.type !== 'submit'){
             /* This event will be fired every time the target is a button, this event will present any form
             if needed in the modal, the form that will be presented in the modal based on the
@@ -411,6 +483,8 @@ if (wrapper){
         }
 
         if (e.target.classList.contains('wallpaper')){
+            /* This event will be fired every time the target contains a wallpaper class, and will change the wallpaper
+             based on the users choice.*/
             document.querySelector('#id_wallpaper').value = e.target.getAttribute('data-value')
             let form = document.querySelector('#user-settings-form')
             let url = form.action
@@ -444,7 +518,9 @@ if (wrapper){
 
 
     wrapper.addEventListener('change', (e) => {
+
         if (e.target.id === 'id_availability'){
+            /* This event will be fired every time the target contains an id_availability id, this will change the users status. */
             let form = document.querySelector('form')
             let url = form.action
             let method = form.method
@@ -452,8 +528,19 @@ if (wrapper){
             let formData = new FormData(form)
             changeAvailability(url, method, csrfmiddlewaretoken, formData)
         }
-    })
 
+        if (e.target.id === 'id_session_expire_time' || e.target.id === 'id_tzone'){
+            /* This event will be fired every time the target contains an id_session_expire_time or id_tzone id,
+            this will change the users session expire time or tzone. */
+            let form = document.querySelector('form')
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            updateSessionExpiryTime(url, method, csrfmiddlewaretoken, formData)
+        }
+
+    })
 
     wrapper.addEventListener('submit', (e) => {
         e.preventDefault()

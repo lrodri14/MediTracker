@@ -213,7 +213,7 @@ if (body){
                         e.target.classList.remove('fa-user-plus-hover')
                         e.target.setAttribute('data-procedure', 'cancel')
                         e.target.classList.add('fa-user-slash')
-                        notificationWebsocket.send(JSON.stringify({'to': username.slice(2,username.length), 'message':"You've received a contact add request from ", 'nf_type': 'contact_request'}))
+                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'created_by': data['created_by'], 'message':"You've received a contact add request from ", 'nf_type': 'contact_request'}))
                     }else{
                         e.target.classList.remove('fa-user-slash')
                         e.target.classList.remove('fa-user-slash-hover')

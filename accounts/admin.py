@@ -3,7 +3,7 @@
 """
 
 from django.contrib import admin
-from .models import CustomUser, UsersProfile, UserSetting, MailingCredential, ContactRequest, Chat
+from .models import CustomUser, Assistant, Doctor, UsersProfile, UserAccountSettings, UserGeneralSettings, MailingCredential, ContactRequest, Chat
 from .forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -13,13 +13,16 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = BaseUserAdmin.fieldsets + (('Title Info', {'fields': ('roll', 'speciality')}),)
-    add_fieldsets = ((None, {'fields': ('username', 'password1', 'password2', 'roll', 'speciality'), }, ), )
+    fieldsets = BaseUserAdmin.fieldsets + (('Title Info', {'fields': ('roll', )}),)
+    add_fieldsets = ((None, {'fields': ('username', 'password1', 'password2', 'roll'), }, ), )
 
 
 admin.site.register(CustomUser, UserAdmin)
+admin.site.register(Assistant)
+admin.site.register(Doctor)
 admin.site.register(UsersProfile)
-admin.site.register(UserSetting)
+admin.site.register(UserAccountSettings)
+admin.site.register(UserGeneralSettings)
 admin.site.register(MailingCredential)
 admin.site.register(ContactRequest)
 admin.site.register(Chat)

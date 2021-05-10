@@ -14,8 +14,10 @@
                     <th>Residence</th>
                     <th>Insurance?</th>
                     <!-- This code will check if the user is a doctor -->
-                    {% if doctor %}<th>Edit</th>
-                    <th>Delete</th>{% endif %}
+                    {% if doctor %}
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    {% endif %}
                     <th><i class="fas fa-plus" onclick="window.location='{% url 'patients:add_patient' %}'"></i></th>
                 </tr>
             </thead>

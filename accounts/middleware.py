@@ -31,11 +31,8 @@ class LoginRequiredMiddleware:
     def process_view(self, request, view_func, view_args, view_kwargs):
         view_names = ['Login', 'signup', 'main', 'PasswordReset',
                       'PasswordResetDone', 'PasswordResetConfirm', 'PasswordResetComplete']
-        if request.user.is_authenticated and view_func.__name__ in view_names:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        elif request.user.is_authenticated or view_func.__name__ in view_names:
-            return None
-        else:
+
+        if view_func.__name__ not in view_names and not request.user.is_authenticated:
             return redirect(settings.LOGIN_URL)
 
 
@@ -58,8 +55,8 @@ class TimezoneMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.user.is_authenticated:
-            tzname = request.user.profile.tzone
+        if request.user.is_authenticated and request.user.username != 'admin':
+            tzname = request.user.account_settings.tzone
             if tzname:
                 timezone.activate(pytz.timezone(tzname))
             else:

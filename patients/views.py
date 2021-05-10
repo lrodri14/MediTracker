@@ -15,7 +15,7 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from accounts.models import MailingCredential
 from django.template.loader import render_to_string
-from appointments.models import Consult, MedicalTestResult
+from appointments.models import BaseConsult, MedicalTestResult
 from appointments.forms import ConsultDetailsFilterForm
 from utilities.accounts_utilities import open_connection
 from utilities.global_utilities import country_number_codes, collect_country_code
@@ -33,12 +33,20 @@ def patients(request):
         this function only accepts 'GET' requests, the 'page' query parameter will be evaluated every time, so the function knows
         which page should it send, if the 'page' parameter exists, then the content will be returned in JSON Format. It accepts only
         one parameter, 'request' which expects a request object.
+
+        *Note: the collection of patients from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
     """
-    doctor_group = Group.objects.get(name='Doctor')
-    doctor = doctor_group in request.user.groups.all()
-    template = 'patients/patients.html'
-    patients_list = Patient.objects.filter(created_by=request.user).order_by('id_number')
+    if request.user.roll == 'DOCTOR':
+        doctor_group = Group.objects.get(name='Doctor')
+        doctor = doctor_group in request.user.groups.all()
+        aimed_user = request.user
+    else:
+        doctor = False
+        aimed_user = request.user.assistant.doctors.all()[0]
+    patients_list = Patient.objects.filter(created_by=aimed_user).order_by('id_number')
     patient_filter = PatientFilterForm
+    template = 'patients/patients.html'
     context = {'patients': patients_list, 'form': patient_filter, 'doctor': doctor}
     return render(request, template, context)
 
@@ -50,12 +58,20 @@ def filter_patients(request):
         'GET' request in the 'query' parameter, once this data is collected, it is paginated by 17 instances each page, we also need
         to evaluate the 'page' parameter, so the function knows which page must be sent to the front-end, the data collected
         is sent in JSON Format.
+
+        *Note: the collection of patients from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
     """
-    doctor_group = Group.objects.get(name='Doctor')
-    doctor = doctor_group in request.user.groups.all()
-    template = 'patients/patients_partial_list.html'
     query = request.GET.get('query')
-    patients_list = Patient.objects.filter(Q(first_names__icontains=query) | Q(last_names__icontains=query), created_by=request.user).order_by('id_number')
+    if request.user.roll == 'DOCTOR':
+        doctor_group = Group.objects.get(name='Doctor')
+        doctor = doctor_group in request.user.groups.all()
+        aimed_user = request.user
+    else:
+        doctor = False
+        aimed_user = request.user.assistant.doctors.all()[0]
+    patients_list = Patient.objects.filter(Q(first_names__icontains=query) | Q(last_names__icontains=query),created_by=aimed_user).order_by('id_number')
+    template = 'patients/patients_partial_list.html'
     context = {'patients': patients_list, 'doctor': doctor}
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
@@ -75,8 +91,22 @@ def add_patient(request):
         check if there are any forms marked as deleted, if the form is not marked as deleted, then it's patient attribute
         is set to the current patient and saved, after all this process is completed, we will be redirected to the patients
         main page, it accepts one parameters, 'request'.
+
+        *Note: the collection of phone_number and country code and saving from user with Assistant roll, is based on the
+         indexing syntax,since assistants can only be linked to a single doctor, this before we build up the multiple
+         linking functionality in future updates.*
+
     """
-    patient_form = PatientForm(initial={'phone_number': country_number_codes[request.user.profile.location]})
+    if request.user.roll == 'DOCTOR':
+        country_number_code = request.user.profile.location
+        country_code = 'flag-icon-' + request.user.profile.location.lower()
+        user_creating = request.user
+    else:
+        country_number_code = request.user.assistant.doctors.all()[0].profile.location
+        country_code = 'flag-icon-' + request.user.assistant.doctors.all()[0].profile.location.lower()
+        user_creating = request.user.assistant.doctors.all()[0]
+
+    patient_form = PatientForm(initial={'phone_number': country_number_codes[country_number_code]})
     allergies_form = AllergyInformationFormset()
     antecedents_form = AntecedentFormset()
     insurance_form = InsuranceInformationForm()
@@ -93,9 +123,9 @@ def add_patient(request):
             insurance = insurance_form.save(commit=False)
 
             if patient.phone_number is None:
-                patient.phone_number = country_number_codes[request.user.profile.location]
+                patient.phone_number = country_number_codes[country_number_code]
             patient.save()
-            patient.created_by = request.user
+            patient.created_by = user_creating
             patient.save()
 
             for allergy_instance in allergies_instances:
@@ -111,7 +141,7 @@ def add_patient(request):
 
             return redirect('patients:patients')
 
-    context_data = {'patient_form': patient_form, 'allergies_form': allergies_form, 'insurance_form': insurance_form, 'antecedents_form': antecedents_form, 'country_code': 'flag-icon-' + request.user.profile.location.lower()}
+    context_data = {'patient_form': patient_form, 'allergies_form': allergies_form, 'insurance_form': insurance_form, 'antecedents_form': antecedents_form, 'country_code': country_code}
     return render(request, template, context=context_data)
 
 
@@ -131,8 +161,8 @@ def patient_details(request, pk):
     allergies = AllergyInformation.objects.filter(patient=patient)
     antecedents = Antecedent.objects.filter(patient=patient)
     insurance = InsuranceInformation.objects.get(patient=patient)
-    consults_list = Consult.objects.filter(patient=patient, created_by=request.user).order_by('-datetime')
-    charges_list = Consult.objects.filter(patient=patient, created_by=request.user, charge__gte=0).order_by('-datetime')
+    consults_list = BaseConsult.objects.filter(patient=patient, created_by=request.user).order_by('-datetime')
+    charges_list = BaseConsult.objects.filter(patient=patient, created_by=request.user, charge__gte=0).order_by('-datetime')
     exams_list = MedicalTestResult.objects.filter(consult__patient=patient).order_by('-date')
     template = 'patients/patient_details.html'
     context = {'patient': patient, 'consults': consults_list, 'allergies': allergies, 'antecedents': antecedents, 'insurance':insurance, 'exams': exams_list, 'charges': charges_list, 'consults_form': ConsultDetailsFilterForm}
@@ -152,12 +182,12 @@ def filter_patient_details(request):
     date_to = datetime.datetime.strptime(request.GET.get('date_to'), '%Y-%m-%d')
     requested_details = request.GET.get('filter_request_type')
     if requested_details == 'appointments':
-        filtered_results = Consult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user).order_by('-datetime')
+        filtered_results = BaseConsult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user).order_by('-datetime')
         template = 'patients/patient_consults_partial_list.html'
         context = {'consults': filtered_results}
         data = {'html': render_to_string(template, context, request)}
     elif requested_details == 'charges':
-        filtered_results = Consult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user, charge__gte=0).order_by('-datetime')
+        filtered_results = BaseConsult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user, charge__gte=0).order_by('-datetime')
         template = 'patients/patient_charges_partial_list.html'
         context = {'charges': filtered_results}
         data = {'html': render_to_string(template, context, request)}
@@ -182,7 +212,7 @@ def delete_patient(request, pk):
     patient = Patient.objects.get(pk=pk)
     doctor_group = Group.objects.get(name='Doctor')
     doctor = doctor_group in request.user.groups.all()
-    consults = Consult.objects.filter(created_by=request.user, patient=patient, medical_status=True)
+    consults = BaseConsult.objects.filter(created_by=request.user, patient=patient, medical_status=True)
     template = 'patients/delete_patient.html'
     context = {'patient': patient}
     data = {'html': render_to_string(template, context, request=request)}

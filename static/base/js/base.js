@@ -339,8 +339,8 @@ if (socialSection){
             .then(data => {
                 if (data['html']){
                     socialSectionData.innerHTML = data['html']
-                    if (data['accepted'] && data['sender']){
-                        notificationWebsocket.send(JSON.stringify({'to': data['sender'], 'message': ' just accepted your contact addition request', 'nf_type': 'contact_request_accepted'}))
+                    if (data['accepted']){
+                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'created_by': data['created_by'], 'message': ' just accepted your contact addition request', 'nf_type': 'contact_request_accepted'}))
                     }
                 }else{
                     e.target.parentNode.remove()

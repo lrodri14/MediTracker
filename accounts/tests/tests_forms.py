@@ -11,7 +11,7 @@ class TestSignUpForm(TestCase):
             'email': 'adolfo123@gmail.com',
             'password1': 'bmwm3e46',
             'password2': 'bmwm3e46',
-            'roll': 'Doctor',
+            'roll': 'DOCTOR',
             'speciality': 'UROLOGY'
         })
 
@@ -25,7 +25,7 @@ class TestSignUpForm(TestCase):
             'email': 'adolfo123gmail.com',
             'password1': 'bmwm3e46',
             'password2': 'bmwbmwmw',
-            'roll': 'Doctor',
+            'roll': 'DOCTOR',
             'speciality': 'UROLOGY'
         })
         self.assertEqual(len(form.errors), 2)

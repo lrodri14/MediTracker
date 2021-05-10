@@ -274,7 +274,7 @@ if (modal){
             .then(data => {
                 if (data['success']){
                     modal.classList.remove('modal-show')
-                    notificationWebsocket.send(JSON.stringify({'to': data['created_by'],'message': `Appointment has been created successfully for ${data['datetime']} by `, 'nf_type': 'appointment_created'}))
+                    notificationWebsocket.send(JSON.stringify({'to': data['to'], 'created_by': data['created_by'], 'message': `Appointment has been created successfully for ${data['datetime']} by `, 'nf_type': 'appointment_created'}))
                 } else {
                     modalContent.innerHTML = data['html']
                 }

@@ -32,6 +32,7 @@
         </div>
         <i class="fas fa-angle-left"></i><i class="fas fa-angle-right"></i>
         <div class="diagnose">
+        {% if user.doctor.speciality == 'GM' or user.doctor.speciality == 'IM' or user.doctor.speciality == 'PED' %}
             <div>
                 <div class="data">
                     <h3>Vital Signs</h3>
@@ -60,6 +61,14 @@
                     <p>{{ consult_form.medical_exams }}</p>
                 </div>
             </div>
+        {% else %}
+            <div>
+                <div class="data">
+                    <h2>General Notes</h2>
+                    <p>{{ consult_form.general_notes }}</p>
+                </div>
+            </div>
+        {% endif %}
             <div>
                 <div class="data">
                     <h2>Diagnose</h2>

@@ -1,0 +1,8 @@
+{% load static %}
+<form method="POST" action="{% url 'settings:remove_linking' user.pk %}" id="delete">
+    {% csrf_token %}
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+    <h3>Are you sure you want to unlink this user?</h3>
+    <button id="yes" type="submit" name="choice" value="yes">Yes</button>
+    <button id="no" type="submit" name="choice" value="no">No</button>
+</form>

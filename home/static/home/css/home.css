@@ -16,6 +16,10 @@ h1{
     transition: all 0.5s;
 }
 
+#single-wrapper-title{
+    margin-top: 10%;
+}
+
 /*//////////////////////////////////////////////////// Search Bar ////////////////////////////////////////////////////*/
 
 #search-bar{
@@ -43,7 +47,7 @@ h1{
 
 .query-results{
     position: absolute;
-    top: 24%;
+    top: 10%;
     left: 10%;
     width: 82%;
     max-height: 74%;
@@ -60,7 +64,6 @@ table{
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
 }
 
 tr{
@@ -68,7 +71,6 @@ tr{
     max-line-height: 15px;
     cursor: pointer;
     transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
 }
 
 tr td{
@@ -129,6 +131,14 @@ tr:nth-child(even){
     margin-top: 20px;
 }
 
+/*//////////////////////////////////////////////////// Single Wrapper ///////////////////////////////////////////////////*/
+
+#single-wrapper{
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-gap: 10px;
+}
+
 /*/////////////////////////////////////////////////////// Tiles //////////////////////////////////////////////////////*/
 
 .tile{
@@ -182,6 +192,12 @@ h3{
 
 .logout-loader-show{
     visibility: visible;
+}
+
+.modal{
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 .modal-content{

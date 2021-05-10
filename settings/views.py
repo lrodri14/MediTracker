@@ -4,6 +4,8 @@
 """
 
 # Imports
+from meditracker.settings import STATIC_URL
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import IntegrityError
@@ -11,7 +13,10 @@ from django.apps import apps
 from django.template.loader import render_to_string
 from patients.forms import AllergyFilterForm, AllergyForm, InsuranceCarrierFilterForm, InsuranceCarrierForm
 from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm
-from accounts.forms import UserSettingsForm, MailingCredentialForm, ChangeAvailabilityForm
+from accounts.forms import MailingCredentialForm, ChangeAvailabilityForm, AddLinkingForm, UserAccountSettingsForm, UserGeneralSettingsForm
+User = apps.get_model('accounts', 'CustomUser')
+Doctor = apps.get_model('accounts', 'Doctor')
+Assistant = apps.get_model('accounts', 'Assistant')
 MailingCredential = apps.get_model('accounts', 'MailingCredential')
 InsuranceCarrier = apps.get_model('patients', 'InsuranceCarrier')
 Drugs = apps.get_model('appointments', 'Drug')
@@ -59,11 +64,11 @@ def change_wallpaper(request):
         is valid, then a success response will be sent as JSON Response.
     """
     if request.method == 'POST':
-        form = UserSettingsForm(request.POST, instance=request.user.settings)
+        form = UserGeneralSettingsForm(request.POST, instance=request.user.general_settings)
         if form.is_valid():
             form.save()
             return JsonResponse({'response': 'success'})
-    form = UserSettingsForm(instance=request.user.settings)
+    form = UserGeneralSettingsForm(instance=request.user.general_settings)
     template = 'settings/change_wallpaper.html'
     context = {'form': form}
     data = {'html': render_to_string(template, context, request)}
@@ -116,7 +121,79 @@ def account(request):
         request object.
     """
     template = 'settings/account.html'
-    data = {'html': render_to_string(template, request=request)}
+    form = UserAccountSettingsForm(instance=request.user.account_settings)
+    data = {'html': render_to_string(template, request=request, context={'user_settings_form': form})}
+    return JsonResponse(data)
+
+
+def update_user_session_expiry_time(request):
+    if request.method == "POST":
+        form = UserAccountSettingsForm(request.POST, instance=request.user.account_settings)
+        if form.is_valid():
+            form.save()
+        data = {'Success': 'Session Expiry Time has been changed successfully'}
+        return JsonResponse(data)
+
+
+# Linking
+###############################
+
+def linking(request):
+    """
+        DOCSTRING: This view is used to display the links between doctors and assitants
+    """
+    if request.user.roll == 'DOCTOR':
+        links = Assistant.objects.filter(doctors__in=[request.user])
+    else:
+        links = request.user.assistant.doctors.all()
+    template = 'settings/linkings.html'
+    data = {'html': render_to_string(template, request=request, context={'links': links})}
+    return JsonResponse(data)
+
+
+def add_linking(request):
+    """
+        DOCSTRING: The add_linking view is used by the assistant user to add a linking between itself and a doctor account,
+        this view accepts a request object, based on what method the request was made, a different operation will occur,
+        if the method id GET then we will render the add_linking form, we will send it in JSON format to be displayed
+        async in the front-end, if the method is POST, we will collect the linking id and search if there are any doctor's
+        who own this id, finally the link will be created.
+    """
+    linking_form = AddLinkingForm
+    template = 'settings/create_linking.html'
+    context = {'linking_form': linking_form}
+    data = {'html': render_to_string(template, context, request)}
+    if request.method == 'POST':
+        linking_id = request.POST.get('linking_id')
+        try:
+            doctor = Doctor.objects.get(linking_id=linking_id)
+            request.user.assistant.doctors.add(doctor)
+            links = request.user.assistant.doctors.all()
+            data = {'updated_html': render_to_string('settings/linkings.html', request=request, context={'links': links})}
+        except Doctor.DoesNotExist:
+            context['error'] = 'The linking ID provided does not belong to any entity'
+            data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def remove_linking(request, pk):
+    """
+        DOCSTRING: This remove_linking view is used to remove linkings between doctors and assistants, it receives a
+        request object and a pk used to identify the doctor or assistant that will be removed from the linkings.
+    """
+    user = User.objects.get(pk=pk)
+    if request.method == 'POST':
+        if request.user.roll == 'DOCTOR':
+            user.assistant.doctors.remove(request.user)
+            links = Assistant.objects.filter(doctors__in=[request.user])
+        else:
+            request.user.assistant.doctors.remove(user)
+            links = request.user.assistant.doctors.all()
+        data = {'updated_html': render_to_string(template_name='settings/linkings.html', request=request, context={'links':links})}
+        return JsonResponse(data)
+
+    template = 'settings/remove_linking.html'
+    data = {'html': render_to_string(template, request=request, context={'user': user})}
     return JsonResponse(data)
 
 # Mailing
@@ -282,11 +359,9 @@ def update_medical_test(request, pk):
         medical_test_form = MedicalTestForm(request.POST or None, instance=medical_test)
         if medical_test_form.is_valid():
             try:
-                # Why do i need to provide again the user?
                 medical_test_form.save()
                 updated_medical_tests = MedicalTest.objects.filter(created_by=request.user).order_by('name')
                 context = {'medical_tests': updated_medical_tests, 'form': MedicalTestForm}
-                # How to return an error from the backend to the frontend?
                 data = {'updated_html': render_to_string('settings/medical_testing.html', context, request)}
             except IntegrityError:
                 context['error'] = 'Medical Test already listed in your options'
@@ -381,7 +456,6 @@ def add_insurance_carrier(request):
                 insurance.save()
                 updated_insurances = InsuranceCarrier.objects.filter(created_by=request.user).order_by('company')
                 context = {'insurances': updated_insurances, 'form': InsuranceCarrierFilterForm}
-                # How to return an error from the backend to the frontend?
                 data = {'updated_html': render_to_string('settings/insurance_list.html', context, request), 'updated_selections': render_to_string('settings/insurance_partial_select.html', context=context, request=request)}
             except IntegrityError:
                 context['error'] = 'Insurance already listed in your options'

@@ -3,6 +3,8 @@
     5 classes.
 """
 
+import string
+import random
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utilities.global_utilities import LOCATION_CHOICES, ORIGIN_CHOICES
@@ -16,51 +18,123 @@ class CustomUser(AbstractUser):
         DOCSTRING:
         This CustomUser class is used to create user instances, this class inherits from the AbstractUser class since
         we needed to add some extra information to the User, every time the user instance is created a new UserProfile
-        class instance is created as well, linked through a OneToOne relationship to the user. We overwrote our save
-        method to capitalize the user names and last names whenever is created.
+        class instance is created as well, linked through a OneToOne relationship to the user. We created the assign_roll
+        method that will set the current instance's roll and overwrote our save method to capitalize the user names and
+        last names whenever is created.
     """
 
     ROLL_CHOICES = (
-        ('Doctor', 'Doctor'),
-        ('Assistant', 'Assistant'),
-        ('Patient', 'Patient')
+        ('DOCTOR', 'Doctor'),
+        ('ASSISTANT', 'Assistant'),
+        # ('PATIENT', 'Patient'),
+        # ('LABORATORY', 'Laboratory'),
+        # ('PHARMACY', 'Pharmacy')
     )
 
-    SPECIALITY_CHOICES = (
-        ('ALLERGY & IMMUNOLOGY', 'Allergy & Immunology'),
-        ('ANESTHESIOLOGY', 'Anesthesiology'),
-        ('DERMATOLOGY', 'Dermatology'),
-        ('DENTIST', 'Dentist'),
-        ('DIAGNOSTIC RADIOLOGY', 'Diagnostic Radiology'),
-        ('EMERGENCY MEDICINE', 'Emergency Medicine'),
-        ('FAMILY MEDICINE', 'Family Medicine'),
-        ('INTERNAL MEDICINE', 'Internal Medicine'),
-        ('MEDICAL GENETICS', 'Medical Genetics'),
-        ('NEUROLOGY', 'Neurology'),
-        ('NUCLEAR MEDICINE', 'Nuclear Medicine'),
-        ('OBSTETRICS AND GYNECOLOGY', 'Obstetrics & Gynechology'),
-        ('OPHTHALMOLOGY', 'Ophthalmolgy'),
-        ('PATHOLOGY', 'Pathology'),
-        ('PEDIATRICS', 'Pediatrics'),
-        ('PHYSICAL MEDICINE & REHABILITATION', 'Physical Medicine & Rehabilitation'),
-        ('PREVENTIVE MEDICINE', 'Preventive Medicine'),
-        ('PSYCHIATRY', 'Psychiatry'),
-        ('RADIATION ONCOLOGY', 'Radiation Oncology'),
-        ('SURGERY', 'Surgery'),
-        ('UROLOGY', 'Urology'),
-    )
     email = models.EmailField(blank=False, unique=True)
-    roll = models.CharField('Roll', max_length=25, blank=False, help_text='Choose the roll you will acquire in this account.', choices=ROLL_CHOICES)
-    speciality = models.CharField('Speciality', max_length=100, blank=True, help_text='If your roll is (A, Assistant), leave this field blank.', choices=SPECIALITY_CHOICES)
+    roll = models.CharField(verbose_name='Roll', max_length=25, blank=False, help_text='Choose the roll you will acquire in this account.', choices=ROLL_CHOICES)
+
+    def assign_roll(self, speciality):
+        """
+            DOCSTRING: This method 'assign_roll' will receive a boolean value parameter, which will define the roll inside
+            the current instance. If the speciality parameter receives a True boolean value, then roll will be assigned as
+            'Doctor' if that's not the case, then it will be set to 'Assistant'
+        """
+        if speciality is not False:
+            self.roll = 'DOCTOR'
+        else:
+            self.roll = 'ASSISTANT'
 
     def save(self, *args, **kwargs):
         self.first_name = self.first_name.title()
         self.last_name = self.last_name.title()
-        created = not self.pk
-        super(CustomUser, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['username', ]
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+
+class Doctor(CustomUser):
+
+    """
+        DOCSTRING: This Doctor class is used to create Doctor roll user instances, it inherits functionality from
+        CustomUser class, we defined two extra fields called speciality to choose the doctor's sepaciality and linking_id
+        which will store a unique characters id, this id will be used by Assistant user instances to link to the doctors.
+        We added a new method called generate_linking_id() which will generate and assign the id mentiones before.
+    """
+
+    SPECIALITY_CHOICES = (
+        ('A&I', 'Allergy & Immunology'),
+        ('DT', 'Dentist'),
+        ('IM', 'Internal Medicine'),
+        ('GM', 'General Medicine'),
+        ('NEU', 'Neurology'),
+        ('O&G', 'Obstetrics & Gynecology'),
+        ('OPH', 'Ophthalmology'),
+        ('PED', 'Pediatrics'),
+        ('PSY', 'Psychiatry'),
+        ('SRG', 'Surgery'),
+        ('URO', 'Urology'),
+    )
+
+    speciality = models.CharField(verbose_name='Speciality', max_length=100, blank=True, help_text="Doctor's Speciality", choices=SPECIALITY_CHOICES)
+    linking_id = models.CharField(verbose_name='Linking ID', max_length=14, blank=True, null=True, help_text='Used by Assistants to link to Doctors', unique=True)
+
+    def generate_linking_id(self):
+        """
+            DOCSTRING: This generate_linking_id method will create a 14 character unique string, that will be used in the
+            linking processes between the assistants and doctors, after it's generated it will be assigned to the linking_id
+            attribute.
+        """
+        generated_linking_id = ''
+        characters = string.ascii_letters + string.digits
+        for i in range(0, 12):
+            random_digit = random.randint(0, len(characters)-1)
+            generated_linking_id += characters[random_digit]
+            if len(generated_linking_id) == 4 or len(generated_linking_id) == 9:
+                generated_linking_id += '-'
+        self.linking_id = generated_linking_id
+
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+        super().save(*args, **kwargs)
         if created:
             UsersProfile.objects.create(user=self)
-            UserSetting.objects.create(wallpaper=1, user=self)
+            UserAccountSettings.objects.create(user=self)
+            UserGeneralSettings.objects.create(wallpaper=1, user=self)
+            MailingCredential.objects.create(email=self.email, user=self)
+
+    class Meta:
+        verbose_name = 'Doctor'
+        verbose_name_plural = 'Doctors'
+        ordering = ['first_name', ]
+
+
+class Assistant(CustomUser):
+
+    """
+        DOCSTRING: This Assistant class is used to create Assistant roll user instances, it inherits functionality from the
+        CustomUser class, we added an extra field 'doctors' which declares a relationship from ManyToMany with the Doctor
+        class, this way the assistant can be able to relate with as many doctors as needed.
+
+        *NOTE* Assistant can only relate to a single doctor until now, in future updates this functionality will be added.
+    """
+
+    doctors = models.ManyToManyField(to=Doctor, verbose_name='Doctors', blank=True, help_text="Doctor's who this assistant will be working with")
+
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+        super().save(*args, **kwargs)
+        if created:
+            UserAccountSettings.objects.create(user=self)
+            UserGeneralSettings.objects.create(wallpaper=1, user=self)
+
+    class Meta:
+        verbose_name = 'Assistant'
+        verbose_name_plural = 'Assistants'
+        ordering = ['first_name', ]
 
 
 class UsersProfile(models.Model):
@@ -92,40 +166,62 @@ class UsersProfile(models.Model):
     location = models.CharField('Location', max_length=100, blank=False, null=True, choices=LOCATION_CHOICES, help_text='Provide your location')
     address = models.TextField('Address', max_length=200, blank=False, null=True, help_text='Provide your exact address')
     phone_number = models.CharField('Phone Number', max_length=15, null=True, blank=True, help_text='Provide your phone number')
-    tzone = models.CharField('Timezone', max_length=40, blank=False, null=True, help_text='Provide your timezone')
     contacts = models.ManyToManyField(to=CustomUser, blank=True, help_text='Contacts List')
+
+    def __str__(self):
+        return str(self.user) + ' - ' + 'User Profile'
 
     class Meta:
         ordering = ['user']
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
 
-    def __str__(self):
-        return str(self.user) + ' - ' + 'User Profile'
 
-
-class UserSetting(models.Model):
+class UserAccountSettings(models.Model):
 
     """
         DOCSTRING:
-        This UsersSetting class is linked through a OneToOne relationship with the CustomUser class, this class will
-        store all the user's app settings . We created the class Class Meta to provide extra functionality
+        This UserAccountSettings class is linked through a OneToOne relationship with the CustomUser class, this class will
+        store all the user's account settings . We created the class Class Meta to provide extra functionality
         and finally we created the class's own __str__ dunder method.
     """
 
-    wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper')
-    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='settings')
+    SESSION_EXPIRE_TIME = (
+        (300, '5 Minutes'),
+        (600, '10 Minutes'),
+        (1200, '20 Minutes'),
+        (1800, '30 Minutes'),
+        (3600, '1 Hour'),
+    )
 
-    class Meta:
-        verbose_name = "User Setting"
-        verbose_name_plural = "User Settings"
+    tzone = models.CharField('Timezone', max_length=40, blank=False, null=True, help_text='Provide your timezone')
+    session_expire_time = models.IntegerField('Session Expire Time', blank=True, null=True, help_text='Provide your session time expire timeout', choices=SESSION_EXPIRE_TIME, default=1800)
+    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='account_settings')
 
     def __str__(self):
-        return str(self.user) + " Settings"
+        return str(self.user) + " Account Settings"
 
-    def save(self, *args, **kwargs):
-        self.wallpaper = 'web-backgrounds/bg-{}.jpg'.format(self.wallpaper)
-        super().save(*args, **kwargs)
+    class Meta:
+        verbose_name = "User Account Setting"
+        verbose_name_plural = "User Account Settings"
+
+
+class UserGeneralSettings(models.Model):
+    """
+        DOCSTRING:
+        This UserGeneralSettings class is linked through a OneToOne relationship with the CustomUser class, this class will
+        store all the user's general settings . We created the class Class Meta to provide extra functionality
+        and finally we created the class's own __str__ dunder method.
+    """
+    wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper')
+    user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='general_settings')
+
+    def __str__(self):
+        return str(self.user) + " General Settings"
+
+    class Meta:
+        verbose_name = "User General Setting"
+        verbose_name_plural = "User General Settings"
 
 
 class MailingCredential(models.Model):
@@ -145,12 +241,21 @@ class MailingCredential(models.Model):
     use_tls = models.BooleanField("Use TLS? (Recommended)", default=False)
     user = models.OneToOneField(CustomUser, blank=True, null=True, related_name="mailing_credentials", on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.user) + ' - ' + 'Mailing Credentials'
+
+    def save(self, *args, **kwargs):
+        from utilities.accounts_utilities import set_mailing_credentials
+        available_credentials = set_mailing_credentials(self.email)
+        if available_credentials:
+            self.smtp_server = available_credentials['smtp_server']
+            self.port = available_credentials['port']
+            self.use_tls = available_credentials['use_tls']
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = 'Mailing Credential'
         verbose_name_plural = 'Mailing Credentials'
-
-    def __str__(self):
-        return str(self.user) + ' - ' + 'Mailing Credentials'
 
 
 class ContactRequest(models.Model):
@@ -166,13 +271,13 @@ class ContactRequest(models.Model):
     to_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User to send the request', verbose_name='Request Receive', related_name='request')
     from_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User sending the request', verbose_name='Request Sender')
 
+    def __str__(self):
+        return 'Contact request sent from: {} to {}'.format(self.from_user, self.to_user)
+
     class Meta:
         verbose_name = 'Contact Request'
         verbose_name_plural = 'Contact Requests'
         unique_together = ['from_user', 'to_user']
-
-    def __str__(self):
-        return 'Contact request sent from: {} to {}'.format(self.from_user, self.to_user)
 
 
 class Chat(models.Model):
@@ -187,10 +292,6 @@ class Chat(models.Model):
 
     participants = models.ManyToManyField(to=CustomUser, blank=True, verbose_name='Participants', related_name='participants', help_text='Chat Participants')
 
-    class Meta:
-        verbose_name = 'Chat'
-        verbose_name_plural = 'Chats'
-
     def __str__(self):
         return "{}'s and {}'s private chat".format(self.participants.all()[0], self.participants.all()[1])
 
@@ -204,3 +305,7 @@ class Chat(models.Model):
 
         destination = self.participants.all()[1] if user == self.participants.all()[0] else self.participants.all()[0]
         return destination
+
+    class Meta:
+        verbose_name = 'Chat'
+        verbose_name_plural = 'Chats'

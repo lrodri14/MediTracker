@@ -25,7 +25,7 @@ class TestUserProfileModel(TestCase):
     def setUp(self):
         user_model = get_user_model()
         self.user = user_model.objects.create_user(username='luisadolfo', password='bmwm3e46', first_name='luis',
-                                                   last_name='rodriguez', roll='Doctor', speciality='UROLOGY')
+                                                   last_name='rodriguez', roll='DOCTOR', speciality='UROLOGY')
 
     def test_existence_of_profile_created(self):
         profile = UsersProfile.objects.get(user=self.user)

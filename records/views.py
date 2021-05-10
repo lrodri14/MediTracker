@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from patients.models import Patient
-from appointments.models import Consult
+from appointments.models import BaseConsult
 from appointments.forms import RecordsDateFilterForm
 
 
@@ -26,7 +26,7 @@ def records(request):
         an object request, This view will render the content if the page is not a valid number, if it is, the response will
         be returned in JSON Format.
     """
-    records_list = Consult.objects.filter(created_by=request.user, medical_status=True).order_by('-datetime')
+    records_list = BaseConsult.objects.filter(created_by=request.user, medical_status=True).order_by('-datetime')
     form = RecordsDateFilterForm
     template = 'records/records_list.html'
     context = {'records': records_list, 'form': form}
@@ -43,7 +43,7 @@ def filter_records(request):
     """
     query_date_from = datetime.strptime(request.GET.get('date_from'), '%Y-%m-%d')
     query_date_to = datetime.strptime(request.GET.get('date_to'), '%Y-%m-%d')
-    filtered_records = Consult.objects.filter(created_by=request.user, datetime__date__gte=query_date_from, datetime__date__lte=query_date_to, medical_status=True).order_by('-datetime')
+    filtered_records = BaseConsult.objects.filter(created_by=request.user, datetime__date__gte=query_date_from, datetime__date__lte=query_date_to, medical_status=True).order_by('-datetime')
     template = 'records/partial_records_list.html'
     context = {'records': filtered_records}
     data = {'html': render_to_string(template, context, request)}
@@ -60,7 +60,7 @@ def personal_records(request, pk):
         which expects a patient's primary key.
     """
     patient = Patient.objects.get(pk=pk)
-    records_list = Consult.objects.filter(created_by=request.user, medical_status=True, patient=patient).order_by('-datetime')
+    records_list = BaseConsult.objects.filter(created_by=request.user, medical_status=True, patient=patient).order_by('-datetime')
     template = 'records/personal_records.html'
     context = {'records': records_list}
     data = {'html': render_to_string(template, context, request)}

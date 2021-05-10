@@ -1,0 +1,9 @@
+{% load static %}
+<form method="POST" action="{% url 'settings:add_linking' %}" autocomplete="off" class="add">
+    {% csrf_token %}
+    <h2>Add Linking</h2>
+    <p>Linking ID</p>
+    <p>{{ linking_form.linking_id }}</p>
+    <p class="error"><small>{{ error }}</small></p>
+    <button type="submit" id="medical-test-submit">Link</button>
+</form>
