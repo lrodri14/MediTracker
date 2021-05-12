@@ -62,6 +62,14 @@ function chargesScroll(){
     })
 }
 
+function vaccinesAndSurgeriesScroll(){
+    /*This function will scroll the window object left the width of the window screen * 5 in a smooth behavior.*/
+    window.scrollTo({
+        left: window.screen.availWidth * 4,
+        behavior: 'smooth'
+    })
+}
+
 function defineQuerystring(classList){
     let dayFrom
     let monthFrom
@@ -97,6 +105,24 @@ function defineQuerystring(classList){
             monthTo = document.querySelector('.charges-form #id_date_to_month').value
             yearTo = document.querySelector('.charges-form #id_date_to_year').value
             filterRequestType = 'charges'
+            break
+        case 'vaccines-form':
+            dayFrom = document.querySelector('.vaccines-form #id_date_from_day').value
+            monthFrom = document.querySelector('.vaccines-form #id_date_from_month').value
+            yearFrom = document.querySelector('.vaccines-form #id_date_from_year').value
+            dayTo = document.querySelector('.vaccines-form #id_date_to_day').value
+            monthTo = document.querySelector('.vaccines-form #id_date_to_month').value
+            yearTo = document.querySelector('.vaccines-form #id_date_to_year').value
+            filterRequestType = 'vaccines'
+            break
+        case 'surgeries-form':
+            dayFrom = document.querySelector('.surgeries-form #id_date_from_day').value
+            monthFrom = document.querySelector('.surgeries-form #id_date_from_month').value
+            yearFrom = document.querySelector('.surgeries-form #id_date_from_year').value
+            dayTo = document.querySelector('.surgeries-form #id_date_to_day').value
+            monthTo = document.querySelector('.surgeries-form #id_date_to_month').value
+            yearTo = document.querySelector('.surgeries-form #id_date_to_year').value
+            filterRequestType = 'surgeries'
             break
     }
 
@@ -159,6 +185,16 @@ body.addEventListener('mouseover', (e) => {
         e.target.classList.add('fa-angle-hover')
     }
 
+    // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be added.
+    if (e.target.classList.contains('fa-plus')){
+        e.target.classList.add('fa-plus-hover')
+    }
+
+    // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be added.
+    if (e.target.classList.contains('fa-edit')){
+        e.target.classList.add('fa-edit-hover')
+    }
+
     /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
        properties from the row and add tr-hover and td-hover class*/
     if (e.target.nodeName === 'TD'){
@@ -205,6 +241,16 @@ body.addEventListener('mouseout', (e) => {
     // This event will be fired, every time the user hover out occurs on a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be removed.
     if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
         e.target.classList.remove('fa-angle-hover')
+    }
+
+    // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be removed.
+    if (e.target.classList.contains('fa-plus')){
+        e.target.classList.remove('fa-plus-hover')
+    }
+
+    // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be removed.
+    if (e.target.classList.contains('fa-edit')){
+        e.target.classList.remove('fa-edit-hover')
     }
 
   /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
@@ -311,8 +357,11 @@ body.addEventListener('click', (e) => {
         }else if (tab.innerText === 'Exams'){
             examsScroll()
             title.innerText = tab.innerText
-        }else{
+        }else if (tab.innerText === 'Charges'){
             chargesScroll()
+            title.innerText = tab.innerText
+        }else{
+            vaccinesAndSurgeriesScroll()
             title.innerText = tab.innerText
         }
     }
@@ -337,6 +386,18 @@ body.addEventListener('click', (e) => {
         let form = document.querySelector('.charges-form')
         form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
         chargesBackUp = document.querySelector('.charges').innerHTML
+
+    }else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('vaccines-filter')){
+
+        let form = document.querySelector('.vaccines-form')
+        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
+        vaccinesBackUp = document.querySelector('.vaccines').innerHTML
+
+    }else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('surgeries-filter')){
+
+        let form = document.querySelector('.surgeries-form')
+        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
+        surgeriesBackup = document.querySelector('.surgeries').innerHTML
 
     }
 
@@ -371,7 +432,6 @@ body.addEventListener('submit', (e) => {
         const url = e.target.action + queryString
         filterResultsAW(url)
         .then(data => {
-            document.querySelector('#consults-paginator') && document.querySelector('#consults-paginator').remove()
             tableData.innerHTML = data['html']
         })
     } else if (e.target.classList.contains('exams-form')){
@@ -379,15 +439,27 @@ body.addEventListener('submit', (e) => {
         const url = e.target.action + queryString
         filterResultsAW(url)
         .then(data => {
-            document.querySelector('#exams-paginator') && document.querySelector('#exams-paginator').remove()
             tableData.innerHTML = data['html']
         })
-    } else{
+    } else if (e.target.classList.contains('charges-form')){
         tableData = document.querySelector('.charges tbody')
         const url = e.target.action + queryString
         filterResultsAW(url)
         .then(data => {
-            document.querySelector('#charges-paginator') && document.querySelector('#charges-paginator').remove()
+            tableData.innerHTML = data['html']
+        })
+    }else if (e.target.classList.contains('vaccines-form')){
+        tableData = document.querySelector('.vaccines tbody')
+        const url = e.target.action + queryString
+        filterResultsAW(url)
+        .then(data => {
+            tableData.innerHTML = data['html']
+        })
+    }else{
+        tableData = document.querySelector('.surgeries tbody')
+        const url = e.target.action + queryString
+        filterResultsAW(url)
+        .then(data => {
             tableData.innerHTML = data['html']
         })
     }

@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from utilities.appointments_utilities import MEDICAL_TEST_CHOICES
 from .models import BaseConsult, GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult,\
                     GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult,\
-                    MedicalTest, MedicalTestResult, Drug
+                    MedicalTest, MedicalTestResult, Drug, Vaccine, VaccineApplication, Surgery
 
 # Creation Forms
 
@@ -344,7 +344,7 @@ class ConsultDetailsFilterForm(forms.Form):
         The ConsultDetailsFilterForm inherits from forms.Form class and is used to consults records and display them
         dynamically in our template, it holds only two attributes: 'date_from' and 'date_to'
     """
-    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), initial=timezone.now())
+    date_from = forms.DateField(widget=forms.SelectDateWidget(years=years), initial=timezone.now() - relativedelta.relativedelta(months=3))
     date_to = forms.DateField(widget=forms.SelectDateWidget(years=years), initial=timezone.now())
 
 # Tuple Holding all the months displayed in the Registers Filter Form
@@ -466,3 +466,46 @@ class MedicalTestTypeFilterForm(forms.Form):
         The MedicalTestFilterForm is used to filter medical tests and display them dynamically in our template.
     """
     test_type = forms.CharField(label='Test Type', required=False, widget=forms.Select(choices=MEDICAL_TEST_CHOICES))
+
+
+class VaccineCreationAndUpdateForm(forms.ModelForm):
+
+    """
+        DOCSTRING: This VaccineCreationAndUpdateForm is used to create and update Vaccine instances.
+    """
+
+    class Meta:
+        model = Vaccine
+        exclude = ('created_by',)
+
+
+class SurgeryCreationAndUpdateForm(forms.ModelForm):
+
+    """
+        DOCSTRING: This SurgeryCreationAndUpdateForm is used to create and update Surgery instances.
+    """
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['patient'].queryset = Patient.objects.filter(created_by=user)
+
+    class Meta:
+        model = Surgery
+        exclude = ('created_by',)
+
+
+class VaccineApplicationCreationAndUpdateForm(forms.ModelForm):
+
+    """
+        DOCSTRING: This VaccineApplicationCreationAndUpdateForm is used to create and update VaccineApplication instances.
+    """
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['patient'].queryset = Patient.objects.filter(created_by=user)
+
+    class Meta:
+        model = VaccineApplication
+        fields = '__all__'

@@ -1,0 +1,25 @@
+{% load static %}
+{% for surgery in surgeries %}
+    <tr>
+        <td>{{ surgery.get_surgery_type_display }}</td>
+        <td>{{ surgery.datetime.date }}</td>
+        <td>{{ surgery.datetime.time }}</td>
+        {% if surgery.status == 'OPEN' %}
+            <td id="Open">Open</td>
+        {% elif surgery.status == 'CONFIRMED' %}
+            <td id="Confirmed">Confirmed</td>
+        {% elif surgery.status == 'CANCELLED' %}
+            <td id="Cancelled">Cancelled</td>
+        {% elif surgery.status == 'CLOSED' %}
+            <td id="Closed">Closed</td>
+        {% endif %}
+        {% if surgery.medical_status == False and surgery.status == 'CLOSED' or surgery.medical_status == False and surgery.status == 'CANCELLED' %}
+            <td id="never_attended">Never Attended</td>
+        {% elif surgery.medical_status == False and surgery.status == 'OPEN' or surgery.medical_status == False and r.status == 'CONFIRMED' %}
+            <td id="pending">Pending</td>
+        {% else %}
+            <td id="attended">Attended</td>
+        {% endif %}
+        <td><i class="fas fa-edit"></i></td>
+    </tr>
+{% endfor %}

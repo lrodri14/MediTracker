@@ -114,8 +114,7 @@ body{
 }
 
 /*///////////////////////////////////////////////////// Forms ////////////////////////////////////////////////////////*/
-
-form{
+#login-form, #signup-form, #password-reset-form, #password-reset-done{
     text-align: center;
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur( 10px );
@@ -178,10 +177,22 @@ select{
   background-color: rgba(0,0,0,0);
   border: none;
   border-bottom: 1px solid #FFFFFF;
+  width: 250px;
   height: 30px;
 }
 
 select:focus{
+    outline: none;
+}
+
+textarea{
+    border: 1px solid white;
+    background-color: transparent;
+    resize: none;
+    height: 100px;
+}
+
+textarea:focus{
     outline: none;
 }
 
@@ -233,12 +244,6 @@ select:focus{
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 25px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur( 10px );
-    background-clip: padding-box;
-    z-index: 1;
     animation: show-up 0.3s linear forwards;
 }
 
@@ -257,8 +262,8 @@ select:focus{
 
 #signup-form{
     width: 70%;
-    padding: 25px;
-    border-radius: 25px;
+    padding: 10px;
+    border-radius: 20px;
     position: absolute;
     top: 50%;
     left: 50%;

@@ -161,25 +161,42 @@ def signup(request):
     """
     data = {}
     account_type = request.GET.get('account_type')
-    form = DoctorSignUpForm if account_type == 'doctor' else AssistantSignUpForm
+
+    if account_type == 'doctor':
+        user_creation_form = DoctorSignUpForm
+        profile_creation_form = ProfileForm
+        context = {'user_creation_form': user_creation_form, 'profile_creation_form': profile_creation_form}
+    else:
+        user_creation_form = AssistantSignUpForm
+        context = {'user_creation_form': user_creation_form}
+
     if request.method == 'POST':
         doctor = Group.objects.get(name='Doctor')
         assistant = Group.objects.get(name='Assistant')
-        form = DoctorSignUpForm(request.POST) if 'speciality' in request.POST else AssistantSignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            if form.cleaned_data.get('speciality'):
+
+        if 'speciality' in request.POST:
+            user_creation_form = DoctorSignUpForm(request.POST)
+            profile_creation_form = ProfileForm(request.POST)
+        else:
+            user_creation_form = AssistantSignUpForm(request.POST)
+
+        if user_creation_form.is_valid():
+            user = user_creation_form.save(commit=False)
+            if user_creation_form.cleaned_data.get('speciality'):
+                user_profile = profile_creation_form.save(commit=False)
                 user.assign_roll(speciality=True)
                 user.generate_linking_id()
                 user.save()
                 user.groups.add(doctor)
+                user_profile.user = user
+                user_profile.save()
             else:
                 user.assign_roll(speciality=False)
                 user.save()
                 user.groups.add(assistant)
         else:
             data['error'] = True
-    context = {'form': form}
+
     data['html'] = render_to_string('accounts/signup.html', context, request)
     return JsonResponse(data)
 

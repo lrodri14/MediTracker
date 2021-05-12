@@ -3,38 +3,86 @@
 <form method="POST" autocomplete="off" id="signup-form" action="{% url 'accounts:signup' %}">
     {% csrf_token %}
     <div class="wrapper">
-        <!-- Personal Information -->
-        <div class="personal-info">
-            <h1>Sign Up</h1>
-            <p>{{ form.first_name.label }}</p>
-            <p>{{ form.first_name }}</p>
-            <p>{{ form.last_name.label }}</p>
-            <p>{{ form.last_name }}</p>
-            <p>{{ form.email.label }}</p>
-            <p>{{ form.email }}</p>
-            <p>{{ form.speciality.label }}</p>
-            <p>{{ form.speciality }}</p>
+        {% if profile_creation_form %}
+            <!-- Personal Information -->
+            <div class="personal-info">
+                <h1>Sign Up</h1>
+                <p>{{ user_creation_form.first_name.label }}</p>
+                <p>{{ user_creation_form.first_name }}</p>
+                <p>{{ user_creation_form.last_name.label }}</p>
+                <p>{{ user_creation_form.last_name }}</p>
+                <p>{{ profile_creation_form.gender.label }}</p>
+                <p>{{ profile_creation_form.gender }}</p>
+                <p>{{ profile_creation_form.origin.label }}</p>
+                <p>{{ profile_creation_form.origin }}</p>
+                <p>{{ profile_creation_form.location.label }}</p>
+                <p>{{ profile_creation_form.location }}</p>
+                <p>{{ profile_creation_form.birth_date.label }}</p>
+                <p>{{ profile_creation_form.birth_date }}</p>
+                <p>{{ user_creation_form.speciality.label }}</p>
+                <p>{{ user_creation_form.speciality }}</p>
+            </div>
+            <!-- Account Information -->
+            <div class="account-info">
+                <p>{{ user_creation_form.username.label }}</p>
+                <p>{{ user_creation_form.username }}</p>
+                <p>{{ user_creation_form.email.label }}</p>
+                <p>{{ user_creation_form.email }}</p>
+                <p>{{ user_creation_form.password1.label }}</p>
+                <p>{{ user_creation_form.password1 }}</p>
+                <p>Password Confirmation</p>
+                <p>{{ user_creation_form.password2 }}</p>
+                <p>{{ profile_creation_form.phone_number.label }}</p>
+                <p>{{ profile_creation_form.phone_number }}</p>
+                <p>{{ profile_creation_form.address.label }}</p>
+                <p>{{ profile_creation_form.address }}</p>
+                <button type="submit" class="submit-btn signup-submit-btn">Sign Up</button>
+                {% if user_creation_form.errors %}
+                    {% for error in user_creation_form.email.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                    {% for error in user_creation_form.username.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                    {% for error in user_creation_form.password2.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% else %}
+            <!-- Personal Information -->
+            <div class="personal-info">
+                <h1>Sign Up</h1>
+                <p>{{ user_creation_form.first_name.label }}</p>
+                <p>{{ user_creation_form.first_name }}</p>
+                <p>{{ user_creation_form.last_name.label }}</p>
+                <p>{{ user_creation_form.last_name }}</p>
+                <p>{{ user_creation_form.email.label }}</p>
+                <p>{{ user_creation_form.email }}</p>
+                <p>{{ user_creation_form.speciality.label }}</p>
+                <p>{{ user_creation_form.speciality }}</p>
+            </div>
+            <!-- Account Information -->
+            <div class="account-info">
+                <p>{{ user_creation_form.username.label }}</p>
+                <p>{{ user_creation_form.username }}</p>
+                <p>{{ user_creation_form.password1.label }}</p>
+                <p>{{ user_creation_form.password1 }}</p>
+                <p>Password Confirmation</p>
+                <p>{{ user_creation_form.password2 }}</p>
+                <button type="submit" class="submit-btn signup-submit-btn">Sign Up</button>
+                {% if user_creation_form.errors %}
+                    {% for error in user_creation_form.email.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                    {% for error in user_creation_form.username.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                    {% for error in user_creation_form.password2.errors %}
+                        <p class="error"><small>{{ error }}</small></p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
         </div>
-        <!-- Account Information -->
-        <div class="account-info">
-            <p>{{ form.username.label }}</p>
-            <p>{{ form.username }}</p>
-            <p>{{ form.password1.label }}</p>
-            <p>{{ form.password1 }}</p>
-            <p>Password Confirmation</p>
-            <p>{{ form.password2 }}</p>
-            <button type="submit" class="submit-btn signup-submit-btn">Sign Up</button>
-            {% if form.errors %}
-                {% for error in form.email.errors %}
-                    <p class="error"><small>{{ error }}</small></p>
-                {% endfor %}
-                {% for error in form.username.errors %}
-                    <p class="error"><small>{{ error }}</small></p>
-                {% endfor %}
-                {% for error in form.password2.errors %}
-                    <p class="error"><small>{{ error }}</small></p>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
 </form>

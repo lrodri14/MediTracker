@@ -14,6 +14,7 @@ urlpatterns = [
     path('add_patient/', add_patient, name='add_patient'),
     path('details/<int:pk>', patient_details, name='patients_details'),
     path('filter_patient_details', filter_patient_details, name='filter_patient_details'),
+    path('filter_patient_details/<int:pk>', filter_patient_details, name='filter_patient_details'),
     path('update/<int:pk>', update_patient, name='update_patient'),
     path('delete/<int:pk>', delete_patient, name='delete_patient'),
     path('send_email', send_email, name='send_email'),

@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.db import models
 from patients.models import Patient
 from django.contrib.auth import get_user_model
-from utilities.appointments_utilities import DRUG_CATEGORY_CHOICES, MEDICAL_TEST_CHOICES
+from utilities.appointments_utilities import STATUS_CHOICES, DRUG_CATEGORY_CHOICES, MEDICAL_TEST_CHOICES
 # Getting the user model
 user = get_user_model()
 
@@ -92,12 +92,6 @@ class MedicalTest(models.Model):
     name = models.CharField('Test Name', max_length=150, blank=False, null=True, help_text='Medical Test Name')
     created_by = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, help_text='Created By', related_name='medical_test')
 
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'Medical Test'
-        verbose_name_plural = 'Medical Tests'
-        unique_together = ['test_type', 'name', 'created_by']
-
     def __str__(self):
         return self.name
 
@@ -112,6 +106,114 @@ class MedicalTest(models.Model):
         self.name = self.name.title()
         super().save(*args, **kwargs)
 
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Medical Test'
+        verbose_name_plural = 'Medical Tests'
+        unique_together = ['test_type', 'name', 'created_by']
+
+
+class Vaccine(models.Model):
+    """
+        DOCSTRING: This Vaccine model, inherits from the models.Model class, and it's used to create different vaccines,
+        based on the user's needs. We overrode the save method and declared our own Meta class.
+    """
+    name = models.CharField('Name', max_length=100, blank=False, null=True, help_text='Vaccine name')
+    scientific_name = models.CharField('Scientific Name', max_length=100, blank=True, null=True, help_text="Vaccine's scientific name")
+    purpose = models.TextField('Purpose', blank=False, null=True, help_text="Vaccine's purpose")
+    laboratory = models.CharField('Laboratory', max_length=100, blank=True, null=True, help_text='Laboratory')
+    comments = models.TextField('Comments', blank=True, null=True, help_text='Comments about the vaccine')
+    created_by = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, help_text='Created_by', verbose_name='Created By', related_name='vaccine')
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.capitalize()
+        self.scientific_name = self.scientific_name.capitalize()
+        self.purpose = self.purpose.capitalize()
+        self.comments = self.comments.capitalize()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name + " ({})".format(self.scientific_name)
+
+    class Meta:
+        verbose_name = 'Vaccine'
+        verbose_name_plural = 'Vaccines'
+        ordering = ('name',)
+
+
+class Surgery(models.Model):
+    """
+        DOCSTRING: This Surgery model, inherits from models.Model class, and it's used to schedule different surgical
+        procedures to patients. We overrode the save method and declared our own Meta class.
+    """
+
+    SURGERY_TYPE_CHOICES = (
+        ('BAS', 'Bariatric Surgery'),
+        ('BRS', 'Breast Surgery'),
+        ('CRS', 'Colon and Rectal Surgery'),
+        ('ES', 'Endocrine Surgery'),
+        ('GS', 'General Surgery'),
+        ('GYS', 'Gynecological Surgery'),
+        ('HS', 'Hand Surgery'),
+        ('HRS', 'Hernia Surgery'),
+        ('NEUS', 'Neurological Surgery'),
+        ('ORTS', 'Orthopedic Surgery'),
+        ('OPHS', 'Ophthalmological Surgery'),
+        ('OUTS', 'Outpatient Surgery'),
+        ('PS', 'Pediatric Surgery'),
+        ('PRS', 'Plastic and Reconstructive Surgery'),
+        ('RS', 'Robotic Surgery'),
+        ('THS', 'Thoracic Surgery'),
+        ('TRS', 'Trauma Surgery'),
+        ('US', 'Urological Surgery'),
+        ('VS', 'Vascular Surgery'),
+        ('MIS', 'Minimally Invasive Surgery'),
+    )
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True, help_text='Patient receiving the surgery', related_name='surgery')
+    datetime = models.DateTimeField('Datetime', blank=False, null=True, help_text='Surgery date and time')
+    surgery_type = models.CharField(max_length=50, verbose_name='Type', blank=False, null=True, help_text='Surgery Type', choices=SURGERY_TYPE_CHOICES)
+    about = models.TextField('About', blank=True, null=True, help_text='Information about the surgery')
+    comments = models.TextField('Comments', blank=True, null=True, help_text='Surgery comments or important notes')
+    status = models.CharField('Status', max_length=10, blank=True, null=True, help_text='Surgery status', choices=STATUS_CHOICES, default='OPEN')
+    medical_status = models.BooleanField('Medical Status', blank=True, null=True, help_text='Medical Surgery Status', default=False)
+
+    def __str__(self):
+        return "{}'s {} surgery".format(str(self.patient), self.about)
+
+    def save(self, *args, **kwargs):
+        self.about = self.about.capitalize()
+        self.comments = self.comments.capitalize()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Surgery'
+        verbose_name_plural = 'Surgeries'
+        ordering = ('datetime',)
+
+
+class VaccineApplication(models.Model):
+    """
+        DOCSTRING: This VaccineApplication model inherits from models.Model and is used to relate different vaccine
+        applications to patients. We overrode the save method and we declared our own Meta class.
+    """
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True, help_text='Patient receiving the surgery', related_name='vaccine')
+    datetime = models.DateTimeField('Datetime', blank=False, null=True, help_text='Surgery date and time')
+    vaccine_applied = models.ForeignKey(Vaccine, on_delete=models.CASCADE, blank=False, null=True, help_text='Vaccine Applied', verbose_name='Vaccine')
+    comments = models.TextField('Comments', blank=True, null=True, help_text='Surgery comments or important notes')
+
+    def __str__(self):
+        return "{} - {} - {}".format(str(self.patient), str(self.datetime), self.vaccine_applied)
+
+    def save(self, *args, **kwargs):
+        self.comments = self.comments.capitalize()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Vaccine applied'
+        verbose_name_plural = 'Vaccines applied'
+        ordering = ('datetime',)
+
 
 class BaseConsult(models.Model):
     """
@@ -125,13 +227,6 @@ class BaseConsult(models.Model):
         'datetime' attributes, fianlly we created our own __str__ dunder method and rewrote the save method,
         capitalizing the 'motive' and 'suffering' attributes once they reach the database.
     """
-
-    STATUS_CHOICES = (
-        ('OPEN', 'Open'),
-        ('CONFIRMED', 'Confirmed'),
-        ('CANCELLED', 'Cancelled'),
-        ('CLOSED', 'Closed'),
-    )
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Patient', help_text='Patient assisting this consult', related_name='consult')
     datetime = models.DateTimeField('Date & Time', blank=False, null=True, help_text='Date the consult will be done')

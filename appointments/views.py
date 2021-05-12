@@ -15,11 +15,12 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.contrib.auth.models import Group
-from .models import MedicalTestResult, BaseConsult
+from .models import BaseConsult, MedicalTestResult, VaccineApplication, Surgery
 from utilities.accounts_utilities import speciality_mapping
 from django.template.loader import render_to_string
 from .forms import DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, \
-                    MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm
+                    MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm, VaccineCreationAndUpdateForm, \
+                    SurgeryCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm, SurgicalConsultCreationForm
 from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, \
                                             collect_months_names, filter_conditional_results
 
@@ -203,6 +204,142 @@ def update_consult(request, pk):
             context['error'] = '* Exams not filled correctly. "Type" & "Image" fields must be provided.'
 
     return render(request, template, context)
+
+
+def add_vaccination_record(request):
+    """
+        DOCSTRING: This add_vaccination_record view, expects a request as it's unique parameter, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to create VaccineApplication instances, if the request is a POST request and the form it's valid, it will return
+        a success response.
+    """
+    form = VaccineApplicationCreationAndUpdateForm
+    if request.method == 'POST':
+        form = VaccineApplicationCreationAndUpdateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    template = 'appointments/add_vaccination_record.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def update_vaccination_record(request, pk):
+    """
+        DOCSTRING: This update_vaccination_record view, expects a request and pk as parameters, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to update VaccineApplication instances, if the request is a POST request and the form it's valid, it will return
+        a success response.
+    """
+    vaccination_record = VaccineApplication.objects.get(pk=pk)
+    form = VaccineApplicationCreationAndUpdateForm(instance=vaccination_record)
+    if request.method == 'POST':
+        form = VaccineApplicationCreationAndUpdateForm(request.POST, instance=vaccination_record)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    template = 'appointments/update_vaccination_record.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def vaccination_record_details(request, pk):
+    """
+        DOCSTRING: This vaccination_record_details receives two parameters, the request and the pk of the instance we are
+        trying to visualize, this will return the instance details.
+    """
+    vaccination_record = VaccineApplication.objects.get(pk=pk)
+    template = 'appointments/vaccination_record_details.html'
+    context = {'record': vaccination_record}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def delete_vaccination_record(request, pk):
+    """
+        DOCSTRING: This delete_vaccination_record view, expects a request and pk as parameters, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to delete VaccineApplication instances, if the request is a POST request it will delete the instance and it will return
+        a success response.
+    """
+    vaccination_record = VaccineApplication.objects.get(pk=pk)
+    if request.method == 'POST':
+        vaccination_record.delete()
+        return JsonResponse({'success': True})
+    template = 'appointments/delete_vaccination_record.html'
+    context = {'record': vaccination_record}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def appoint_surgery(request):
+    """
+        DOCSTRING: This appoint_surgery view, expects a request as it's unique parameter, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to create Surgery instances, if the request is a POST request and the form it's valid, it will return
+        a success response.
+    """
+    form = SurgeryCreationAndUpdateForm
+    if request.method == 'POST':
+        form = SurgeryCreationAndUpdateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    template = 'appointments/create_surgery_appointment.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def update_surgery_record(request, pk):
+    """
+        DOCSTRING: This update_surgery_record view, expects a request and pk as parameters, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to update Surgery instances, if the request is a POST request and the form it's valid, it will return
+        a success response.
+    """
+    surgery_appointment = Surgery.objects.get(pk=pk)
+    form = SurgeryCreationAndUpdateForm(instance=surgery_appointment)
+    if request.method == 'POST':
+        form = SurgeryCreationAndUpdateForm(request.POST, instance=surgery_appointment)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    template = 'appointments/update_surgery_appointment.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def surgery_details(request, pk):
+    """
+        DOCSTRING: This surgery_details receives two parameters, the request and the pk of the instance we are
+        trying to visualize, this will return the instance details.
+    """
+    surgery_appointment = Surgery.objects.get(pk=pk)
+    template = 'appointments/surgery_details.html'
+    context = {'surgery': surgery_appointment}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def cancel_surgery_appointment(request, pk):
+    """
+        DOCSTRING: This cancel_surgery_appointment view, expects a request and pk as parameters, this view will return
+        two different response based on the HTTP request method, if the method is GET then it will return the form used
+        to cancel Surgery instances, if the request is a POST request it will delete the instance and it will return
+        a success response.
+    """
+    surgery_appointment = Surgery.objects.get(pk=pk)
+    if request.method == 'POST':
+        surgery_appointment.status = 'CANCELLED'
+        return JsonResponse({'success': True})
+    template = 'appointments/cancel_surgery_appointment.html'
+    context = {'surgery': surgery_appointment}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
 
 
 def agenda(request):

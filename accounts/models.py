@@ -101,7 +101,6 @@ class Doctor(CustomUser):
         created = self.pk is None
         super().save(*args, **kwargs)
         if created:
-            UsersProfile.objects.create(user=self)
             UserAccountSettings.objects.create(user=self)
             UserGeneralSettings.objects.create(wallpaper=1, user=self)
             MailingCredential.objects.create(email=self.email, user=self)
@@ -165,7 +164,7 @@ class UsersProfile(models.Model):
     origin = models.CharField('Origin', max_length=50, blank=False, null=True, choices=ORIGIN_CHOICES)
     location = models.CharField('Location', max_length=100, blank=False, null=True, choices=LOCATION_CHOICES, help_text='Provide your location')
     address = models.TextField('Address', max_length=200, blank=False, null=True, help_text='Provide your exact address')
-    phone_number = models.CharField('Phone Number', max_length=15, null=True, blank=True, help_text='Provide your phone number')
+    phone_number = models.CharField('Phone Number', max_length=15, null=True, blank=False, help_text='Provide your phone number')
     contacts = models.ManyToManyField(to=CustomUser, blank=True, help_text='Contacts List')
 
     def __str__(self):

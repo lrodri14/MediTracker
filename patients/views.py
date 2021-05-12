@@ -15,7 +15,7 @@ from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from accounts.models import MailingCredential
 from django.template.loader import render_to_string
-from appointments.models import BaseConsult, MedicalTestResult
+from appointments.models import BaseConsult, MedicalTestResult, VaccineApplication, Surgery
 from appointments.forms import ConsultDetailsFilterForm
 from utilities.accounts_utilities import open_connection
 from utilities.global_utilities import country_number_codes, collect_country_code
@@ -164,12 +164,14 @@ def patient_details(request, pk):
     consults_list = BaseConsult.objects.filter(patient=patient, created_by=request.user).order_by('-datetime')
     charges_list = BaseConsult.objects.filter(patient=patient, created_by=request.user, charge__gte=0).order_by('-datetime')
     exams_list = MedicalTestResult.objects.filter(consult__patient=patient).order_by('-date')
+    vaccines = VaccineApplication.objects.filter(patient=patient)
+    surgeries = Surgery.objects.filter(patient=patient)
     template = 'patients/patient_details.html'
-    context = {'patient': patient, 'consults': consults_list, 'allergies': allergies, 'antecedents': antecedents, 'insurance':insurance, 'exams': exams_list, 'charges': charges_list, 'consults_form': ConsultDetailsFilterForm}
+    context = {'patient': patient, 'consults': consults_list, 'allergies': allergies, 'antecedents': antecedents, 'insurance': insurance, 'exams': exams_list, 'charges': charges_list, 'vaccines': vaccines, 'surgeries': surgeries, 'consults_form': ConsultDetailsFilterForm}
     return render(request, template, context)
 
 
-def filter_patient_details(request):
+def filter_patient_details(request, pk=None):
     """
         DOCSTRING:
         The filter_patient_details view is used to filter the details either of appoinments, exams or charges of a speci-
@@ -181,20 +183,34 @@ def filter_patient_details(request):
     date_from = datetime.datetime.strptime(request.GET.get('date_from'), '%Y-%m-%d')
     date_to = datetime.datetime.strptime(request.GET.get('date_to'), '%Y-%m-%d')
     requested_details = request.GET.get('filter_request_type')
+
+    if pk:
+        patient = Patient.objects.get(pk=pk)
+
     if requested_details == 'appointments':
         filtered_results = BaseConsult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user).order_by('-datetime')
         template = 'patients/patient_consults_partial_list.html'
         context = {'consults': filtered_results}
+        data = {'html': render_to_string(template, context, request)}
+    elif requested_details == 'exams':
+        filtered_results = MedicalTestResult.objects.filter(date__gte=date_from, date__lte=date_to, consult__created_by=request.user).order_by('-date')
+        template = 'patients/patient_exams_partial_list.html'
+        context = {'exams': filtered_results}
         data = {'html': render_to_string(template, context, request)}
     elif requested_details == 'charges':
         filtered_results = BaseConsult.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, created_by=request.user, charge__gte=0).order_by('-datetime')
         template = 'patients/patient_charges_partial_list.html'
         context = {'charges': filtered_results}
         data = {'html': render_to_string(template, context, request)}
+    elif requested_details == 'vaccines':
+        filtered_results = VaccineApplication.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, patient=patient).order_by('-datetime')
+        template = 'patients/patient_vaccines_partial_list.html'
+        context = {'vaccines': filtered_results}
+        data = {'html': render_to_string(template, context, request)}
     else:
-        filtered_results = MedicalTestResult.objects.filter(date__gte=date_from, date__lte=date_to, consult__created_by=request.user).order_by('-date')
-        template = 'patients/patient_exams_partial_list.html'
-        context = {'exams': filtered_results}
+        filtered_results = Surgery.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, patient=patient).order_by('-datetime')
+        template = 'patients/patient_surgeries_partial_list.html'
+        context = {'surgeries': filtered_results}
         data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 

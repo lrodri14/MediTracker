@@ -16,6 +16,13 @@ from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, NUMVERIF
 # Twilio Client instance
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
+STATUS_CHOICES = (
+    ('OPEN', 'Open'),
+    ('CONFIRMED', 'Confirmed'),
+    ('CANCELLED', 'Cancelled'),
+    ('CLOSED', 'Closed'),
+)
+
 DRUG_CATEGORY_CHOICES = (
     ('AP', 'Antipyretics'),
     ('AG', 'Analgesics'),
