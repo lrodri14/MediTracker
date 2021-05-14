@@ -4,15 +4,17 @@
 """
 
 # Imports
+
 from meditracker.settings import STATIC_URL
 
+from django.apps import apps
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import IntegrityError
-from django.apps import apps
 from django.template.loader import render_to_string
 from patients.forms import AllergyFilterForm, AllergyForm, InsuranceCarrierFilterForm, InsuranceCarrierForm
-from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm, VaccineCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm
+from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm, VaccineCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm, VaccineFilterForm
 from accounts.forms import MailingCredentialForm, ChangeAvailabilityForm, AddLinkingForm, UserAccountSettingsForm, UserGeneralSettingsForm
 User = apps.get_model('accounts', 'CustomUser')
 Doctor = apps.get_model('accounts', 'Doctor')
@@ -845,11 +847,40 @@ def delete_drug(request, pk):
 ###############################
 
 def vaccines_list(request):
-    pass
+    """
+        DOCSTRING:
+        This vaccines_list view is used to display the list of all the vaccines created and available for this user,
+        the content of this view will be displayed async int eh front end so we must send our data im Json Format, for
+        this we will make use of our render_to_string function, if the request.method is 'GET' then we will send our
+        content through a JsonResponse, if the request.method is 'POST', then we will fill our DrugsFilterForm
+        with our request.POST dict content, and proceed the filtering with the value inside the 'name' key, when our
+        query is set, we send it to the client side as a JSON Response. This view is passed a single argument: 'request',
+        which expects a request object.
+    """
+    vaccines = Vaccine.objects.filter(created_by=request.user)
+    filter_form = VaccineFilterForm
+    template = 'settings/vaccines_list.html'
+    context = {'vaccines': vaccines, 'form': filter_form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
 
 
 def filter_vaccines(request):
-    pass
+    """
+        DOCSTRING:
+        This filter_vaccines view is used to filter the vaccines of the available drugs for the user, this view
+        will perform the filtering and will return the data collected based on a query made by the user, this query
+        will be extracted from the 'HTTP_QUERY' inside the request.META dictionary, the results will be sent to the
+        client side in JSON Format for dynamic displaying, so for this we will make use of the render_to_string function,
+        this way we can convert, our response with sent as a JsonResponse. This view accepts one single argument, the
+        'request' which expects a request object.
+    """
+    query = request.GET.get('query')
+    vaccines = Vaccine.objects.filter(Q(name__icontains=query) | Q(scientific_name__icontains=query), created_by=request.user)
+    template = 'settings/vaccines_partial_list.html'
+    context = {'vaccines': vaccines}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
 
 
 def add_vaccine(request, pk=None):
@@ -864,7 +895,11 @@ def add_vaccine(request, pk=None):
         This view serves the quick addition of vaccines from patient details and consults.
     """
     form = VaccineCreationAndUpdateForm
-    patient = Patient.objects.get(pk=pk)
+
+    try:
+        patient = Patient.objects.get(pk=pk)
+    except Patient.DoesNotExist:
+        patient = None
 
     if request.method == 'POST':
         form = VaccineCreationAndUpdateForm(request.POST)
@@ -880,7 +915,11 @@ def add_vaccine(request, pk=None):
                 data = {'html': render_to_string(template, context, request)}
                 return JsonResponse(data)
 
-            return JsonResponse({'success': True})
+            vaccines = Vaccine.objects.filter(created_by=request.user)
+            template = 'settings/vaccines_list.html'
+            context = {'vaccines': vaccines, 'form': VaccineFilterForm}
+            data = {'updated_html': render_to_string(template, context, request)}
+            return JsonResponse(data)
 
     template = 'settings/add_vaccine.html'
     context = {'form': form, 'patient': patient}
@@ -906,7 +945,11 @@ def update_vaccine(request, pk):
         form = VaccineCreationAndUpdateForm(request.POST, instance=vaccine)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': True})
+            vaccines = Vaccine.objects.filter(created_by=request.user)
+            template = 'settings/vaccines_list.html'
+            context = {'vaccines': vaccines, 'form': VaccineFilterForm}
+            data = {'updated_html': render_to_string(template, context, request)}
+            return JsonResponse(data)
     context = {'form': form, 'vaccine': vaccine}
     template = 'settings/update_vaccine.html'
     data = {'html': render_to_string(template, context, request)}
@@ -939,8 +982,12 @@ def delete_vaccine(request, pk):
     vaccine = Vaccine.objects.get(pk=pk)
     if request.method == 'POST':
         vaccine.delete()
-        return JsonResponse({'success': True})
+        vaccines = Vaccine.objects.filter(created_by=request.user)
+        template = 'settings/vaccines_list.html'
+        context = {'vaccines': vaccines, 'form': VaccineFilterForm}
+        data = {'updated_html': render_to_string(template, context, request)}
+        return JsonResponse(data)
     context = {'vaccine': vaccine}
-    template = 'settings/vaccine_details.html'
+    template = 'settings/delete_vaccine.html'
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)

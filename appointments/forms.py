@@ -483,6 +483,15 @@ class VaccineCreationAndUpdateForm(forms.ModelForm):
         }
 
 
+class VaccineFilterForm(forms.Form):
+
+    """
+        DOCSTRING: This VaccineFilterForm class is used to filter vaccines in the settings view.
+    """
+
+    name = forms.CharField(label='Vaccine Name', required=False)
+
+
 class SurgeryCreationAndUpdateForm(forms.ModelForm):
 
     """

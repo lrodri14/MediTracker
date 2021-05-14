@@ -1,0 +1,19 @@
+{% load static %}
+
+{% if vaccines %}
+     {% for vaccine in vaccines %}
+        <tr data-url="{% url 'settings:vaccine_details' vaccine.pk %}">
+            <td>{{ vaccine.name }}</td>
+            <td>
+                {% if vaccine.scientific_name is not None %}
+                    {{ vaccine.scientific_name }}
+                {% else %}
+                    ------------
+                {% endif %}
+            </td>
+            <td><i class="fas fa-edit" data-url="{% url 'settings:update_vaccine' vaccine.pk %}"></i></td>
+            <td><i class="fas fa-trash" data-url="{% url 'settings:delete_vaccine' vaccine.pk %}"></i></td>
+            <td></td>
+        </tr>
+    {% endfor %}
+{% endif %}

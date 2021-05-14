@@ -1,5 +1,5 @@
 {% load static %}
-<form action="{% url 'settings:add_vaccine'%}" method="POST" id="add-vaccine-operation" class="vaccination-operation-form" data-primary-key="{{ patient.pk }}">
+<form action="{% url 'settings:add_vaccine' %}" method="POST" id="add-vaccine-operation" class="vaccination-operation-form add" data-primary-key="{{ patient.pk }}">
     {% csrf_token %}
     <h2>Add Vaccine</h2>
     <p>{{ form.name.label }}</p>

@@ -1,0 +1,14 @@
+{% load static %}
+<div id="details">
+    <h2>{{ vaccine.name }}</h2>
+    <p>Name: {{ vaccine.name }} {% if vaccine.scientific_name %}- ({{ vaccine.scientific_name }}) {% endif %}</p>
+    <p>Purpose: {{ vaccine.purpose }}</p>
+    <p>Laboratory: {{ vaccine.laboratory }}</p>
+    <div id="comments">
+        {% if vaccine.comments %}
+            {{ vaccine.comments }}
+        {% else %}
+            No Comments
+        {% endif %}
+    </div>
+</div>

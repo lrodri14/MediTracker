@@ -1,0 +1,16 @@
+{% load static %}
+<form action="{% url 'settings:update_vaccine' vaccine.pk %}" method="POST" id="update-vaccine-operation" class="vaccination-operation-form update" data-primary-key="{{ patient.pk }}">
+    {% csrf_token %}
+    <h2>Add Vaccine</h2>
+    <p>{{ form.name.label }}</p>
+    <p>{{ form.name }}</p>
+    <p>{{ form.scientific_name.label }}</p>
+    <p>{{ form.scientific_name }}</p>
+    <p>{{ form.purpose.label }}</p>
+    <p>{{ form.purpose }}</p>
+    <p>{{ form.laboratory.label }}</p>
+    <p>{{ form.laboratory }}</p>
+    <p>{{ form.comments.label }}</p>
+    <p>{{ form.comments }}</p>
+    <button type="submit">Update Vaccine</button>
+</form>
