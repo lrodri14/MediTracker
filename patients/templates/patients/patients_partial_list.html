@@ -11,8 +11,10 @@
             <td>{{ p.get_origin_display }}</td>
             <td>{{ p.get_residence_display }}</td>
             <td>{% if p.insurance.insurance_carrier != None %}{{ p.insurance.insurance_carrier }}{% else %}Not Available{% endif %}</td>
-            {% if doctor %}<td data-url="{% url 'patients:update_patient' p.pk %}"><i class="fas fa-edit"></i></td>
-            <td data-url="{% url 'patients:delete_patient' p.pk %}"><i class="fas fa-trash"></i></td>{% endif %}
+            {% if doctor %}
+                <td data-url="{% url 'patients:update_patient' p.pk %}"><i class="fas fa-edit"></i></td>
+                <td data-url="{% url 'patients:delete_patient' p.pk %}"><i class="fas fa-trash"></i></td>
+            {% endif %}
             <!-- This condition is used to notify the user that some information inside that patient instance, presents
                  anomallies, and must be corrected. We will also display a small pop-up -->
             {% if p.age >= 18 and not p.id_number and p.insurance.expiration_date <= today %}

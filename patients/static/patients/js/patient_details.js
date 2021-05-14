@@ -143,11 +143,9 @@ async function filterResultsAW(url){
     return data
 }
 
-
-async function requestPageAW(url){
-    /* This async function will be used to collect the data from the previous or next page, this content will be
-    received as a promise, so we need to return it in JSON format so we can process it, this content will be set to
-    the tbody dynamically.*/
+async function requestFormAW(url){
+    /* This async function will be used to display creation and update forms, based on the url requested. This information
+        will be displayed dynamically, since it will be received in JSON Format. */
     const result = await fetch(url)
     const data = result.json()
     return data
@@ -174,6 +172,40 @@ async function sendEmailAW(url, method, csrfmiddlewaretoken, formData){
     return data
 }
 
+async function addVaccineTypeAW(url, method, csrfmiddlewaretoken, formData){
+    /*Function used to add vaccines this functions takes three parameters, the 'url' for the "POST" request, the 'method' which
+      we collect from the form's method attribute, the 'csrfmiddlewaretoken' parameter, which receives the value from the csrfmiddlewaretoken attribute
+      in every form's hidden input. This function will return the result in JSON Format.*/
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    const data = result.json()
+    return data
+}
+
+
+async function addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData){
+    /*Function used to add vaccines or surgeries related to the current patient, this functions takes
+      three parameters, the 'url' for the "POST" request, the 'method' which
+      we collect from the form's method attribute, the 'csrfmiddlewaretoken'
+      parameter, which receives the value from the csrfmiddlewaretoken attribute
+      in every form's hidden input. This function will return the
+      result in JSON Format.*/
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    const data = result.json()
+    return data
+}
+
+async function displayDetailsAW(url){
+    /* This function will be used to display details about a specific element, either a surgery or a vaccine,
+       it requites 4 parameters we will grab to make the POST request successfully: 'url', required to make the POST
+       request to this address, 'method' is the method used for the request, 'csrfmiddlewaretoken' we grab from the form
+       hidden input and lastly the 'formData', we create a new FormData object using the information in the inputs of the
+       form, we send this information and the response we return it in JSON Format.*/
+    const result = await fetch(url)
+    const data = await result.json()
+    return data
+}
+
+
 // ##################################################### Event Listeners ###############################################
 
 // Body Event Listeners
@@ -195,9 +227,14 @@ body.addEventListener('mouseover', (e) => {
         e.target.classList.add('fa-edit-hover')
     }
 
+    // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be added.
+    if (e.target.classList.contains('fa-trash')){
+        e.target.classList.add('fa-trash-hover')
+    }
+
     /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
        properties from the row and add tr-hover and td-hover class*/
-    if (e.target.nodeName === 'TD'){
+    if (e.target.nodeName === 'TD' || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-trash')){
         let row
         e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
         row.style.backgroundColor = '#FFFFFF'
@@ -253,9 +290,14 @@ body.addEventListener('mouseout', (e) => {
         e.target.classList.remove('fa-edit-hover')
     }
 
+    // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be removed.
+    if (e.target.classList.contains('fa-trash')){
+        e.target.classList.remove('fa-trash-hover')
+    }
+
   /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
      properties from the row and removed tr-hover and td-hover class*/
-      if (e.target.nodeName === 'TD' || ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit')))){
+      if (e.target.nodeName === 'TD' || e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit')){
         let row
         e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
             row.style.backgroundColor = ''
@@ -293,6 +335,18 @@ body.addEventListener('mouseout', (e) => {
 })
 
 body.addEventListener('click', (e) => {
+
+    /* This event will be fired every time the target contains the 'fa-plus' class, this will display the modal and the
+       content that it's been requested.*/
+    if (e.target.classList.contains('fa-plus') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-trash')){
+        let url = e.target.getAttribute('data-url')
+        requestFormAW(url)
+        .then(data => {
+            modalContent.innerHTML = data['html']
+            modal.classList.add('modal-show')
+        })
+    }
+
 
     /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
        GET request, then the response will be added to the dataTable, as well as the paginator will be deleted
@@ -401,6 +455,19 @@ body.addEventListener('click', (e) => {
 
     }
 
+
+    /* This event will be fired every time a vaccine row is clicked, this will display vaccine details */
+    if (e.target.parentNode.classList.contains('vaccine-details')){
+        let url = e.target.parentNode.getAttribute('data-url')
+        displayDetailsAW(url)
+        .then(data => {
+            modalContent.innerHTML = data['html']
+            modal.classList.add('modal-show')
+        })
+    }
+
+    // If the target contains the 'fa-envelope' class, the modal will be displayed along with the email form.
+
     if (e.target.classList.contains('fa-envelope')){
         let url = e.target.getAttribute('data-url')
         sendEmailFormAW(url).
@@ -504,24 +571,69 @@ if (exams){
 
 if (modal){
 
+    // Click Events
+
     modal.addEventListener('click', (e) => {
 
-        if (e.target === modal || e.target.textContent === 'Continue'){
+        // If the target is the modal or it contains the "Continue" word, the modal will be hidden.
+
+        if (e.target === modal || e.target.textContent === 'Continue' || e.target.textContent === 'Cancel'){
+            modalContent.innerHTML = ''
             modal.classList.remove('modal-show')
+        }
+
+
+        /* This event will be fired every time the target contains the 'fa-plus' and it's inside a modal, this will display
+           a formed based on the url collected.
+        */
+
+        if (e.target.id == 'add-vaccine' || e.target.id == 'add-surgery'){
+            let url = e.target.getAttribute('data-url')
+            requestFormAW(url)
+            .then(data => {
+                modalContent.innerHTML = data['html']
+            })
         }
 
     })
 
+    // Submit Events
 
     modal.addEventListener('submit', (e) => {
+
         e.stopPropagation()
         e.preventDefault()
-        if (e.target.nodeName === 'FORM'){
-            let form = e.target
-            let url = form.action
-            let method = form.method
-            let csrfmiddlewaretoken = document.querySelector('.modal [name=csrfmiddlewaretoken]').value
-            let formData = new FormData(form)
+        let form = e.target
+        let url = form.action
+        let method = form.method
+        let csrfmiddlewaretoken = document.querySelector('.modal [name=csrfmiddlewaretoken]').value
+        let formData = new FormData(form)
+
+        /* This event will be fired every time the target's id is 'add-vaccine-record' it is used to create vaccine records */
+
+        if (e.target.id === 'add-vaccine-record' || e.target.id === 'update-vaccine-record' || e.target.id === 'delete-vaccine-record'){
+            addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                document.querySelector('#vaccine-records').innerHTML = data['html']
+                modal.classList.remove('modal-show')
+                modalContent.innerHTML = ''
+            })
+        }
+
+        /* This event will be fired every time the target's id is 'add-vaccine-operation' it is used to create vaccines */
+
+        if (e.target.id === 'add-vaccine-operation'){
+            let primary_key = e.target.getAttribute('data-primary-key')
+            addVaccineTypeAW(url  + '/' + primary_key, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                modalContent.innerHTML = data['html']
+            })
+        }
+
+        /* This event will be fired every time the target's id is 'email-form' it is used to send emails */
+
+
+        if (e.target.id === 'email-form'){
             sendEmailAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 modalContent.innerHTML = data['html']

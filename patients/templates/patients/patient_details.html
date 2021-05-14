@@ -12,7 +12,7 @@
     {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
     <!--Info Navigation, this is used to select what information the user wants to see.-->
     <div class="info">
-        <div class="info-tab tab-active"><p>General</p></div><div class="info-tab"><p>Appointments</p></div><div class="info-tab"><p>Exams</p></div><div class="info-tab"><p>Charges</p></div>{% if user.doctor.speciality == 'PED'%}<div class="info-tab"><p>Vaccines</p></div>{% elif user.doctor.speciality == 'SRG' %}<div class="info-tab"><p>Surgeries</p></div>{% endif %}
+        <div class="info-tab tab-active"><p>General</p></div><div class="info-tab"><p>Appointments</p></div><div class="info-tab"><p>Exams</p></div><div class="info-tab"><p>Charges</p></div>{% if user.doctor.speciality == 'PED'%}<div class="info-tab"><p>Vaccines</p></div>{% elif user.doctor.speciality == 'SRG' %}<!--<div class="info-tab"><p>Surgeries</p></div>-->{% endif %}
     </div>
 {% endif %}
 
@@ -185,10 +185,12 @@
                                 <th>Scientific Name</th>
                                 <th>Date</th>
                                 <th>Time</th>
-                                <th><i class="fas fa-plus"></i></th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th><i class="fas fa-plus" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="vaccine-records">
                             <!-- Included template for dynamic displaying of results-->
                             {% include 'patients/patient_vaccines_partial_list.html' %}
                         </tbody>
@@ -211,42 +213,46 @@
             {% endif %}
         </div>
     {% elif user.doctor.speciality == 'SRG'%}
-        <div class="filterable surgeries">
-            {% if surgeries %}
-                <div class="data-table">
-                    <table>
-                        <thead>
-                            <tr class="heading">
-                                <th>Surgery Type</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
-                                <th>Medical Status</th>
-                                <th><i class="fas fa-plus"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Included template for dynamic displaying of results-->
-                            {% include 'patients/patient_surgeries_partial_list.html' %}
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <i class="fas fa-filter surgeries-filter"></i>
-                    <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="surgeries-form">
-                        <h3>Filter Results</h3>
-                        <p>{{ consults_form.date_from.label }}</p>
-                        <p>{{ consults_form.date_from }}</p>
-                        <p>{{ consults_form.date_to.label }}</p>
-                        <p>{{ consults_form.date_to }}</p>
-                        <p class="error"><small>{{ error }}</small></p>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-            {% else %}
-                <p id="no-surgeries-data">No Data</p>
-            {% endif %}
-        </div>
+
+<!--  Assisted Surgery coming up in updates!  -->
+
+<!--        <div class="filterable surgeries">-->
+<!--            {% if surgeries %}-->
+<!--                <div class="data-table">-->
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                            <tr class="heading">-->
+<!--                                <th>Surgery Type</th>-->
+<!--                                <th>Date & Time</th>-->
+<!--                                <th>Status</th>-->
+<!--                                <th>Medical Status</th>-->
+<!--                                <th>Update</th>-->
+<!--                                <th>Cancel</th>-->
+<!--                                <th><i class="fas fa-plus" data-url="{% url 'appointments:appoint_surgery' patient.pk %}"></i></th>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody id="surgical-records">-->
+<!--                            &lt;!&ndash; Included template for dynamic displaying of results&ndash;&gt;-->
+<!--                            {% include 'patients/patient_surgeries_partial_list.html' %}-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <i class="fas fa-filter surgeries-filter"></i>-->
+<!--                    <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="surgeries-form">-->
+<!--                        <h3>Filter Results</h3>-->
+<!--                        <p>{{ consults_form.date_from.label }}</p>-->
+<!--                        <p>{{ consults_form.date_from }}</p>-->
+<!--                        <p>{{ consults_form.date_to.label }}</p>-->
+<!--                        <p>{{ consults_form.date_to }}</p>-->
+<!--                        <p class="error"><small>{{ error }}</small></p>-->
+<!--                        <button type="submit">Submit</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            {% else %}-->
+<!--                <p id="no-surgeries-data">No Data</p>-->
+<!--            {% endif %}-->
+<!--        </div>-->
     {% endif %}
 </div>
 

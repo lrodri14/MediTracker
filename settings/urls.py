@@ -45,4 +45,11 @@ urlpatterns = [
     path('drug_details/<int:pk>', drug_details, name='drug_details'),
     path('update_drug/<int:pk>', update_drug, name='update_drug'),
     path('delete_drug/<int:pk>', delete_drug, name='delete_drug'),
+    path('vaccines_list', vaccines_list, name='vaccine_list'),
+    path('filter_vaccines', filter_vaccines, name='filter_vaccines'),
+    path('add_vaccine', add_vaccine, name='add_vaccine'),
+    path('add_vaccine/<int:pk>', add_vaccine, name='add_vaccine'),
+    path('vaccine_details/<int:pk>', vaccine_details, name='vaccine_details'),
+    path('update_vaccine/<int:pk>', update_vaccine, name='update_vaccine'),
+    path('delete_vaccine/<int:pk>', delete_vaccine, name='delete_vaccine'),
 ]

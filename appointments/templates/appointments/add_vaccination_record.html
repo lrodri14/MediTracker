@@ -1,0 +1,13 @@
+{% load static %}
+<form action="{% url 'appointments:add_vaccination_record' patient.pk %}" method="POST" id="add-vaccine-record" class="vaccination-operation-form">
+    {% csrf_token %}
+    <h2>Vaccine Application</h2>
+    <i class="fas fa-plus" id="add-vaccine" data-url="{% url 'settings:add_vaccine' patient.pk %}"></i>
+    <p>{{ form.vaccine_applied.label }}</p>
+    <p>{{ form.vaccine_applied }}</p>
+    <p>{{ form.datetime.label }}</p>
+    <p>{{ form.datetime }}</p>
+    <p>{{ form.comments.label }}</p>
+    <p>{{ form.comments }}</p>
+    <button type="submit">Submit</button>
+</form>

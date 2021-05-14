@@ -2,8 +2,7 @@
 {% for surgery in surgeries %}
     <tr>
         <td>{{ surgery.get_surgery_type_display }}</td>
-        <td>{{ surgery.datetime.date }}</td>
-        <td>{{ surgery.datetime.time }}</td>
+        <td>{{ surgery.datetime.date }} - {{ surgery.datetime.time }}</td>
         {% if surgery.status == 'OPEN' %}
             <td id="Open">Open</td>
         {% elif surgery.status == 'CONFIRMED' %}
@@ -20,6 +19,8 @@
         {% else %}
             <td id="attended">Attended</td>
         {% endif %}
-        <td><i class="fas fa-edit"></i></td>
+        <td><i class="fas fa-edit" data-url="{% url 'appointments:update_surgery_record' surgery.pk %}"></i></td>
+        <td><i class="fas fa-times-circle"></i></td>
+        <td></td>
     </tr>
 {% endfor %}

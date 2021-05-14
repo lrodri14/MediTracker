@@ -12,16 +12,19 @@ from django.db import IntegrityError
 from django.apps import apps
 from django.template.loader import render_to_string
 from patients.forms import AllergyFilterForm, AllergyForm, InsuranceCarrierFilterForm, InsuranceCarrierForm
-from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm
+from appointments.forms import DrugForm, DrugFilterForm, MedicalTestForm, MedicalTestFilterForm, VaccineCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm
 from accounts.forms import MailingCredentialForm, ChangeAvailabilityForm, AddLinkingForm, UserAccountSettingsForm, UserGeneralSettingsForm
 User = apps.get_model('accounts', 'CustomUser')
 Doctor = apps.get_model('accounts', 'Doctor')
 Assistant = apps.get_model('accounts', 'Assistant')
+Patient = apps.get_model('patients', 'Patient')
 MailingCredential = apps.get_model('accounts', 'MailingCredential')
 InsuranceCarrier = apps.get_model('patients', 'InsuranceCarrier')
 Drugs = apps.get_model('appointments', 'Drug')
 Allergies = apps.get_model('patients', 'Allergy')
 MedicalTest = apps.get_model('appointments', 'MedicalTest')
+Vaccine = apps.get_model('appointments', 'Vaccine')
+
 
 # Create your views here.
 
@@ -493,7 +496,7 @@ def update_insurance(request, pk):
     carrier = InsuranceCarrier.objects.get(pk=pk)
     insurance_form = InsuranceCarrierForm(request.POST or None, instance=carrier)
     template = 'settings/insurance_update.html'
-    context = {'insurance': insurance_form, 'carrier':carrier}
+    context = {'insurance': insurance_form, 'carrier': carrier}
     data = {'html': render_to_string(template, context, request)}
     if request.method == 'POST':
         insurance_form = InsuranceCarrierForm(request.POST or None, instance=carrier)
@@ -838,5 +841,106 @@ def delete_drug(request, pk):
     return JsonResponse(data)
 
 
+# Vaccination Logic
+###############################
+
+def vaccines_list(request):
+    pass
 
 
+def filter_vaccines(request):
+    pass
+
+
+def add_vaccine(request, pk=None):
+    """
+        The add_vaccine view is used to display the vaccine addition form, this form will be displayed async
+        in the client side, if the request.method is 'GET' then the content from this view, in this case the form, will
+        be sent as a response in JSON Format, we convert the rendered content in the template to a string using the
+        render_to_string function, this data will be sent as a JSON Response to the client side, if the request.method
+        is 'POST' then the form will be filled with the request.POST content inside our dictionary, will be evaluated,
+        and if the response is valid, will be saved and the updated list will be sent as a JSON Response, if the form is
+        invalid, a custom error will be the response, this view expects one single arguments: 'requests' a single object.
+        This view serves the quick addition of vaccines from patient details and consults.
+    """
+    form = VaccineCreationAndUpdateForm
+    patient = Patient.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = VaccineCreationAndUpdateForm(request.POST)
+        if form.is_valid():
+            vaccine = form.save(commit=False)
+            vaccine.created_by = request.user
+            vaccine.save()
+
+            if 'patients' in request.META['HTTP_REFERER'] or 'appointments' in request.META['HTTP_REFERER']:
+                form = VaccineApplicationCreationAndUpdateForm(user=request.user)
+                template = 'appointments/add_vaccination_record.html'
+                context = {'form': form, 'patient': patient}
+                data = {'html': render_to_string(template, context, request)}
+                return JsonResponse(data)
+
+            return JsonResponse({'success': True})
+
+    template = 'settings/add_vaccine.html'
+    context = {'form': form, 'patient': patient}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def update_vaccine(request, pk):
+    """
+        DOCSTRING:
+        This update_vaccine view is used to update any drug instance, the form used to update the instances will
+        be displayed async in the client side, so the content must be sent in JSON Format, for this we make use of
+        our render_to_string function to convert into a string the rendered template, if the request.method is 'GET', then
+        this form will be sent to the client side as a JsonResponse object, if the request.method is a 'POST' then the form
+        will be populated with the content inside our request.POST dictionary, we will evalute this form, if the form is
+        valid then the drug instance will be updated, if not a custom error will be sent instead. This view requires
+        two arguments: 'request' which expects request object, and 'pk' which expects an drug pk of a particular drug
+        instance.
+    """
+    vaccine = Vaccine.objects.get(pk=pk)
+    form = VaccineCreationAndUpdateForm(instance=vaccine)
+    if request.method == 'POST':
+        form = VaccineCreationAndUpdateForm(request.POST, instance=vaccine)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+    context = {'form': form, 'vaccine': vaccine}
+    template = 'settings/update_vaccine.html'
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def vaccine_details(request, pk):
+    """
+        DOCSTRING:
+        This vaccine_details views is used to display the information of a particular drug, this information
+        will be displayed async in the client side, so our content must be sent in JSON Format, for this we will make use
+        of our render_to_string function and send this string as a JsonResponse. This view requires two arguments,
+        'request' which expects a request object and 'pk' which expects a pk of a particular insurance.
+    """
+    vaccine = Vaccine.objects.get(pk=pk)
+    context = {'vaccine': vaccine}
+    template = 'settings/vaccine_details.html'
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
+
+def delete_vaccine(request, pk):
+    """
+        DOCSTRING:
+        This delete_vaccine view is used to delete any vaccine instances, the form to delete the drug instance
+        will be displayed async in the client side, for this we will make use of our render_to_string function to
+        convert our content into a string, if the request.method is a 'GET' then the content will be sent as a Json-
+        Response, if the request.method is 'POST' then the instance will be deleted automatically.
+    """
+    vaccine = Vaccine.objects.get(pk=pk)
+    if request.method == 'POST':
+        vaccine.delete()
+        return JsonResponse({'success': True})
+    context = {'vaccine': vaccine}
+    template = 'settings/vaccine_details.html'
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)

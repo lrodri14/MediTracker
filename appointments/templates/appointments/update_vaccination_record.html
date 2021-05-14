@@ -1,0 +1,12 @@
+{% load static %}
+<form action="{% url 'appointments:update_vaccination_record' record.pk patient.pk %}" method="POST" id="update-vaccine-record" class="vaccination-operation-form">
+    {% csrf_token %}
+    <h2>Update Vaccine Application</h2>
+    <p>{{ form.vaccine_applied.label }}</p>
+    <p>{{ form.vaccine_applied }}</p>
+    <p>{{ form.datetime.label }}</p>
+    <p>{{ form.datetime }}</p>
+    <p>{{ form.comments.label }}</p>
+    <p>{{ form.comments }}</p>
+    <button type="submit">Submit</button>
+</form>

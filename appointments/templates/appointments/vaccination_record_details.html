@@ -1,0 +1,14 @@
+{% load static %}
+<div id="vaccination-details">
+    <h2>Vaccination Details</h2>
+    <p>Vaccine: {{ record.vaccine_applied }}</p>
+    <p>Date and Time: {{ record.datetime }}</p>
+    <p>Comments:</p>
+    <div id="comments">
+        {% if record.comments != '' or record.comments is not None %}
+            {{ record.comments }}
+        {% else %}
+            No comments
+        {% endif %}
+    </div>
+</div>

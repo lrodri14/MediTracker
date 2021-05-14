@@ -8,8 +8,8 @@
 
 .fa-envelope{
     position: absolute;
-    top: 7.8%;
-    left: 18%;
+    top: 23%;
+    left: 47%;
     font-size: 20px;
     cursor: pointer;
     transition: 0.5s;
@@ -224,7 +224,8 @@ button:focus{
 
 /*##################################################### Email Modal - Form ###########################################*/
 
-.email-form{
+
+#email-form{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -243,21 +244,21 @@ button:focus{
     visibility: visible;
 }
 
-.email-form p{
+#email-form p{
     text-align: left;
 }
 
-.email-form hr{
+#email-form hr{
     border: none;
-    border-bottom: 1px solid #C7E8F3;
+    border-bottom: 1px solid #FFFFFF;
 }
 
-.email-form input{
+#email-form input{
     width: 40%;
     text-align: left;
 }
 
-.email-form button{
+#email-form button{
     width: 20%;
 }
 
@@ -278,6 +279,67 @@ button:focus{
 
 .server-response button{
     width: 20%;
+}
+
+/*####################################### Vaccination - Surgical Forms & Details #####################################*/
+
+.vaccination-operation-form, .surgery-operation-form{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0%;
+    width: 25%;
+    height: 60%;
+    padding: 25px;
+    visibility: visible;
+}
+
+#add-vaccine-operation{
+    height: 65%;
+}
+
+#add-vaccine{
+    position: absolute;
+    top: 25%;
+    left: 85%;
+}
+
+#delete-vaccine-record{
+    top: 45%;
+    height: 18%;
+    width: 35%;
+}
+
+#delete-vaccine-record button{
+    width: 30%;
+}
+
+#vaccination-details{
+    width: 40%;
+    height: 30%;
+    padding: 25px;
+    border-radius: 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
+}
+
+#vaccination-details h2{
+    text-align: center;
+}
+
+#comments{
+    text-align: justify;
+    max-height: 85px;
+    overflow-y: auto;
 }
 
 /*##################################################### Image Preview ################################################*/
@@ -349,4 +411,10 @@ button:focus{
     left: 450%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+/*##################################################### Modal ######################################################*/
+
+.modal{
+    position: fixed;
 }

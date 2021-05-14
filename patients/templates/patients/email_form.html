@@ -1,6 +1,6 @@
 {% load static %}
 {% if form %}
-    <form method="POST" action="{% url 'patients:send_email' receiver.pk %}" class="email-form" autocomplete="off">
+    <form method="POST" action="{% url 'patients:send_email' receiver.pk %}" id="email-form" autocomplete="off">
         {% csrf_token %}
         <div class="loader"></div>
         <h2>Send Email</h2>

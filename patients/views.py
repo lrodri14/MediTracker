@@ -205,12 +205,12 @@ def filter_patient_details(request, pk=None):
     elif requested_details == 'vaccines':
         filtered_results = VaccineApplication.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, patient=patient).order_by('-datetime')
         template = 'patients/patient_vaccines_partial_list.html'
-        context = {'vaccines': filtered_results}
+        context = {'vaccines': filtered_results, 'patient': patient}
         data = {'html': render_to_string(template, context, request)}
     else:
         filtered_results = Surgery.objects.filter(datetime__date__gte=date_from, datetime__date__lte=date_to, patient=patient).order_by('-datetime')
         template = 'patients/patient_surgeries_partial_list.html'
-        context = {'surgeries': filtered_results}
+        context = {'surgeries': filtered_results, 'patient': patient}
         data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 

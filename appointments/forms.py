@@ -477,6 +477,10 @@ class VaccineCreationAndUpdateForm(forms.ModelForm):
     class Meta:
         model = Vaccine
         exclude = ('created_by',)
+        widgets = {
+            'purpose': forms.Textarea(attrs={'cols': 30, 'rows': 2}),
+            'comments': forms.Textarea(attrs={'cols': 30, 'rows': 2})
+        }
 
 
 class SurgeryCreationAndUpdateForm(forms.ModelForm):
@@ -484,11 +488,6 @@ class SurgeryCreationAndUpdateForm(forms.ModelForm):
     """
         DOCSTRING: This SurgeryCreationAndUpdateForm is used to create and update Surgery instances.
     """
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-        self.fields['patient'].queryset = Patient.objects.filter(created_by=user)
 
     class Meta:
         model = Surgery
@@ -504,7 +503,7 @@ class VaccineApplicationCreationAndUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-        self.fields['patient'].queryset = Patient.objects.filter(created_by=user)
+        self.fields['vaccine_applied'].queryset = Vaccine.objects.filter(created_by=user)
 
     class Meta:
         model = VaccineApplication

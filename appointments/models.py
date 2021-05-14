@@ -127,13 +127,11 @@ class Vaccine(models.Model):
 
     def save(self, *args, **kwargs):
         self.name = self.name.capitalize()
-        self.scientific_name = self.scientific_name.capitalize()
         self.purpose = self.purpose.capitalize()
-        self.comments = self.comments.capitalize()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name + " ({})".format(self.scientific_name)
+        return self.name.upper()
 
     class Meta:
         verbose_name = 'Vaccine'
@@ -203,7 +201,7 @@ class VaccineApplication(models.Model):
     comments = models.TextField('Comments', blank=True, null=True, help_text='Surgery comments or important notes')
 
     def __str__(self):
-        return "{} - {} - {}".format(str(self.patient), str(self.datetime), self.vaccine_applied)
+        return "{} - {}".format(str(self.patient), self.vaccine_applied)
 
     def save(self, *args, **kwargs):
         self.comments = self.comments.capitalize()
