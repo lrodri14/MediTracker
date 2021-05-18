@@ -13,6 +13,7 @@ var navigation = document.querySelector('.navigation')
 var prevSlide = document.querySelector('.fa-angle-left')
 var nextSlide = document.querySelector('.fa-angle-right')
 var controllers = [prevSlide, nextSlide]
+
 // Consult Information
 
 var generalInfo = document.querySelector('.general-info')
@@ -20,10 +21,11 @@ var patientInfo = document.querySelector('#patient-info')
 var patientInfoPopUp = document.querySelector('.patient-info-popup')
 var exams = document.querySelector('.fa-file-medical-alt')
 var medicalBook = document.querySelector('.fa-book-medical')
+var vaccines = document.querySelector('.fa-syringe')
 var padlock = document.querySelector('.fa-lock')
 var lock = document.querySelector('.lock')
 var lockInput = document.querySelector('#id_lock')
-var lockPopUp = document.querySelector('.popup')
+var lockPopUp = document.querySelector('.lock-popup')
 
 // Diagnose
 
@@ -31,42 +33,36 @@ var diagnose = document.querySelector('.diagnose')
 var indications = document.querySelector('#id_indications')
 var actions = document.querySelector('#id_actions')
 
-// Exams
+// Exam Results
 
-var examsModal = document.querySelector('.exams-modal')
-var examsData = document.querySelector('.exams-data')
-var previewImg = document.querySelector('.preview-image')
-var image = document.querySelector('.previewed-image')
-var addForm = document.querySelector('.add-form')
-var remExam = document.querySelector('.fa-trash')
+var examResultsModal = document.querySelector('.exam-results-modal')
+var examResultsData = document.querySelector('.exam-results-data')
+var dataPreview = document.querySelector('.data-preview')
+var resultData = document.querySelector('.exam-result-data')
+var addExamForm = document.querySelector('.add-exam-result-form')
+var remExamForm = document.querySelector('.remove-exam-result-form')
 
 // Drugs
 
 var drugCategoryFilter = document.querySelector('#id_category')
-var drugList = document.querySelector('#drugs')
+var drugsList = document.querySelector('#id_drugs')
 var addDrug = document.querySelector('.add-drug')
-var addDrugModal = document.querySelector('.add-drug-modal')
-var addDrugModalContent = document.querySelector('.add-drug-modal-content')
-var addDrugForm = document.querySelector('.add-drug-modal-content form')
 var checkedDrugs = []
 
 // Medical Tests
 
 var addTest = document.querySelector('.add-test')
-var addTestModal = document.querySelector('.add-test-modal')
 var testing = document.querySelector('#id_testing')
 var MedicalTestTypeFilter = document.querySelector('#id_test_type')
-var addTestForm = document.querySelector('.add-test-modal-content form')
 var checkedTests = []
 
 // Modals
 
 var modal = document.querySelector('.modal')
-var recordsModal = document.querySelector('.records-modal')
-var recordsTable = document.querySelector('.records-table')
-var recordsSummary = document.querySelector('.records-general-information')
+var modalContent = document.querySelector('.modal-content')
 var prescriptionModal = document.querySelector('.prescription-modal')
 var prescriptionModalContent = document.querySelector('.prescription-modal-content')
+var modalBackUp = document.querySelector('.reminder')
 
 // Navigator
 navigation.innerHTML = '<li></li>'.repeat(document.querySelectorAll('.diagnose > div').length)
@@ -76,14 +72,15 @@ navigation.childNodes[0].classList.add('navigator-active')
 
 // Async Functions
 
-async function addDrugAsync(url, method, formData, csrfmiddlewaretoken){
-    /*This addDrugAsync function is used to drugs asynchronously to the server, this function takes 4 paramaters we collect
-    from the form that fires the submit event, we need to collect the 'url' to where we make our POST request, we also
-    need to collect 'method' from the form.method attribute and 'csrfmiddlewaretoken' from the form's hidden input, finally
-    we collect the formData from the form and send it in our request, the response will be converted to JSON Format and
-    returned for further processing.*/
-    const result = await fetch(url, {method:method, headers:{'X-CSRFToken':csrfmiddlewaretoken}, body:formData})
-    const data = await result.json()
+async function requestElementCreationFormAsync(url){
+
+    /* This requestElementCreationForm function is used to request element creation forms for testing and drugs, this
+    function only takes one argument, the url containing the parameters for the GET request, the response will be
+    converted into JSON Format and finally, displayed in the select box. It takes a single argument, the 'url' to make
+    the GET request.*/
+
+    const result = await fetch(url)
+    const data = result.json()
     return data
 }
 
@@ -97,8 +94,8 @@ async function retrieveDrugsFilterAsync(url){
     return data
 }
 
-async function addTestAsync(url, method, formData, csrfmiddlewaretoken){
-    /*This addTestAsync function is used to drugs asynchronously to the server, this function takes 4 paramaters we collect
+async function addElementAsync(url, method, formData, csrfmiddlewaretoken){
+    /*This addElementAsync function is used to create tests or drugs asynchronously to the server, this function takes 4 paramaters we collect
     from the form that fires the submit event, we need to collect the 'url' to where we make our POST request, we also
     need to collect 'method' from the form.method attribute and 'csrfmiddlewaretoken' from the form's hidden input, finally
     we collect the formData from the form and send it in our request, the response will be converted to JSON Format and
@@ -182,9 +179,6 @@ function diagnoseScroll(elScrollLeft, elScrollWidth, distance, element, eTarget,
 
 /*#################################################### Assignments ###################################################*/
 
-
-// Asignments
-
 // This assignment is made to ensure that every time a consult is opened, it is locked, no matter if it was left opened in the last opening.
 
 lockInput.value = 'True'
@@ -233,12 +227,42 @@ if (medicalBook){
         let url = medicalBook.getAttribute('data-url')
         requestRecords(url)
         .then(data => {
-            recordsTable.innerHTML = data['html']
+            modalContent.innerHTML = data['html']
             if (document.querySelector('#no-records')){
-                recordsSummary.classList.add('records-general-information-hide')
+                document.querySelector('.records-summary').classList.add('records-summary-hide')
             }
         })
-        recordsModal.classList.add('records-modal-show')
+        modal.classList.add('modal-show')
+    })
+
+}
+
+if (vaccines){
+
+    /* This event will be fired every time a mouseover occurs of an element with the 'fa-book-medical' class in its class
+        list. This event will add the fa-book-medical-hover class to the target.*/
+    vaccines.addEventListener('mouseover', (e) => {
+        e.target.classList.add('fa-syringe-hover')
+    })
+
+    /* This event will be fired every time a mouseout occurs of an element with the 'fa-book-medical' class in its class
+    list. This event will remove the fa-book-medical-hover class to the target.*/
+    vaccines.addEventListener('mouseout', (e) => {
+        e.target.classList.remove('fa-syringe-hover')
+    })
+
+
+    /* This click event will be fired every time the target contains the 'fa-book-medical' class in its classlist, and
+    this event will grab the 'url' from the data-url attribute from the target to make an AJAX request to the server, and
+    display all the consults previously filled for this patient in a modal, where you will be able to take a look to the most
+    important aspects of that consult.*/
+    vaccines.addEventListener('click', () => {
+        let url = vaccines.getAttribute('data-url')
+        requestElementCreationFormAsync(url)
+        .then(data => {
+            modalContent.innerHTML = data['html']
+        })
+        modal.classList.add('modal-show')
     })
 
 }
@@ -263,32 +287,7 @@ if (button){
 
 }
 
-
-// Exams Event Listeners
-
-if (exams){
-
-    /* This event will be fired every time a mouseover occurs over the exams icon, this event will add the fa-file-medical-alt-hover
-        class to it's classlist.*/
-    exams.addEventListener('mouseover', function(){
-        this.classList.add('fa-file-medical-alt-hover')
-    })
-
-    /* This event will be fired every time a mouseout occurs over the exams icon, this event will remove the fa-file-medical-alt-hover
-        class to it's classlist.*/
-    exams.addEventListener('mouseout', function(){
-        this.classList.remove('fa-file-medical-alt-hover')
-    })
-
-    /* This event will be fired every time a click occurs over the exams icon, this event will display the examsModal
-    with it's form as a content.*/
-    exams.addEventListener('click', function(){
-        examsModal.classList.add('exams-modal-show')
-    })
-
-}
-
-// Lock Event Listeners
+/*##################################################### Consult Locking ###########################################*/
 
 if (lock){
 
@@ -322,78 +321,37 @@ if (lock){
     })
 }
 
-/*#################################################### Records Table Modal ###########################################*/
+/*############################################ Exams Displaying and Results Modal ####################################*/
 
-// Records Table
-if (recordsTable){
+if (exams){
 
-    // RecordsTable Mouseover Events
-
-    recordsTable.addEventListener('mouseover', (e) => {
-        /* This event will be fired every time the target is a table data cell inside the table, this event will perform
-            various actions, it will change some styles of the row and will grab the 'data-url' attribute from the row,
-            to display the information in the summary section.*/
-        if (e.target.nodeName === 'TD'){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
-            let url = row.getAttribute('data-url')
-            row.style.backgroundColor = '#FFFFFF'
-            row.style.color = '#000000'
-            consultSummaryAW(url)
-            .then(data => {
-                recordsSummary.innerHTML = data['html']
-            })
-        }
+    /* This event will be fired every time a mouseover occurs over the exams icon, this event will add the fa-file-medical-alt-hover
+        class to it's classlist.*/
+    exams.addEventListener('mouseover', function(){
+        this.classList.add('fa-file-medical-alt-hover')
     })
 
-    // RecordsTable Mouseout Events
-
-    recordsTable.addEventListener('mouseout', (e) => {
-
-          /* This event will be fired every time the target is a table cell inside the table, every time a hover out occurs,
-             this event will remove the styles previously set to the table row.*/
-
-          if (e.target.nodeName === 'TD'){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
-            row.style.backgroundColor = ''
-            row.style.color = ''
-
-          }
-
+    /* This event will be fired every time a mouseout occurs over the exams icon, this event will remove the fa-file-medical-alt-hover
+        class to it's classlist.*/
+    exams.addEventListener('mouseout', function(){
+        this.classList.remove('fa-file-medical-alt-hover')
     })
+
+    /* This event will be fired every time a click occurs over the exams icon, this event will display the examsModal
+    with it's form as a content.*/
+    exams.addEventListener('click', function(){
+        examResultsModal.classList.add('exam-results-modal-show')
+    })
+
 }
 
+// Exam Results Modal
 
-// Records Modal Event Listeners
-
-if (recordsModal){
-
-    // This event will be fired any time the target is the recordsModal itself, it will remove the 'records-modal-show' class from its classList
-    recordsModal.addEventListener('click', (e) => {
-        if (e.target === recordsModal){
-            recordsModal.classList.remove('records-modal-show')
-        }
-    })
-}
-
-
-
-/*########################################################## Exams Modal #############################################*/
-
-// Exams Modal
-
-if (examsModal){
+if (examResultsModal){
 
     // Exams Modal Mouseover Events
 
-    examsModal.addEventListener('mouseover', function(e){
-
-        // This event will be fired every time a hover occurs over an element with the 'add-exam' class in it's classList, it will add the 'add-exam-hover' class.
-
-        if (e.target.classList.contains('add-exam')){
-            e.target.classList.add('add-exam-hover')
-        }
+    examResultsModal.addEventListener('mouseover', function(e){
 
         // This event will be fired every time a hover occurs over an element with the 'fa-plus' class in it's classList, it will add the 'fa-plus-hover' class.
 
@@ -413,6 +371,12 @@ if (examsModal){
             e.target.classList.add('fa-eye-hover')
         }
 
+        // This event will be fired every time a hover occurs over an element with the 'add-exam-result' class in it's classList, it will add the 'add-exam-result-hover' class.
+
+        if (e.target.classList.contains('add-exam-result')){
+            e.target.classList.add('add-exam-result-hover')
+        }
+
         /* This event will be fired every time the element contains the 'filename' class, it it's classList, and the
            and the exams-modal-show class is set in the modal, this event will perform some actions, it will grab the
            file element inside that form, and collect the file object. After this information is collected, the event
@@ -420,8 +384,8 @@ if (examsModal){
            will perform is that it will load the file object, and prepare it to get displayed in the preview section,
            to load this file object we use the readAsDataURL() FileReader method.*/
 
-        if (e.target.classList.contains('filename') && e.target.innerText !== '' && examsModal.classList.contains('exams-modal-show')){
-            let imagePreview = document.querySelector('.previewed-image')
+        if (e.target.classList.contains('filename') && e.target.innerText !== '' && examResultsModal.classList.contains('exam-results-modal-show')){
+
             let file
             for (let i = 0; i<e.target.parentNode.childNodes.length; i++){
                 if (e.target.parentNode.childNodes[i].firstChild && e.target.parentNode.childNodes[i].firstChild.type === 'file'){
@@ -430,9 +394,9 @@ if (examsModal){
             }
             let reader = new FileReader()
             reader.addEventListener('load', (e) => {
-                imagePreview.src = e.target.result
-                if (imagePreview.parentNode.classList.contains('preview-image-display')){
-                    imagePreview.classList.add('previewed-image-show')
+                resultData.src = e.target.result
+                if (resultData.parentNode.classList.contains('data-preview-display')){
+                    resultData.classList.add('exam-result-data-show')
                 }
             })
             reader.readAsDataURL(file);
@@ -442,12 +406,7 @@ if (examsModal){
 
     // Exams Modal Mouseout Events
 
-    examsModal.addEventListener('mouseout', function(e){
-        // This event will be fired every time a hover out occurs on an element with the 'add-exam' class in it's classList, it will remove the 'add-exam-hover' class.
-
-        if (e.target.classList.contains('add-exam')){
-            e.target.classList.remove('add-exam-hover')
-        }
+    examResultsModal.addEventListener('mouseout', function(e){
 
         // This event will be fired every time a hover out occurs over an element with the 'fa-plus' class in it's classList, it will remove the 'fa-plus-hover' class.
 
@@ -467,24 +426,73 @@ if (examsModal){
             e.target.classList.remove('fa-eye-hover')
         }
 
+        // This event will be fired every time a hover occurs over an element with the 'add-exam-result' class in it's classList, it will remove the 'add-exam-result-hover' class.
+
+        if (e.target.classList.contains('add-exam-result')){
+            e.target.classList.remove('add-exam-result-hover')
+        }
+
         /* This event will be fired when a hover out occurs over an element with the 'filename' class, it its claslist, this will remove the
            'previewed-image' class from the preview section to hide it, and remove the 'src' attribute from the img element.*/
          if (e.target.classList.contains('filename') && e.target.innerText !== ''){
-            let imagePreview = document.querySelector('.previewed-image')
-            imagePreview.classList.remove('previewed-image-show')
-            imagePreview.src = ''
+            resultData.classList.remove('exam-result-data-show')
+            resultData.src = ''
         }
     })
 
 
     // Exams Modal Click Events
 
-    examsModal.addEventListener('click', function(e){
+    examResultsModal.addEventListener('click', function(e){
 
         // This event will be fired every time the target is the modal itself, it will remove the 'exams-modal-show' to remove it.
-        if (e.target.classList.contains('exams-modal') || e.target.innerText === 'Save'){
-            this.classList.remove('exams-modal-show')
+        if (e.target === examResultsModal || e.target.innerText === 'Save'){
+            this.classList.remove('exam-results-modal-show')
         }
+
+        /* This event will be fired every time the target is the addExamForm element, this event will add another
+          form to the list of forms available to add as many instances as needed in the Exams
+          form's list, to create as many instances as the user needs, the event does the following:
+          1. Grab the amount of forms in existence.
+          2. Grab the hidden input #id_form-TOTAL_FORMS for further modifications.
+          3. Clone an exams_form so we can added to our form's list and change it's attribute values.
+          4. Grab the cloned node and through a loop change all it's attributes depending on the input type.
+          5. Change the Total Forms Value to the amount of forms available plus one unit.
+          6. Append the cloned node to the exams_forms list.*/
+
+          if (e.target.classList.contains('fa-plus')){
+            let formAmount = document.querySelectorAll('.form-container')
+            let totalAmountFormManagement = document.querySelector('#id_exam-TOTAL_FORMS')
+            let clonedForm = formAmount[0].cloneNode(true)
+            let formContainers = document.querySelector('tbody')
+            for (let i = 0; i<clonedForm.childNodes.length; i++){
+                if (clonedForm.childNodes[i].firstChild){
+                    if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'file'){
+                        clonedForm.childNodes[i].childNodes[0].value = null
+                        clonedForm.childNodes[i].childNodes[1].htmlFor = 'id_exam-' + formAmount.length + '-image'
+                        clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-image'
+                        clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-image'
+                    }else if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'checkbox'){
+                        clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-DELETE'
+                        clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-DELETE'
+                    }else if (clonedForm.childNodes[i].firstChild.nodeName === 'SELECT'){
+                        clonedForm.childNodes[i].childNodes[0].value = null
+                        clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-type'
+                        clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-type'
+                    }
+                }
+
+                if (clonedForm.childNodes[i].classList){
+                    if (clonedForm.childNodes[i].classList.contains('filename')){
+                        clonedForm.childNodes[i].innerText = ''
+                    }
+                }
+
+            }
+            totalAmountFormManagement.value = formAmount.length + 1
+            clonedForm.classList.remove('form-hide')
+            formContainers.appendChild(clonedForm)
+         }
 
         /* This event will be fired every time the target contains the 'fa-trash' class in it's classlist, this event
             will perform various actions, it will check the checkbox of the current form in order to get deleted in the
@@ -504,15 +512,15 @@ if (examsModal){
         /*This event will be fired every time the target contains the 'fa-eye' class in it's classList, this event will
           set the form into exams-preview mode, and will display the section to show the preview of the exam.*/
         if (e.target.classList.contains('fa-eye')){
-            examsData.classList.contains('exams-data-preview-set') ? examsData.classList.remove('exams-data-preview-set') : examsData.classList.add('exams-data-preview-set')
-            previewImg.classList.contains('preview-image-display') ? previewImg.classList.remove('preview-image-display') : previewImg.classList.add('preview-image-display')
+            examResultsData.classList.contains('exam-result-data-slide') ? examResultsData.classList.remove('exam-result-data-slide') : examResultsData.classList.add('exam-result-data-slide')
+            dataPreview.classList.contains('data-preview-display') ? dataPreview.classList.remove('data-preview-display') : dataPreview.classList.add('data-preview-display')
         }
 
     })
 
     // Exams Change Events
 
-    examsModal.addEventListener('change', function(e){
+    examResultsModal.addEventListener('change', function(e){
 
         /* This event will be fired every time a change occurs over a an input element which type is a file, what this
             event will do is, that it will fill the Filename data cell with the name of the file.*/
@@ -528,54 +536,9 @@ if (examsModal){
             }
             filenameSpace.innerText = e.target.files[0]['name']
         }
-
     })
 
 }
-
-addForm.addEventListener('click', function(){
-    /* This event will be fired every time the target is the addForm element, this event will add another
-      form to the list of forms available to add as many instances as needed in the Exams
-      form's list, to create as many instances as the user needs, the event does the following:
-      1. Grab the amount of forms in existence.
-      2. Grab the hidden input #id_form-TOTAL_FORMS for further modifications.
-      3. Clone an exams_form so we can added to our form's list and change it's attribute values.
-      4. Grab the cloned node and through a loop change all it's attributes depending on the input type.
-      5. Change the Total Forms Value to the amount of forms available plus one unit.
-      6. Append the cloned node to the exams_forms list.*/
-    let formAmount = document.querySelectorAll('.form-container')
-    let totalAmountFormManagement = document.querySelector('#id_exam-TOTAL_FORMS')
-    let clonedForm = formAmount[0].cloneNode(true)
-    let formContainers = document.querySelector('tbody')
-    for (let i = 0; i<clonedForm.childNodes.length; i++){
-        if (clonedForm.childNodes[i].firstChild){
-            if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'file'){
-                clonedForm.childNodes[i].childNodes[0].value = null
-                clonedForm.childNodes[i].childNodes[1].htmlFor = 'id_exam-' + formAmount.length + '-image'
-                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-image'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-image'
-            }else if (clonedForm.childNodes[i].firstChild.nodeName === 'INPUT' && clonedForm.childNodes[i].firstChild.type === 'checkbox'){
-                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-DELETE'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-DELETE'
-            }else if (clonedForm.childNodes[i].firstChild.nodeName === 'SELECT'){
-                clonedForm.childNodes[i].childNodes[0].value = null
-                clonedForm.childNodes[i].childNodes[0].name = 'exam-' + formAmount.length + '-type'
-                clonedForm.childNodes[i].childNodes[0].id = 'id_exam-' + formAmount.length + '-type'
-            }
-        }
-
-        if (clonedForm.childNodes[i].classList){
-            if (clonedForm.childNodes[i].classList.contains('filename')){
-                clonedForm.childNodes[i].innerText = ''
-            }
-        }
-
-    }
-    totalAmountFormManagement.value = formAmount.length + 1
-    clonedForm.classList.remove('form-hide')
-    formContainers.appendChild(clonedForm)
-})
-
 
 /*####################################################### Diagnose Modal #############################################*/
 
@@ -598,8 +561,7 @@ diagnose.addEventListener('scroll', function(){
 
 })
 
-
-// Controllers
+// Controllers Event Listeners
 
 if (controllers){
 
@@ -662,13 +624,13 @@ if (drugCategoryFilter){
 // Check for a better way to improve this code.
 // Better way to take control of the already checked checkboxes
 
-if (drugList){
+if (drugsList){
 
     // Whenever we do a filtering of the drugs options, we will keep a backup of the drugsPrescribed and the checkedDrugs.
     let drugsPrescribed = []
 
     // DrugList Event Listeners
-    drugList.addEventListener('change', function(e){
+    drugsList.addEventListener('change', function(e){
         /* This event listener will be the one in charge of updating the medicine input text whenever a new drug is checked
            to prescribe to a patient, */
         indications.value = ''
@@ -742,86 +704,25 @@ if (testing){
 if (addTest){
 
     // This event will be fired every time the addDrug element is hovered, it will add the 'add-drug-hover' class to the classList.
-    addTest.addEventListener('mouseover', function(e){
-        this.classList.add('add-test-hover')
+
+    addTest.addEventListener('mouseover', (e) => {
+        e.target.classList.add('add-test-hover')
     })
 
     // This event will be fired every time a hover out occurs in the addDrug element, it will remove the 'add-drug-hover' class from the classList.
-    addTest.addEventListener('mouseout', function(e){
-        this.classList.remove('add-test-hover')
+    addTest.addEventListener('mouseout', (e) => {
+        e.target.classList.remove('add-test-hover')
     })
 
-    // This event will be fired every time a click occurs in the addDrug element, this event will add the 'modal-show' class to the addDrugModal element.
-    addTest.addEventListener('click', function(e){
-        addTestModal.classList.add('modal-show')
-    })
-
-}
-
-// Add Test Modal Event Listeners.
-
-if (addTestModal){
-
-    // addDrugModal click event listeners
-    addTestModal.addEventListener('click', function(e){
-        /* This event will be fired every time the target is the addDrugModal element, this event will clear the form and remove the errors if needed.*/
-        if (e.target.classList.contains('add-test-modal')){
-            document.querySelector('.add-test-modal .error').innerText = ''
-            addTestForm.reset()
-            this.classList.remove('modal-show')
-        }
-    })
-
-    // This event will be fired every time the target is a button inside the addDrugModal element, this will add the 'button-hover' class to the target's classList.
-    addDrugModal.addEventListener('mouseover', function(e){
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
-        }
-    })
-
-    // This event will be fired every time the target is a button inside the addDrugModal element, this will remove the 'button-hover' class to the target's classList.
-    addDrugModal.addEventListener('mouseout', function(e){
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-hover')
-        }
-    })
-
-    /* This event will be fired whenever the addTestModal catches a submit event, this event will perform various operations,
-       first, the data needed to perform the asynchronous request to the server, the url, method, csrf token and the formData,
-       the request will be done, and if the response contains the 'html' key then this means an error was raised and will
-       be rendered to the form, if not, then the modal will be closed and the form will be reset, the select option will
-       be updated and the checkboxes that were checked, will be checked again.*/
-    addTestModal.addEventListener('submit', function(e){
-        e.preventDefault()
-        e.stopPropagation()
-        const url = addTestForm.action
-        const method = addTestForm.method
-        const data = new FormData(addTestForm)
-        const csrfmiddlewaretoken = document.querySelector('.add-medical-test-form > [name=csrfmiddlewaretoken]').value
-        addTestAsync(url, method, data, csrfmiddlewaretoken)
+    // This event will be fired every time a click occurs in the addTest element, this event will add the 'modal-show' class to the modal element and display the add test form.
+    addTest.addEventListener('click', (e) => {
+        let url = e.target.getAttribute('data-url')
+        requestElementCreationFormAsync(url)
         .then(data => {
-            if (data['html']){
-                const error = document.querySelector('.add-medical-test-form .error')
-                error.innerText = 'This test is already listed.'
-            }else{
-                addTestModal.classList.remove('modal-show')
-                document.querySelector('.add-medical-test-form .error').innerText = ''
-                addTestForm.reset()
-                document.querySelector('#id_testing').innerHTML = data['updated_tests_list']
-                // Better way to take control of the already checked checkboxes
-                let checkboxes = document.querySelectorAll('#id_testing input[type=checkbox]')
-                for (let i = 0; i<checkedTests.length; i++){
-                    let checkedTest = checkedTests[i]
-                    for (let j = 0; j<checkboxes.length; j++){
-                        if (checkedTest.value === checkboxes[j].value){
-                            checkboxes[j].checked = true
-                        }
-                    }
-                }
-            }
+            modalContent.innerHTML = data['html']
         })
+        modal.classList.add('modal-show')
     })
-
 }
 
 // Add Drug Event Listeners
@@ -839,73 +740,13 @@ if (addDrug){
     })
 
     // This event will be fired every time a click occurs in the addDrug element, this event will add the 'modal-show' class to the addDrugModal element.
-    addDrug.addEventListener('click', function(e){
-        addDrugModal.classList.add('modal-show')
-    })
-
-}
-
-// Add Drug Modal Event Listeners.
-if (addDrugModal){
-
-    // addDrugModal click event listeners
-    addDrugModal.addEventListener('click', function(e){
-        /* This event will be fired every time the target is the addDrugModal element, this event will clear the form and remove the errors if needed.*/
-        if (e.target.classList.contains('add-drug-modal')){
-            document.querySelector('.add-drug-modal .error').innerText = ''
-            addDrugForm.reset()
-            this.classList.remove('modal-show')
-        }
-    })
-
-    // This event will be fired every time the target is a button inside the addDrugModal element, this will add the 'button-hover' class to the target's classList.
-    addDrugModal.addEventListener('mouseover', function(e){
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
-        }
-    })
-
-    // This event will be fired every time the target is a button inside the addDrugModal element, this will remove the 'button-hover' class to the target's classList.
-    addDrugModal.addEventListener('mouseout', function(e){
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-hover')
-        }
-    })
-
-    /* This event will be fired whenever the addDrugModal catches a submit event, this event will perform various operations,
-       first, the data needed to perform the asynchronous request to the server, the url, method, csrf token and the formData,
-       the request will be done, and if the response contains the 'html' key then this means an error was raised and will
-       be rendered to the form, if not, then the modal will be closed and the form will be reset, the select option will
-       be updated and the checkboxes that were checked, will be checked again.*/
-    addDrugModal.addEventListener('submit', function(e){
-        e.preventDefault()
-        e.stopPropagation()
-        const url = addDrugForm.action
-        const method = addDrugForm.method
-        const data = new FormData(addDrugForm)
-        const csrfmiddlewaretoken = document.querySelector('.add-drug-form > [name=csrfmiddlewaretoken]').value
-        addDrugAsync(url, method, data, csrfmiddlewaretoken)
+    addDrug.addEventListener('click', (e) => {
+        let url = e.target.getAttribute('data-url')
+        requestElementCreationFormAsync(url)
         .then(data => {
-            if (data['html']){
-                const error = document.querySelector('.add-drug-form .error')
-                error.innerText = 'This drug is already listed.'
-            }else{
-                addDrugModal.classList.remove('modal-show')
-                document.querySelector('.add-drug-form .error').innerText = ''
-                addDrugForm.reset()
-                document.querySelector('#id_drugs').innerHTML = data['updated_drugs_list']
-                // Better way to take control of the already checked checkboxes
-                let checkboxes = document.querySelectorAll('#id_drugs input[type=checkbox]')
-                for (let i = 0; i<checkedDrugs.length; i++){
-                    let checkedDrug = checkedDrugs[i]
-                    for (let j = 0; j<checkboxes.length; j++){
-                        if (checkedDrug.value === checkboxes[j].value){
-                            checkboxes[j].checked = true
-                        }
-                    }
-                }
-            }
+            modalContent.innerHTML = data['html']
         })
+        modal.classList.add('modal-show')
     })
 
 }
@@ -915,6 +756,7 @@ if (addDrugModal){
 
 // Forms Event Listeners
 if (form){
+
     form.addEventListener('submit', (e) => {
         /* This event will be fired every time a submit occurs over this form, this event will be stopped and default
         prevented, this because we need to evaluate some conditions before continuing, this event will check if there
@@ -941,7 +783,6 @@ if (form){
             let formData = new FormData(e.target)
             submitConsultAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
-                console.log(data)
                 if (data['prescription_path']){
                     prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
                     pdfPath = prescriptionModalContent.getAttribute('data-pdf')
@@ -954,6 +795,9 @@ if (form){
             })
         } else{
             /*If there are, the confirmation modal will be displayed.*/
+            if (modal.innerHTML !== modalBackUp){
+                modal.innerHTML = modalBackUp
+            }
             modal.classList.add('modal-show')
         }
     })
@@ -963,14 +807,86 @@ if (form){
 
 if (modal){
 
+    // Modal MouseOver event listeners
+    modal.addEventListener('mouseover', (e) => {
+
+        // This event will be fired every time the target contains the 'fa-plus' class, it will add the 'fa-plus-hover' class to it.
+        if (e.target.classList.contains('fa-plus')){
+            e.target.classList.add('fa-plus-hover')
+        }
+
+        // This event will be fired every time the target is a button, and it will add the button hover class to it.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button-hover')
+        }
+
+        /* This event will be fired every time the target is a table data cell inside the record's table, this event will perform
+            various actions, it will change some styles of the row and will grab the 'data-url' attribute from the row,
+            to display the information in the summary section.*/
+
+        if (e.target.classList.contains('record') || e.target.parentNode.classList.contains('record')){
+            let row = e.target.classList.contains('record') ? e.target : e.target.parentNode
+            let consultSummary = document.querySelector('.records-summary')
+            let url = row.getAttribute('data-url')
+            row.style.backgroundColor = '#FFFFFF'
+            row.style.color = '#000000'
+            consultSummaryAW(url)
+            .then(data => {
+                consultSummary.innerHTML = data['html']
+            })
+        }
+
+    })
+
+
+    // Modal MouseOut event listeners
+    modal.addEventListener('mouseout', (e) => {
+
+        // This event will be fired every time the target contains the 'fa-plus' class, it will add the 'fa-plus-hover' class to it.
+
+        if (e.target.classList.contains('fa-plus')){
+            e.target.classList.remove('fa-plus-hover')
+        }
+
+        // This event will be fired every time the target is a button, and it will remove the button hover class to it.
+
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button-hover')
+        }
+
+      /* This event will be fired every time the target is a table cell inside the records table, every time a hover out occurs,
+         this event will remove the styles previously set to the table row. */
+
+        if (e.target.classList.contains('record') || e.target.parentNode.classList.contains('record')){
+            let row = e.target.classList.contains('record') ? e.target : e.target.parentNode
+            row.style.backgroundColor = ''
+            row.style.color = ''
+        }
+
+    })
+
+
     // Modal Click Event Listeners
 
     modal.addEventListener('click', (e) => {
 
-        e.preventDefault()
-        e.stopPropagation()
+//        e.preventDefault()
+//        e.stopPropagation()
+
+
+        // This event will be fired every time the target contains the 'fa-plus' class, it will display the corresponding form.
+        if (e.target.classList.contains('fa-plus')){
+            let url = e.target.getAttribute('data-url')
+            requestElementCreationFormAsync(url)
+            .then(data => {
+                modalContent.innerHTML = data['html']
+            })
+        }
+
+
         // This event will be fired every time the target is the modal itself, or a button with 'No' as it's text content, this will remove the 'modal-show' class from the modal.
-        if (e.target === modal || (e.target.nodeName === 'BUTTON' && e.target.textContent === 'No')){
+        if (e.target === modal || e.target === modalContent || (e.target.nodeName === 'BUTTON' && e.target.textContent === 'No')){
+            modalContent.innerHTML = modalBackUp
             modal.classList.remove('modal-show')
         }
 
@@ -1001,6 +917,94 @@ if (modal){
                 form.submit()
             })
         }
+   })
+
+
+   //   Modal Submit Events
+
+   modal.addEventListener('submit', (e) => {
+
+       e.stopPropagation()
+       e.preventDefault()
+
+       let url = e.target.action
+       let method = e.target.method
+       let formData = new FormData(e.target)
+       let csrfmiddlewaretoken = document.querySelector('.modal [name=csrfmiddlewaretoken]').value
+
+        /* This event will be fired every time a submit occurs and the target contains the 'add-medical-test-form' class, this will
+           create MedicalTest instances, and return an updated list as a response. */
+
+       if (e.target.classList.contains('add-medical-test-form')){
+            addElementAsync(url, method, formData, csrfmiddlewaretoken)
+            .then(data => {
+                if (data['html']){
+                    modalContent.innerHTML = data['html']
+                }else{
+                    testing.innerHTML = data['updated_tests_list']
+                    let checkboxes = document.querySelectorAll('#id_testing input[type=checkbox]')
+                    for (let i = 0; i<checkedTests.length; i++){
+                        let checkedTest = checkedTests[i]
+                        for (let j = 0; j<checkboxes.length; j++){
+                            if (checkedTest.value === checkboxes[j].value){
+                                checkboxes[j].checked = true
+                            }
+                        }
+                     }
+                    modal.classList.remove('modal-show')
+                }
+            })
+       }
+
+        /* This event will be fired every time a submit occurs and the target contains the 'add-drug-form' class, this will
+           create Drug instances, and return an updated list as a response. */
+
+       if (e.target.classList.contains('add-drug-form')){
+
+            addElementAsync(url, method, formData, csrfmiddlewaretoken)
+            .then(data => {
+                if (data['html']){
+                    modalContent.innerHTML = data['html']
+                }else{
+                    drugsList.innerHTML = data['updated_drugs_list']
+                    let checkboxes = document.querySelectorAll('#id_drugs input[type=checkbox]')
+                    for (let i = 0; i<checkedDrugs.length; i++){
+                        let checkedDrug = checkedDrugs[i]
+                        for (let j = 0; j<checkboxes.length; j++){
+                            if (checkedDrug.value === checkboxes[j].value){
+                                checkboxes[j].checked = true
+                            }
+                        }
+                     }
+                    modal.classList.remove('modal-show')
+                }
+            })
+       }
+
+
+       /* This event will be fired every time a submit occurs and the target contains the 'vaccination-operation-form' class, this will
+           create Vaccination Records instances, and return an updated list as a response. */
+
+       if (e.target.id === 'add-vaccine-record'){
+            addElementAsync(url, method, formData, csrfmiddlewaretoken)
+            .then(data => {
+                modal.classList.remove('modal-show')
+            })
+       }
+
+       /* This event will be fired every time a submit occurs and the target contains the 'add-vaccine-operation' id, this will
+           create Vaccine instances, and return an updated form as a response. */
+
+       if (e.target.id === 'add-vaccine-operation'){
+            url = url + '/' + e.target.getAttribute('data-primary-key')
+            addElementAsync(url, method, formData, csrfmiddlewaretoken)
+            .then(data => {
+                if (data['html']){
+                    modalContent.innerHTML = data['html']
+                }
+            })
+       }
+
    })
 }
 

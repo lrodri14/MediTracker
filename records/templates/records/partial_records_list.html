@@ -1,13 +1,10 @@
 {% load static %}
 
-{% if records %}
-    {% for r in records %}
-        <tr onclick="window.location='{% url 'appointments:consult_details' r.pk %}'">
-            <td>{{ r.patient.id_number }}</td>
-            <td>{{ r.patient.first_names }} {{ r.patient.last_names }}</td>
-            <td>{{ r.datetime }}</td>
-            <td>{{ r.created_by }}</td>
-            <td id="status-1">Finished</td>
-        </tr>
-    {% endfor %}
-{% endif %}
+{% for r in records %}
+    <tr class="record" onclick="window.location='{% url 'appointments:consult_details' r.pk %}'">
+        <td>{{ r.patient.id_number }}</td>
+        <td>{{ r.patient.first_names }} {{ r.patient.last_names }}</td>
+        <td>{{ r.datetime }}</td>
+        <td id="status-1">Finished</td>
+    </tr>
+{% endfor %}

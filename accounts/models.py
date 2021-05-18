@@ -292,7 +292,10 @@ class Chat(models.Model):
     participants = models.ManyToManyField(to=CustomUser, blank=True, verbose_name='Participants', related_name='participants', help_text='Chat Participants')
 
     def __str__(self):
-        return "{}'s and {}'s private chat".format(self.participants.all()[0], self.participants.all()[1])
+        try:
+            return "{}'s and {}'s private chat".format(self.participants.all()[0], self.participants.all()[1])
+        except IndexError:
+            return 'Hello'
 
     def get_destination(self, user):
         """

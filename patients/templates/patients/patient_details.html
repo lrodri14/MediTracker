@@ -37,16 +37,16 @@
         <div class="background">
             <h2>Background</h2>
             <div class="title">Allergies</div>
-            {% if patient.allergy_information.all %}
-                {% for allergy in patient.allergy_information.all %}
+            {% if patient.allergy_info %}
+                {% for allergy in patient.allergy_info.all %}
                     <p>{{ forloop.counter }}. {{ allergy.allergy_type }} - {{ allergy.about }}</p>
                 {% endfor %}
             {% else %}
                 <p class="no-data">No Data</p>
             {% endif %}
             <div class="title">Antecedents</div>
-            {% if patient.antecedent.all %}
-                {% for antecedent in patient.antecedent.all %}
+            {% if patient.antecedent_info %}
+                {% for antecedent in patient.antecedent_info.all %}
                     <p>{{ forloop.counter }}. {{ antecedent.antecedent }} - {{ antecedent.info }}</p>
                 {% endfor %}
             {% else %}

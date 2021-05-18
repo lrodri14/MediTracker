@@ -399,7 +399,7 @@ class MedicalTestResult(models.Model):
 
     consult = models.ForeignKey(BaseConsult, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Consult', help_text='Medical Exams', related_name='exam')
     date = models.DateField('date', blank=True, null=True, help_text='Date the exams were presented')
-    type = models.CharField('type of exams', max_length=100, blank=False, null=True, help_text='Type of exams', choices=DRUG_CATEGORY_CHOICES)
+    type = models.CharField('type of exams', max_length=100, blank=False, null=True, help_text='Type of exams', choices=MEDICAL_TEST_CHOICES)
     image = models.ImageField('exam', blank=True, null=True, help_text='Exam IMG', upload_to='appointments/exams')
 
     class Meta:
