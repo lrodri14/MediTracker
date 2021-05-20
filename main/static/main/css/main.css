@@ -3,8 +3,8 @@
 /*////////////////////////////////////////////////// Body ////////////////////////////////////////////////////////////*/
 
 *{
-    font-family: 'Nunito', sans-serif;
     color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
 }
 
 body{
@@ -14,20 +14,17 @@ body{
 
 /*//////////////////////////////////////////////////// BG ////////////////////////////////////////////////////////////*/
 
-#main-background {
+#video{
   object-fit: cover;
   width: 100vw;
   height: 100vh;
   top: 0;
   left: 0;
-  position:fixed;
-  z-index: -1;
 }
 
 /*///////////////////////////////////////////////// Container ////////////////////////////////////////////////////////*/
 
-#container{
-    background-color: rgba(0,0,0,0.3);
+.container{
     position: absolute;
     top: 0;
     left: 0;
@@ -35,8 +32,7 @@ body{
     height: 100%;
 }
 
-/*///////////////////////////////////////////////////// Logo /////////////////////////////////////////////////////////*/
-#logo{
+.container__logo{
     width: 100px;
     height: 100px;
     position: absolute;
@@ -44,26 +40,17 @@ body{
     top: 6%;
 }
 
-/*///////////////////////////////////////////////// Authentication ///////////////////////////////////////////////////*/
-
-#authentication{
-    position: fixed;
+.container__auth{
+    position: absolute;
     top: 8%;
-    left: 0%;
-    width: 100%;
+    right: 10%;
 }
 
-#authentication-controls{
-    float: right;
-    margin-right: 8%;
-}
-
-.auth-btn{
-    cursor: pointer;
+.container__auth-button{
     border: none;
+    cursor: pointer;
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
     font-size: 16px;
     height: 50px;
@@ -71,29 +58,20 @@ body{
     transition: background-color 0.5s ease, color 0.5s ease, opacity 0.5s;
 }
 
-.auth-btn-hide{
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s ease;
-}
-
-.auth-btn-hover{
+.container__auth-button--hover{
     background-color: #FFFFFF;
     border-color: #FFFFFF;
     color: #000000;
     transition: all 0.5s ease;
 }
 
-.auth-btn:focus{
+.container__auth-button:focus{
     outline: none;
 }
 
-/*///////////////////////////////////////////////////////// Slogan ///////////////////////////////////////////////////*/
-
-.quote-container{
+.container__quote{
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
     text-align: justify;
     position: absolute;
@@ -101,20 +79,37 @@ body{
     left: 5%;
     max-width: 500px;
     padding: 20px;
-    opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.5s;
     animation: show-up 1.5s linear forwards;
 }
 
-.quote-container-hide{
+.container__elements--hide{
     opacity: 0;
     visibility: hidden;
-    animation: none;
-    transition: 0.5s;
+    transition: all 0.3s ease;
+}
+
+.container__footer{
+    position: absolute;
+    top: 95%;
+    height: 5%;
+    width: 100%;
+}
+
+.container__social-media-contact{
+    position: absolute;
+    right: 1%;
+}
+
+.container__social-media-logo{
+    width: 30px;
+    height: 30px;
+    margin: 0px 5px;
 }
 
 /*///////////////////////////////////////////////////// Forms ////////////////////////////////////////////////////////*/
-#login-form, #signup-form, #password-reset-form, #password-reset-done{
+
+form{
     text-align: center;
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur( 10px );
@@ -124,7 +119,7 @@ body{
     z-index: 1;
 }
 
-.submit-btn{
+.submit-button{
     cursor: pointer;
     margin-top: 5%;
     width: 100px;
@@ -137,17 +132,17 @@ body{
     transition: background-color 0.5s, color 0.5s, opacity 0.5s;
 }
 
-.submit-btn:focus{
+.submit-button:focus{
     outline: none;
 }
 
-.submit-btn-hover{
+.submit-button--hover{
     background-color: #FFFFFF;
     color: #000000;
     transition: all 0.5s ease;
 }
 
-.submit-btn-fade-in{
+.submit-button--fade-in{
     opacity: 1;
     visibility: visible;
     transition: 0.5s;
@@ -196,12 +191,12 @@ textarea:focus{
     outline: none;
 }
 
-/*////////////////////// Login Form /////////////////////*/
+/*///////////////////////////////////////////////////// Login Form ///////////////////////////////////////////////////*/
 
-#login-form{
+.login-form{
     width: 25%;
     height: 50%;
-    padding-top: 20px;
+    padding-top: 25px;
     border-radius: 20px;
     position: absolute;
     top: 50%;
@@ -210,19 +205,19 @@ textarea:focus{
     transform: translate(-50%, -50%);
 }
 
-.password-reset{
+.login-form__password-reset{
     cursor: pointer;
     transition: font-size 0.5s;
 }
 
-.password-reset-hover{
+.login-form__password-reset--hover{
     font-size: 16px;
     transition: 0.5s;
 }
 
-/*////////////////////// Password Reset Form /////////////////////*/
+/*///////////////////////////////////////////// Password Reset Form //////////////////////////////////////////////////*/
 
-#password-reset-form{
+.password-reset-form{
     width: 50%;
     border-radius: 25px;
     position: absolute;
@@ -232,11 +227,11 @@ textarea:focus{
     transform: translate(-50%, -50%);
 }
 
-#password-reset-submit-btn{
+.password-reset-form__submit-button{
     margin-top: 0%;
 }
 
-#password-reset-done{
+.password-reset-done{
     width: 60%;
     padding: 20px;
     position: absolute;
@@ -247,20 +242,20 @@ textarea:focus{
     animation: show-up 0.3s linear forwards;
 }
 
-.continue{
+.password-reset-done__continue-button{
     cursor: pointer;
     margin-left: 45%;
     transition: font-size 0.3s;
 }
 
-.continue-hover{
-    font-size: 18px;
+.password-reset-done__continue-button--hover{
+    font-size: 20px;
     transition: all 0.3s;
 }
 
-/*////////////////////// Signup Form /////////////////////*/
+/*////////////////////////////////////////////////// SignUp Form /////////////////////////////////////////////////////*/
 
-#signup-form{
+.signup-form{
     width: 70%;
     padding: 10px;
     border-radius: 20px;
@@ -271,17 +266,17 @@ textarea:focus{
     transform: translate(-50%, -50%);
 }
 
-.wrapper{
+.signup-form__wrapper{
     display: grid;
     grid-template-columns: 40% 59%;
     grid-gap: 1%;
 }
 
-.personal-info{
+.signup-form__personal-information{
     padding-bottom: 15%;
 }
 
-.account-info{
+.signup-form__account-information{
     padding-top: 10%;
 }
 
@@ -297,7 +292,7 @@ textarea:focus{
     visibility: hidden;
 }
 
-.modal-show{
+.modal--show{
     opacity: 1;
     visibility: visible;
 }
@@ -312,7 +307,6 @@ textarea:focus{
     background-clip: padding-box;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur( 10px );
-    border-radius: 25px;
     position: absolute;
     top: 40%;
     left: 30%;
@@ -323,58 +317,29 @@ textarea:focus{
     transition: opacity 0.3s;
 }
 
-.account-type-selector-show{
+.account-type-selector--show{
     cursor: pointer;
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s;
 }
 
-.doctor-type{
-    border-top-left-radius: 22px;
-    border-bottom-left-radius: 22px;
-}
-
-.assistant-type{
-    border-top-right-radius: 22px;
-    border-bottom-right-radius: 22px;
-}
-
-.account-type-selector-hover{
+.account-type-selector__tile--hover{
     color: #000000;
     background-color: #FFFFFF;
     transition: color 0.3s, background-color 0.3s;
 }
-.account-type-selector-hover i{
+
+.account-type-selector__tile--hover .account-type-selector__icon{
     color: #000000;
     transition: color 0.3s;
 }
 
-.account-type-selector i{
+.account-type-selector__icon{
     margin-top: 17%;
     margin-right: 10px;
     font-size: 50px;
     pointer-events: none;
-}
-
-/*///////////////////////////////////////////////////// Footer ///////////////////////////////////////////////////////*/
-
-#footer{
-    position: fixed;
-    top: 95%;
-    height: 5%;
-    width: 100%;
-}
-
-#social-media-contact{
-    float: right;
-    margin-right: 1%;
-}
-
-.social-media-logo{
-    width: 30px;
-    height: 30px;
-    margin: 0px 5px 0px 5px;
 }
 
 /*///////////////////////////////////////////////////// Animations ///////////////////////////////////////////////////*/

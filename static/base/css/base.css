@@ -2,6 +2,36 @@
    of the colors used in each element aroung the whole application, as well as the title size used in each element.*/
 /*
 
+    Global Classes and ID's
+
+    .modal
+    .modal--show
+    .filter-form
+    .filter-form--display
+    #table-header
+    .submit-button
+    .submit-button--hover
+    input
+    input:focus
+    .input-hover
+    select
+    select:focus
+    textarea
+    textarea:focus
+    .data-table
+    .data-table__icons
+    .data-table__create
+    .data-table__create--active
+    .data-table__delete
+    .data-table__delete--active
+    .data-table__update
+    .data-table__update--active
+    .data-table__confirm
+    .data-table__confirm--active
+    .data-table__cancel
+    .data-table__cancel--active
+
+
     Global Styles
     ------------------
     ------------------

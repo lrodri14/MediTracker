@@ -5,7 +5,7 @@
 
 let newPassword1 = document.querySelector('#id_new_password1')
 let newPassword2 = document.querySelector('#id_new_password2')
-let reset = document.querySelector('button')
+let reset = document.querySelector('.password-reset-confirm-form__submit-button')
 let body = document.querySelector('body')
 
 /*////////////////////////////////////////////////////// Event Listeners /////////////////////////////////////////////*/
@@ -18,9 +18,9 @@ body.addEventListener('input', (e) => {
        if not it won't be added or it will be removed.*/
     if (e.target === newPassword1 || e.target === newPassword2){
         if (newPassword1.value.length > 0 && newPassword2.value.length > 0){
-            reset.classList.add('button-fadeIn')
+            reset.classList.add('submit-button--fade-in')
         }else{
-            reset.classList.remove('button-fadeIn')
+            reset.classList.remove('submit-button--fade-in')
         }
     }
 })
@@ -29,7 +29,7 @@ body.addEventListener('input', (e) => {
 body.addEventListener('mouseover', (e) => {
     // This event will be fired every time the target is the reset button and it will have the button-hover class added.
     if (e.target === reset){
-        reset.classList.add('button-hover')
+        reset.classList.add('submit-button--hover')
     }
 })
 
@@ -37,6 +37,6 @@ body.addEventListener('mouseover', (e) => {
 body.addEventListener('mouseout', (e) => {
     // This event will be fired every time the target is the reset button and it will have the button-hover class removed.
     if (e.target === reset){
-        reset.classList.remove('button-hover')
+        reset.classList.remove('submit-button--hover')
     }
 })

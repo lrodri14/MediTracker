@@ -165,10 +165,9 @@ def signup(request):
     if account_type == 'doctor':
         user_creation_form = DoctorSignUpForm
         profile_creation_form = ProfileForm
-        context = {'user_creation_form': user_creation_form, 'profile_creation_form': profile_creation_form}
     else:
         user_creation_form = AssistantSignUpForm
-        context = {'user_creation_form': user_creation_form}
+        profile_creation_form = None
 
     if request.method == 'POST':
         doctor = Group.objects.get(name='Doctor')
@@ -197,6 +196,7 @@ def signup(request):
         else:
             data['error'] = True
 
+    context = {'user_creation_form': user_creation_form, 'profile_creation_form': profile_creation_form}
     data['html'] = render_to_string('accounts/signup.html', context, request)
     return JsonResponse(data)
 

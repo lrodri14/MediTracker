@@ -10,56 +10,55 @@
 </head>
     <body>
 
-
-    <video id="main-background" src="{% static 'main/backgrounds/background-video.mp4' %}" autoplay loop muted></video>
+    <video id="video" src="{% static 'main/backgrounds/background-video.mp4' %}" autoplay loop muted></video>
 
 <!--        &lt;!&ndash; Background Image &ndash;&gt;-->
 <!--        <img src="{% static 'main/backgrounds/background.jpg' %}" alt="background" id="main-background">-->
 
         <!-- Container -->
-        <div id="container">
+        <div class="container">
             <!-- Logo -->
-            <img id="logo" src="{% static 'main/logo/seal.svg' %}" alt="">
+            <img class="container__logo" src="{% static 'main/logo/seal.svg' %}" alt="">
             <!-- Authentication -->
-            <div id="authentication">
-                <div id="authentication-controls">
-                    <button type="button" id="login-btn" class="auth-btn" data-url="{% url 'accounts:login' %}">Log In</button>
-                    <button type="button" id="signup-btn" class="auth-btn">Sign Up</button>
+            <div class="container__auth">
+                <div class="container__auth-controls">
+                    <button type="button" id="login-btn" class="container__auth-button" data-url="{% url 'accounts:login' %}">Log In</button>
+                    <button type="button" id="signup-btn" class="container__auth-button">Sign Up</button>
                 </div>
             </div>
             <!-- Slogan Container -->
-            <div class="quote-container">
+            <div class="container__quote">
                 <q>{{ quote }}</q><br>
                 {% if author is not None %}
                     <i>- {{ author }}</i>
                 {% endif %}
             </div>
             <!-- Footer -->
-            <div id="footer">
-                <div id="social-media-contact">
-                    <a href="" target="_blank"><img class="social-media-logo" src="{% static 'main/social_media_icons/facebook.svg' %}" alt=""></a>
-                    <a href="" target="_blank"><img class="social-media-logo" src="{% static 'main/social_media_icons/instagram.svg' %}" alt=""></a>
-                    <a href="" target="_blank"><img class="social-media-logo" src="{% static 'main/social_media_icons/twitter.svg' %}" alt=""></a>
-                    <a href="" target="_blank"><img class="social-media-logo" src="{% static 'main/social_media_icons/seal.svg' %}" alt=""></a>
+            <div class="container__footer">
+                <div class="container__social-media-contact">
+                    <a href="" target="_blank"><img class="container__social-media-logo" src="{% static 'main/social_media_icons/facebook.svg' %}" alt=""></a>
+                    <a href="" target="_blank"><img class="container__social-media-logo" src="{% static 'main/social_media_icons/instagram.svg' %}" alt=""></a>
+                    <a href="" target="_blank"><img class="container__social-media-logo" src="{% static 'main/social_media_icons/twitter.svg' %}" alt=""></a>
+                    <a href="" target="_blank"><img class="container__social-media-logo" src="{% static 'main/social_media_icons/seal.svg' %}" alt=""></a>
                 </div>
             </div>
         </div>
 
         <!-- Account Type Selector -->
         <div class="account-type-selector">
-            <div class="doctor-type tile" data-url="{% url 'accounts:signup' %}" data-type="doctor">
-                <i class="fas fa-user-md"></i>
+            <div class="account-type-selector__tile" data-url="{% url 'accounts:signup' %}" data-type="doctor">
+                <i class="fas fa-user-md account-type-selector__icon"></i>
                 Doctor
             </div>
-            <div class="assistant-type tile" data-url="{% url 'accounts:signup' %}" data-type="assistant">
-                <i class="fas fa-user-nurse"></i>
+            <div class="account-type-selector__tile" data-url="{% url 'accounts:signup' %}" data-type="assistant">
+                <i class="fas fa-user-nurse account-type-selector__icon"></i>
                 Assistant
             </div>
         </div>
 
         <!-- Modal -->
         <div class="modal">
-            <div class="modal-content">
+            <div class="modal__content">
 
             </div>
         </div>
