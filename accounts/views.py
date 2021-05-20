@@ -44,7 +44,7 @@ class Login(LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        self.request.session.set_expiry(self.request.user.account_settings.session_expire_time)
+        # self.request.session.set_expiry(self.request.user.account_settings.session_expire_time)
         data = {'success': 'Login Successful'}
         return JsonResponse(data)
 

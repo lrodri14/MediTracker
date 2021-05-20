@@ -87,7 +87,7 @@ if (body){
         /* This event will be fired every time the target contains the doctor-type or assistant-type class in it's
            classList, it will add the account-type-selector-hover class */
         if (e.target.classList.contains('account-type-selector__tile')){
-            e.target.classList.add('account-type-selector__tile--hover')
+            e.target.classList.add('account-type-selector__tile--active')
         }
 
     })
@@ -104,7 +104,7 @@ if (body){
         /* This event will be fired every time the target contains the doctor-type or assistant-type class in it's
            classList, it will remove the account-type-selector-hover class */
         if (e.target.classList.contains('account-type-selector__tile')){
-            e.target.classList.remove('account-type-selector__tile--hover')
+            e.target.classList.remove('account-type-selector__tile--active')
         }
 
     })
@@ -114,25 +114,25 @@ if (body){
 
         /* This event will be fired every time the target is the container, this event will show up all the hidden elements */
         if (e.target === container){
-            loginBtn.classList.remove('container__elements--hide')
-            signUpBtn.classList.remove('container__elements--hide')
-            quoteContainer.classList.remove('container__elements--hide')
-            accountType.classList.remove('account-type-selector--show')
+            loginBtn.classList.remove('container__elements--fade-out')
+            signUpBtn.classList.remove('container__elements--fade-out')
+            quoteContainer.classList.remove('container__elements--fade-out')
+            accountType.classList.remove('account-type-selector--display')
         }
 
         /* This event will be fired every time the target contains the login class in its classList, it will hide the
            sign-up button and collect the url from the data-url attribute and make a request through the loginFormAW func,
            the response will be added to the modalContent and finally the modal will be displayed */
         if (e.target === loginBtn){
-            loginBtn.classList.add('container__elements--hide')
-            signUpBtn.classList.add('container__elements--hide')
-            quoteContainer.classList.add('container__elements--hide')
-            accountType.classList.remove('account-type-selector--show')
+            loginBtn.classList.add('container__elements--fade-out')
+            signUpBtn.classList.add('container__elements--fade-out')
+            quoteContainer.classList.add('container__elements--fade-out')
+            accountType.classList.remove('account-type-selector--display')
             const url = e.target.getAttribute('data-url')
             loginFormAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal--show')
+                modal.classList.add('modal--display')
                 username = document.querySelector('#id_username')
                 password = document.querySelector('#id_password')
                 submitBtn = document.querySelector('.login-form__submit-button')
@@ -142,10 +142,10 @@ if (body){
         /* This event will be fired every time the target contains the sign-up class in its classList, it will hide the
            login button, finally the accountType modal will be displayed */
         if (e.target === signUpBtn){
-            loginBtn.classList.add('container__elements--hide')
-            signUpBtn.classList.add('container__elements--hide')
-            quoteContainer.classList.add('container__elements--hide')
-            accountType.classList.add('account-type-selector--show')
+            loginBtn.classList.add('container__elements--fade-out')
+            signUpBtn.classList.add('container__elements--fade-out')
+            quoteContainer.classList.add('container__elements--fade-out')
+            accountType.classList.add('account-type-selector--display')
         }
 
       /* This event will be fired every time the target contains either the doctor-type or assistant-type class in its
@@ -157,9 +157,9 @@ if (body){
             let url = e.target.getAttribute('data-url') + '?account_type=' + type
             signUpFormAW(url)
             .then(data => {
-                accountType.classList.remove('account-type-selector--show')
+                accountType.classList.remove('account-type-selector--display')
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal--show')
+                modal.classList.add('modal--display')
                 signUpInputs = document.querySelectorAll('input,select')
                 submitBtn = document.querySelector('.signup-form__submit-button')
             })
@@ -176,12 +176,12 @@ if (modal){
 
         // This event will be fired when the target is submit, the button-hover class will be added.
         if (e.target === submitBtn){
-            submitBtn.classList.add('submit-button--hover')
+            submitBtn.classList.add('submit-button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be added.
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.add('input-hover')
+            e.target.classList.add('input-active')
         }
 
         // This event will be fired when the target's classList contains new-password-hover class, the new-password-hover class will be added.
@@ -200,12 +200,12 @@ if (modal){
 
         // This event will be fired when the target is submit, the button-hover class will be removed.
         if (e.target === submitBtn){
-            submitBtn.classList.remove('submit-button--hover')
+            submitBtn.classList.remove('submit-button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be removed.
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.remove('input-hover')
+            e.target.classList.remove('input-active')
         }
 
 
@@ -227,11 +227,11 @@ if (modal){
         /* This event will be fired every time the target is the modal, this event will hide the modal, and display the
            buttons.*/
         if (e.target === modal){
-            modal.classList.remove('modal--show')
-            loginBtn.classList.remove('container__elements--hide')
-            signUpBtn.classList.remove('container__elements--hide')
-            quoteContainer.classList.remove('container__elements--hide')
-            accountType.classList.remove('account-type-selector--show')
+            modal.classList.remove('modal--display')
+            loginBtn.classList.remove('container__elements--fade-out')
+            signUpBtn.classList.remove('container__elements--fade-out')
+            quoteContainer.classList.remove('container__elements--fade-out')
+            accountType.classList.remove('account-type-selector--display')
         }
 
         /* This event will be fired every time the target contains the password-reset class in it's classList, this event
@@ -358,7 +358,7 @@ if (modal){
                         signUpInputs = document.querySelectorAll('input,select')
                         submitBtn = document.querySelector('.signup-form__submit-button')
                     }else{
-                        modal.classList.remove('modal--show')
+                        modal.classList.remove('modal--display')
                         loginBtn.click()
                     }
                 })

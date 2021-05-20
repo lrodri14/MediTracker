@@ -3,13 +3,13 @@
 
 //////////////////////////////////////////////////////// Variables /////////////////////////////////////////////////////
 
-var searchBar = document.querySelector('#search-bar')
-var topMenuElements = document.querySelector('.wrapper-one')
-var bottomMenuElements = document.querySelector('.wrapper-two')
-var menuTitle = document.querySelector('h1')
-var queryResults = document.querySelector('.query-results')
-var tiles = document.querySelectorAll('.tile')
-var icons = document.querySelectorAll('i')
+var searchBar = document.querySelector('.main-menu__search-bar')
+var topMenuElements = document.querySelector('.main-menu__upper-row')
+var bottomMenuElements = document.querySelector('.main-menu__lower-row')
+var menuTitle = document.querySelector('.main-menu__title')
+var queryResults = document.querySelector('.data-table__query-results')
+var tiles = document.querySelectorAll('.main-menu__tile')
+var icons = document.querySelectorAll('main-menu__tile-icon')
 var logoutTile = document.querySelector('#logout')
 var sound = document.querySelector('audio')
 var modal = document.querySelector('.modal')
@@ -44,20 +44,20 @@ if (searchBar){
 
         if (e.target.value !== ''){
             let url = e.target.getAttribute('data-url') + '?query=' + e.target.value
-            topMenuElements.classList.add('hide-menu')
-            bottomMenuElements.classList.add('hide-menu')
-            menuTitle.classList.add('hide-menu')
+            topMenuElements.classList.add('main-menu__elements--fade-out')
+            bottomMenuElements.classList.add('main-menu__elements--fade-out')
+            menuTitle.classList.add('main-menu__elements--fade-out')
             userLookupAW(url)
                 .then(data => {
                     queryResults.innerHTML = data['html']
                 })
-            queryResults.classList.add('query-results-show')
+            queryResults.classList.add('data-table__query-results--display')
         }else{
             queryResults.innerHTML = "";
-            topMenuElements.classList.remove('hide-menu')
-            bottomMenuElements.classList.remove('hide-menu')
-            menuTitle.classList.remove('hide-menu')
-            queryResults.classList.remove('query-results-show')
+            topMenuElements.classList.remove('main-menu__elements--fade-out')
+            bottomMenuElements.classList.remove('main-menu__elements--fade-out')
+            menuTitle.classList.remove('main-menu__elements--fade-out')
+            queryResults.classList.remove('data-table__query-results--display')
         }
 
     })
@@ -72,9 +72,8 @@ if (queryResults){
 
         /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
            properties from the row and add tr-hover and td-hover class*/
-        if (e.target.nodeName === 'TD'){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.classList.contains('data-table__data')){
+            let row = e.target.parentNode
             row.style.backgroundColor = '#FFFFFF'
             row.style.color = '#000000'
         }
@@ -85,12 +84,11 @@ if (queryResults){
 
       /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
          properties from the row and removed tr-hover and td-hover class*/
-      if (e.target.nodeName === 'TD'){
-        let row
-        e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.classList.contains('data-table__data')){
+            let row = e.target.parentNode
             row.style.backgroundColor = ''
             row.style.color = ''
-      }
+        }
 
     })
 
@@ -101,23 +99,21 @@ for (let i = 0; i<tiles.length; i++){
     // Mouseover events
     /* This event will be fired every time the target is a tile, several styles will be altered */
     tiles[i].addEventListener('mouseover', function(){
-        tiles[i].classList.add('tile-hover')
-        icons[i].classList.add('i-hover')
+        tiles[i].classList.add('main-menu__tile--active')
         sound.play()
     })
 
     // Mouseout events
     /* This event will be fired every time the target is a tile, several styles will be removed */
     tiles[i].addEventListener('mouseout', function(){
-        tiles[i].classList.remove('tile-hover')
-        icons[i].classList.remove('i-hover')
+        tiles[i].classList.remove('main-menu__tile--active')
     })
 }
 
 // Logout Tile Events
 /* This event will be fired every time a click occurs over the logoutTile, this event will show up the modal to confirm logout */
 logoutTile.addEventListener('click', (e) => {
-    modal.classList.add('modal-show')
+    modal.classList.add('modal--display')
 })
 
 // Modal Event Listeners
@@ -128,20 +124,15 @@ if (modal){
 
         // This event will be fired every time the target is the modal, this event will close the modal.
         if (e.target === modal){
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
         }
 
-    // This event will be fired every time the target is a button and its textContent is 'Yes', this event will show the loader.
-        if (e.target.nodeName === 'BUTTON'){
+        // This event will be fired every time the target is a button and its textContent is 'Yes', this event will show the loader.
+        if (e.target.classList.contains('modal__button')){
             if (e.target.textContent === 'Yes'){
-                document.querySelector('.logout-loader').classList.add('logout-loader-show')
-            }
-        }
-
-        // This event will be fired every time the target is a button and its textContent is 'No', this event will close the modal.
-        if (e.target.nodeName === 'BUTTON'){
-            if (e.target.textContent === 'No'){
-                modal.classList.remove('modal-show')
+                document.querySelector('.modal__logout-loader').classList.add('modal__logout-loader--display')
+            }else{
+                modal.classList.remove('modal--display')
             }
         }
 
@@ -149,18 +140,22 @@ if (modal){
 
     // Mouseover events
     modal.addEventListener('mouseover', (e) => {
+
         // This event will be fired every time the target is a button, the button-hover class will be added.
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
+        if (e.target.classList.contains('modal__button')){
+            e.target.classList.add('modal__button--active')
         }
+
     })
 
     // Mouse over events
     modal.addEventListener('mouseout', (e) => {
-    // This event will be fired every time the target is a button, the button-hover class will be added.
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-hover')
+
+        // This event will be fired every time the target is a button, the button-hover class will be added.
+        if (e.target.classList.contains('modal__button')){
+            e.target.classList.remove('modal__button--active')
         }
+
     })
 
 }

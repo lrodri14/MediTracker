@@ -5,15 +5,17 @@
     Global Classes and ID's
 
     .modal
-    .modal--show
+    .modal--display
+    .modal__button
+    .modal__button--active
     .filter-form
     .filter-form--display
     #table-header
     .submit-button
-    .submit-button--hover
+    .submit-button--active
     input
     input:focus
-    .input-hover
+    .input-active
     select
     select:focus
     textarea
@@ -30,6 +32,7 @@
     .data-table__confirm--active
     .data-table__cancel
     .data-table__cancel--active
+    .no-data
 
 
     Global Styles

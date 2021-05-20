@@ -1,26 +1,26 @@
 {% load static %}
 <!-- If any requests in existence, they will be displayed. -->
 {% if users %}
-    <table id="query-results-table">
+    <table class="data-table">
         {% for user in users %}
-            <tr onclick="window.location='{% url 'accounts:profile' user.pk %}'">
+            <tr class="data-table__item" onclick="window.location='{% url 'accounts:profile' user.pk %}'">
                 {% if user.profile.profile_pic %}
-                    <td><img src="{{ user.profile.profile_pic.url }}" alt=""></td>
+                    <td class="data-table__data"><img src="{{ user.profile.profile_pic.url }}" alt=""></td>
                 {% else %}
                     {% if user.profile.gender == 'Femenine' %}
-                        <td><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
+                        <td class="data-table__data"><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
                     {% else %}
-                        <td><img src="{% static 'accounts/avatars/male-avatar.png' %}" alt=""></td>
+                        <td class="data-table__data"><img src="{% static 'accounts/avatars/male-avatar.png' %}" alt=""></td>
                     {% endif %}
                 {% endif %}
-                <td>{{ user.first_name }} {{ user.last_name }}</td>
-                <td>{{ user.doctor.get_speciality_display }}</td>
-                <td>{{ user.profile.get_origin_display }}</td>
-                <td>{{ user }}</td>
+                <td class="data-table__data">{{ user.first_name }} {{ user.last_name }}</td>
+                <td class="data-table__data">{{ user.doctor.get_speciality_display }}</td>
+                <td class="data-table__data">{{ user.profile.get_origin_display }}</td>
+                <td class="data-table__data">{{ user }}</td>
             </tr>
         {% endfor %}
     </table>
 <!-- If no users in existence, this message will be displayed -->
 {% else %}
-    <p class="no-results">No results found</p>
+    <p class="no-data">No results found</p>
 {% endif %}
