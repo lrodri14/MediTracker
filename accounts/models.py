@@ -151,8 +151,8 @@ class UsersProfile(models.Model):
     )
 
     GENDER_CHOICES = (
-        ('Masculine', 'Masculine'),
-        ('Femenine', 'Femenine'),
+        ('MASCULINE', 'Masculine'),
+        ('FEMENINE', 'Femenine'),
     )
 
     user = models.OneToOneField(CustomUser, blank=True, null=True, on_delete=models.CASCADE, verbose_name='user', related_name='profile')

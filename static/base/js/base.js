@@ -5,12 +5,11 @@
 
 ///////////////////////////////////////////////// Variables ////////////////////////////////////////////////////////////
 
-var loaderModal = document.querySelector('.loader-modal')
+var loaderModal = document.querySelector('.global-loader-modal')
 var globalNavigator = document.querySelector('.global-navigator')
 var socialSection = document.querySelector('.social-section')
-var socialSectionData = document.querySelector('#social-section-data')
-var socialSectionTabs = document.querySelectorAll('.social-section-tab')
-var closeSocialSection = document.querySelector('#close-social-section')
+var socialSectionData = document.querySelector('.social-section__data')
+var socialSectionTabs = document.querySelectorAll('.social-section__tab')
 var notificationsPopup = document.querySelector('.notifications-popup')
 
 // Variables used for the chat functionality
@@ -66,7 +65,7 @@ function displayMessage(fromUser, message){
        the chatWindow and the chatWindow scroll will be set to the bottom.*/
     let messageContent = document.createElement('div')
     messageContent.textContent = message
-    fromUser === identity ? messageContent.classList.add('message') : messageContent.classList.add('reply')
+    fromUser === identity ? messageContent.classList.add('social-section__message') : messageContent.classList.add('social-section__reply')
     chatWindow.appendChild(messageContent)
     chatWindow.scrollTop = chatWindow.scrollHeight
 }
@@ -106,7 +105,7 @@ function processPage(page){
     /* The processPage function is used to display all the messages that have been sent previously in the channel, it
        takes one single argument: page, which expects a Paginator Object, this will print each and every single message
        sent, it will check if the Paginator contains any other pages to render them too.*/
-    document.querySelectorAll('.messages-loader').forEach(loader => loader.classList.add('messages-loader-hide'))
+    document.querySelectorAll('.social-section__chat-loader').forEach(loader => loader.classList.add('social-section__chat-loader--fade-out'))
     page.items.forEach(message => {
         displayMessage(message.author, message.body)
     })
@@ -160,28 +159,28 @@ window.addEventListener('mousemove', (e) => {
        will display the globalNavigator, if the it does not fulfills these conditions, the navigator will not be shown or it
        will be hidden.*/
     if (globalNavigator){
-        if ((e.clientY >= 50) && (e.clientX <= 5)){
-        globalNavigator.classList.add('global-navigator-show')
+        if ((e.clientY >= 50) && (e.clientX <= 3)){
+        globalNavigator.classList.add('global-navigator--display')
         }else if (e.clientX > globalNavigator.offsetWidth){
-            globalNavigator.classList.remove('global-navigator-show')
+            globalNavigator.classList.remove('global-navigator--display')
         }
     }
 
     /* This event will be fired every time the cursor is 10px less than the screen width this event will display the socialSection,
        if the it does not fulfills these conditions, the socialSection will not be shown or it will be hidden.*/
     if (socialSection){
-        if (e.clientX >= (window.screen.width - 10) && !socialSection.classList.contains('social-section-show')){
-            socialSection.classList.add('social-section-show')
+        if (e.clientX >= (window.screen.width - 3) && !socialSection.classList.contains('social-section--display')){
+            socialSection.classList.add('social-section--display')
             if (socialSectionData.innerHTML == ""){
                 let url = socialSectionTabs[0].getAttribute('data-url')
-                socialSectionTabs[0].classList.add('social-section-tab-active')
+                socialSectionTabs[0].classList.add('social-section__tab--active')
                 displayContactsAW(url)
                 .then(data => {
                     socialSectionData.innerHTML = data['html']
                 })
             }
         }else if (e.clientX <= (window.screen.width - socialSection.offsetWidth)){
-            socialSection.classList.remove('social-section-show')
+            socialSection.classList.remove('social-section--display')
         }
     }
 
@@ -195,9 +194,9 @@ if (globalNavigator){
 
         /* This event will be triggered any time the target contains either the global-navigator-tab, fas or fa-times class,
            the global-navigator-tab-hover class will be added*/
-        if (e.target.classList.contains('global-navigator-tab') || e.target.classList.contains('fas') && !e.target.classList.contains('fa-times')){
-            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode
-            tab.classList.add('global-navigator-tab-hover')
+        if (e.target.closest('.global-navigator__tab')){
+            let tab = e.target.closest('.global-navigator__tab')
+            tab.classList.add('global-navigator__tab--active')
         }
 
     })
@@ -207,20 +206,9 @@ if (globalNavigator){
 
         /* This event will be triggered any time the target contains either the global-navigator-tab, fas or fa-times class,
            the global-navigator-tab-hover class will be removed*/
-        if (e.target.classList.contains('global-navigator-tab') || e.target.classList.contains('fas') && !e.target.classList.contains('fa-times')){
-            let tab = e.target.classList.contains('global-navigator-tab') ? e.target : e.target.parentNode
-            tab.classList.remove('global-navigator-tab-hover')
-        }
-
-    })
-
-    // Click Events
-    globalNavigator.addEventListener('click', (e) => {
-
-        /* This event will be triggered any time the target contains either the close-global-navigator class,
-           the global navigator will be hidden */
-        if (e.target.parentNode.classList.contains('close-global-navigator')){
-           globalNavigator.classList.remove('global-navigator-show')
+        if (e.target.closest('.global-navigator__tab')){
+            let tab = e.target.closest('.global-navigator__tab')
+            tab.classList.remove('global-navigator__tab--active')
         }
 
     })
@@ -234,35 +222,31 @@ if (socialSection){
     socialSection.addEventListener('mouseover', (e) => {
 
         /* This event will be triggered whenever the target contains the cell class, some styles will be edited and added.*/
-        if (e.target.classList.contains('cell') || e.target.parentNode.classList.contains('cell')){
-            let cell = e.target.classList.contains('cell') ? e.target : e.target.parentNode
+        if (e.target.closest('.social-section__cell')){
+            let cell = e.target.closest('.social-section__cell')
             cell.style.backgroundColor = "#FFFFFF"
             cell.style.color = "#000000"
         }
 
         // This event will be triggered every time the target contains the 'social-section-tab' class, social-section-tab-hover class will be added
-         if (e.target.classList.contains('social-section-tab')){
-            e.target.classList.add('social-section-tab-hover')
+         if (e.target.classList.contains('social-section__tab')){
+            e.target.classList.add('social-section__tab--active')
          }
 
-        // This event will be triggered every time the target contains the delete-contact class, delete-contact-hover class will be added
-        if (e.target.classList.contains('delete-contact')){
-            e.target.classList.add('delete-contact-hover')
-        }
-
         // This event will be triggered every time the target contains the accept-contact-request class, accept-contact-request-hover class will be added
-        if (e.target.classList.contains('accept-contact-request')){
-            e.target.classList.add('accept-contact-request-hover')
+        if (e.target.classList.contains('social-section__accept-contact-request')){
+            e.target.classList.add('social-section__accept-contact-request--active')
         }
 
         // This event will be triggered every time the target contains the deny-contact-request class, deny-contact-request-hover class will be added
-        if (e.target.classList.contains('deny-contact-request')){
-            e.target.classList.add('deny-contact-request-hover')
+        if (e.target.classList.contains('social-section__deny-contact-request')){
+            e.target.classList.add('social-section__deny-contact-request--active')
         }
 
         // This event will be triggered every time the target contains the send-message-btn class, send-message-btn-hover class will be added
-        if (e.target.id === 'send-message-btn'){
-            e.target.classList.add('send-message-btn-hover')
+       /* Why is it not working with the social-section__send-message-button class? */
+        if (e.target.classList.contains('fa-paper-plane')){
+            e.target.classList.add('social-section__send-message-button--active')
         }
 
     })
@@ -270,37 +254,32 @@ if (socialSection){
     socialSection.addEventListener('mouseout', (e) => {
 
         /* This event will be triggered whenever the target contains the cell class, some styles will be edited and removed.*/
-        if (e.target.classList.contains('cell') ||  e.target.parentNode.classList.contains('cell')){
-            let cell = e.target.classList.contains('cell') ? e.target : e.target.parentNode
+        if (e.target.closest('.social-section__cell')){
+            let cell = e.target.closest('.social-section__cell')
             cell.style.backgroundColor = ''
             cell.style.color = ''
         }
 
         // This event will be triggered every time the target contains the 'social-section-tab' class, social-section-tab-hover class will be removed
-        if (e.target.classList.contains('social-section-tab')){
-            e.target.classList.remove('social-section-tab-hover')
-        }
-
-        // This event will be triggered every time the target contains the delete-contact class, delete-contact-hover class will be removed
-        if (e.target.classList.contains('delete-contact')){
-            e.target.classList.remove('delete-contact-hover')
+        if (e.target.classList.contains('social-section__tab')){
+            e.target.classList.remove('social-section__tab--active')
         }
 
         // This event will be triggered every time the target contains the accept-contact-request class, accept-contact-request-hover class will be removed
-        if (e.target.classList.contains('accept-contact-request')){
-            e.target.classList.remove('accept-contact-request-hover')
+        if (e.target.classList.contains('social-section__accept-contact-request')){
+            e.target.classList.remove('social-section__accept-contact-request--active')
         }
 
         // This event will be triggered every time the target contains the deny-contact-request-hover class, deny-contact-request-hover class will be removed
-        if (e.target.classList.contains('deny-contact-request')){
-            e.target.classList.remove('deny-contact-request-hover')
+        if (e.target.classList.contains('social-section__deny-contact-request')){
+            e.target.classList.remove('social-section__deny-contact-request--active')
         }
 
         // This event will be triggered every time the target contains the send-message-btn class, send-message-btn-hover class will be removed
-        if (e.target.id === 'send-message-btn'){
-            e.target.classList.remove('send-message-btn-hover')
+       /* Why is it not working with the social-section__send-message-button class? */
+        if (e.target.classList.contains('fa-paper-plane')){
+            e.target.classList.remove('social-section__send-message-button--active')
         }
-
 
     })
 
@@ -314,11 +293,11 @@ if (socialSection){
            from the data-url attribute in the target and the parameters will be added, we will make use
            of the displayContactsAW to request the information from the server, the response will be added
            to the socialSectionData.innerHTML */
-        if (e.target.classList.contains('social-section-tab')){
+        if (e.target.classList.contains('social-section__tab')){
             for (let i = 0; i<socialSectionTabs.length; i++){
-                socialSectionTabs[i].classList.remove('social-section-tab-active')
+                socialSectionTabs[i].classList.remove('social-section__tab--active')
             }
-            e.target.classList.add('social-section-tab-active')
+            e.target.classList.add('social-section__tab--active')
             let url = e.target.getAttribute('data-url')
             displayContactsAW(url)
             .then(data => {
@@ -331,7 +310,7 @@ if (socialSection){
            attribute, these are the parts that will shape our URL, we will make use the requestResponseAW async
            function to send the user response to the server, the server response with the updated content will be
            added to the socialSectionData.innerHTML*/
-        if (e.target.classList.contains('accept-contact-request') || e.target.classList.contains('deny-contact-request')){
+        if (e.target.classList.contains('social-section__accept-contact-request') || e.target.classList.contains('social-section__deny-contact-request')){
             e.preventDefault()
             e.stopPropagation()
             let url = e.target.getAttribute('data-url') + '?response=' + e.target.getAttribute('data-response')
@@ -360,12 +339,12 @@ if (socialSection){
            after the collect our chatClient instance we get it's subscribed channels, making use of the
            getSubscribedChannels function. This will return a promise we will consume, and we will call the
            createOrJoinChannel function.*/
-        if (e.target.classList.contains('chat') || e.target.parentNode.classList.contains('chat')){
-            let chatUrl = e.target.classList.contains('chat') ? e.target.getAttribute('data-url') : e.target.parentNode.getAttribute('data-url')
+        if (e.target.closest('.social-section__chat')){
+            let chatUrl = e.target.closest('.social-section__chat').getAttribute('data-url')
             displayChatAW(chatUrl)
             .then(data => {
                 socialSectionData.innerHTML = data['html']
-                chatWindow = document.querySelector('#chat-content')
+                chatWindow = document.querySelector('.social-section__chat-content')
                 identity = data['identity']
                 channelName = data['channel_name']
                 Twilio.Chat.Client.create(data['token'])
@@ -381,6 +360,8 @@ if (socialSection){
            the value from the #id_message element, and check if there is a channel available, if the condition is
            fulfilled, the channel sendMessage function will be called, passing the message as it's parameter. Finally
            the #id_message element will be cleared.*/
+
+           /* Why is it not working with the social-section__send-message-button class? */
         if (e.target.classList.contains('fa-paper-plane')){
             let message = document.querySelector('#id_message').value
             if (chatChannel && message.length > 0){
@@ -409,10 +390,10 @@ if (socialSection){
 
 // This event will be fired when the browser readyState attribute changes to online, the global loader will be hidden.
 window.addEventListener('online', () => {
-  loaderModal.classList.remove('loader-modal-show')
+  loaderModal.classList.remove('global-loader-modal--display')
 })
 
 // This event will be fired when the browser readyState attribute changes to offline, the global loader will be displayed.
 window.addEventListener('offline', () => {
-  loaderModal.classList.add('loader-modal-show')
+  loaderModal.classList.add('global-loader-modal--display')
 })

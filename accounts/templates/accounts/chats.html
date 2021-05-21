@@ -5,17 +5,21 @@
 {% if chats %}
     {% for chat in chats %}
         {% get_destination chat user as destination %}
-        <div class="cell chat" data-url="{% url 'accounts:display_chat' destination.pk %}">
-            {% if not destination.profile.profile_pic %}
-                {% if destination.profile.gender == 'Masculine' %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+        <div class="social-section__cell social-section__chat" data-url="{% url 'accounts:display_chat' destination.pk %}">
+            <div class="social-section__grid">
+                {% if not destination.profile.profile_pic %}
+                    {% if destination.profile.gender == 'Masculine' %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+                    {% else %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    {% endif %}
                 {% else %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    <img class="social-section__profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
                 {% endif %}
-            {% else %}
-                <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
-            {% endif %}
-            <p class="chat-identification">{{ destination.first_name }} {{ destination.last_name }}</p>
+            </div>
+            <div class="social-section__grid">
+                <p class="social-section__contact-identification">{{ destination.first_name }} {{ destination.last_name }}</p>
+            </div>
         </div>
     {% endfor %}
 <!-- If no chats in existence, this message will be displayed -->

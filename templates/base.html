@@ -20,43 +20,47 @@
 
     <img id=background src="{% display_wallpaper request.user.general_settings.wallpaper %}" alt="">
 
-        {% block notifications_popup %} <div class="notifications-popup"></div> {% endblock %}
+        {% block notifications_popup %}<div class="notifications-popup"></div>{% endblock %}
 
         {% block return %}<a href=""><i class="fas fa-long-arrow-alt-left" ></i></a>{% endblock %}
 
+        <!-- Doctor Section -->
+
         {% if user.roll == 'DOCTOR' %}
+
             {% block navigation %}
                 <!-- Navigator -->
                 <div class="global-navigator">
                     <!-- Tabs -->
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'home:home' %}'"><i class="fas fa-home"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'patients:patients' %}'"><i class="fas fa-user-injured"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'appointments:appointments'%}'"><i class="fas fa-calendar-check"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'records:records' %}'"><i class="fas fa-clipboard"></i></div>
-                    <div class="global-navigator-tab"><i class="fas fa-file-invoice"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'providers:providers' %}'"><i class="fas fa-handshake"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'settings:settings' %}'"><i class="fas fa-cog"></i></div>
-                    <div class="global-navigator-tab" onclick="window.location='{% url 'accounts:profile' %}'"><i class="fas fa-user"></i></div>
-                    <p id="watermark">Telematica</p>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'home:home' %}'"><i class="fas fa-home global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'patients:patients' %}'"><i class="fas fa-user-injured global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'appointments:appointments'%}'"><i class="fas fa-calendar-check global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'records:records' %}'"><i class="fas fa-clipboard global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab"><i class="fas fa-file-invoice global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'providers:providers' %}'"><i class="fas fa-handshake global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'settings:settings' %}'"><i class="fas fa-cog global-navigator__icon"></i></div>
+                    <div class="global-navigator__tab" onclick="window.location='{% url 'accounts:profile' %}'"><i class="fas fa-user global-navigator__icon"></i></div>
+                    <p class="global-navigator__watermark">Telematica</p>
                 </div>
             {% endblock %}
 
             {% block social_section %}
                 <!-- Social Content -->
                 <div class="social-section">
-                    <div id="social-section-navigator"><div class="social-section-tab social-section-tab-active" data-url="{% url 'accounts:contacts' %}">Contacts</div><div class="social-section-tab" data-url="{% url 'accounts:chats' %}">Chats</div><div class="social-section-tab" data-url="{% url 'accounts:contact_requests' %}">Requests</div></div>
-                    <div id="social-section-data"></div>
+                    <div class="social-section__navigator"><div class="social-section__tab social-section__tab--active" data-url="{% url 'accounts:contacts' %}">Contacts</div><div class="social-section__tab" data-url="{% url 'accounts:chats' %}">Chats</div><div class="social-section__tab" data-url="{% url 'accounts:contact_requests' %}">Requests</div></div>
+                    <div class="social-section__data"></div>
                 </div>
             {% endblock %}
+
         {% endif %}
 
         {% block body_block %}
         {% endblock %}
 
-        <div class="loader-modal">
-            <i class="fas fa-heart"></i>
-            <div class="global-loader"></div>
-            <p id="global-loader-message">Check your network connection....</p>
+        <div class="global-loader-modal">
+            <i class="fas fa-heart global-loader-modal__heart-icon"></i>
+            <div class="global-loader-modal__spinner"></div>
+            <p class="global-loader-modal__message">Check your network connection....</p>
         </div>
 
         <script src="{% static 'base/js/base.js' %}"></script>

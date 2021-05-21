@@ -111,33 +111,6 @@
     visibility: hidden;
 }
 
-.data-table{
-    margin: auto;
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-}
-
-.data-table__item{
-    line-height: 15px;
-    max-line-height: 15px;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.data-table__data{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .data-table__query-results img{
     width: 25px;
     height: 25px;
@@ -145,33 +118,13 @@
     margin-top: 2px;
 }
 
-.data-table__item:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-
-}
-
-.data-table__item:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-}
-
 .data-table__query-results--display{
     opacity: 1;
     visibility: visible;
 }
 
-.no-data{
-    margin-left: 45%;
-    margin-top: 20%;
-}
-
 
 /*//////////////////////////////////////////////////// Modal Content /////////////////////////////////////////////////*/
-
-.modal--display{
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.3s;
-}
 
 .modal__modal-content{
     text-align: center;
@@ -203,25 +156,5 @@
 
 .modal__logout-loader--display{
     visibility: visible;
-}
-
-.modal__button{
-    width: 100px;
-    height: 30px;
-    cursor: pointer;
-    border: 1px solid #FFFFFF;
-    border-radius: 20px;
-    background-color: transparent;
-    transition: background-color 0.5s, color 0.5s;
-}
-
-.modal__button:focus{
-    outline: none;
-}
-
-.modal__button--active{
-    color: #000000;
-    background-color: #FFFFFF;
-    transition: background-color 0.5s, color 0.5s,;
 }
 

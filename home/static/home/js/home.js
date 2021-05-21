@@ -100,7 +100,7 @@ for (let i = 0; i<tiles.length; i++){
     /* This event will be fired every time the target is a tile, several styles will be altered */
     tiles[i].addEventListener('mouseover', function(){
         tiles[i].classList.add('main-menu__tile--active')
-        sound.play()
+//        sound.play()
     })
 
     // Mouseout events

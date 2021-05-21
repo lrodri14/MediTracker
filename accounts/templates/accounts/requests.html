@@ -2,19 +2,27 @@
 <!-- If any requests in existence, they will be displayed. -->
 {% if contact_requests %}
     {% for contact_request in contact_requests %}
-        <div class="cell">
-            {% if not contact_request.from_user.profile.profile_pic %}
-                {% if contact.gender == 'Masculine' %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+        <div class="social-section__cell">
+            <div class="social-section__grid">
+                {% if not contact_request.from_user.profile.profile_pic %}
+                    {% if contact_request.from_user.profile.gender == 'Masculine' %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+                    {% else %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    {% endif %}
                 {% else %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    <img class="social-section__profile-picture" src="{{ MEDIA_URL }}{{ contact_request.from_user.profile.profile_pic }}" alt="">
                 {% endif %}
-            {% else %}
-                <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ contact_request.from_user.profile.profile_pic }}" alt="">
-            {% endif %}
-            <p class="request-identification" >{{ contact_request.from_user.first_name }} {{ contact_request.from_user.last_name }}</p>
-            <i class="fas fa-check accept-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="accepted"></i>
-            <i class="fas fa-times deny-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="denied"></i>
+            </div>
+            <div class="social-section__grid">
+                <p class="social-section__contact-identification">{{ contact_request.from_user.first_name }} {{ contact_request.from_user.last_name }}</p>
+            </div>
+            <div class="social-section__grid">
+                <i class="fas fa-times social-section__deny-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="denied"></i>
+            </div>
+            <div class="social-section__grid">
+                <i class="fas fa-check social-section__accept-contact-request" data-url="{% url 'accounts:contact_request_response' contact_request.pk %}" data-response="accepted"></i>
+            </div>
         </div>
     {% endfor %}
 <!-- If no requests in existence, this message will be displayed -->

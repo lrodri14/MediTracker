@@ -2,17 +2,21 @@
 <!-- If any contacts in existence, they will be displayed. -->
 {% if contacts %}
     {% for contact in contacts %}
-        <div class="cell" onclick="window.location='{% url 'accounts:profile' contact.user.pk %}'">
-            {% if not contact.profile_pic %}
-                {% if contact.gender == 'Masculine' %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+        <div class="social-section__cell" onclick="window.location='{% url 'accounts:profile' contact.user.pk %}'">
+            <div class="social-section__grid">
+                {% if not contact.profile_pic %}
+                    {% if contact.gender == 'Masculine' %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+                    {% else %}
+                        <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    {% endif %}
                 {% else %}
-                    <img class="contact-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+                    <img class="social-section__profile-picture" src="{{ MEDIA_URL }}{{ contact.profile_pic }}" alt="">
                 {% endif %}
-            {% else %}
-                <img class="contact-profile-picture" src="{{ MEDIA_URL }}{{ contact.profile_pic }}" alt="">
-            {% endif %}
-            <p class="contact-identification">{{ contact.user.first_name }} {{ contact.user.last_name }}</p>
+            </div>
+            <div class="social-section__grid">
+                <p class="social-section__contact-identification">{{ contact.user.first_name }} {{ contact.user.last_name }}</p>
+            </div>
         </div>
     {% endfor %}
 <!-- If no contacts in existence, this message will be displayed -->

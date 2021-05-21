@@ -177,6 +177,198 @@ body{
     z-index: -1;
 }
 
+/*////////////////////////////////////////////////////// Titles //////////////////////////////////////////////////////*/
+
+h1,h2,h3,h4,h5,h6{
+    color: #FFFFFF;
+}
+
+/*////////////////////////////////////////////////////// Form ////////////////////////////////////////////////////////*/
+
+.filter-form{
+
+}
+
+.filter-form--display{
+
+}
+
+input{
+    text-align: center;
+    color: #FFFFFF;
+    background-color: transparent;
+    font-family: 'Nunito', sans-serif;
+    border: none;
+    border-bottom: 1px solid #FFFFFF;
+    height: 30px;
+    width: 60%;
+    transition: width 0.5s;
+}
+
+.input-active{
+  width: 75%;
+  transition: width 0.5s;
+}
+
+input:focus{
+    outline: none;
+}
+
+textarea{
+  font-family: 'Nunito', sans-serif;
+  color: #FFFFFF;
+  background-color: transparent;
+  border: 1px solid #FFFFFF;
+  padding: 5px;
+  resize: none;
+  transition: 0.5s;
+}
+
+textarea:focus{
+  outline: none;
+}
+
+textarea::-webkit-input-placeholder {
+  color: #FFFFFF;
+}
+
+select{
+  font-family: 'Nunito', sans-serif;
+  text-align-last: center;
+  color: #FFFFFF;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #FFFFFF;
+  height: 30px;
+  width:60%;
+  margin: 5px;
+  transition: 0.5s;
+}
+
+select:focus{
+    outline: none;
+}
+
+.submit-button{
+    cursor: pointer;
+    margin-top: 5%;
+    width: 100px;
+    height: 30px;
+    border: 1px solid #FFFFFF;
+    border-radius: 25px;
+    background-color: transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: background-color 0.5s, color 0.5s, opacity 0.5s;
+}
+
+.submit-button--active{
+    background-color: #FFFFFF;
+    color: #000000;
+    transition: all 0.5s ease;
+}
+
+.submit-button--fade-in{
+    opacity: 1;
+    visibility: visible;
+    transition: 0.5s;
+}
+
+.submit-button:focus{
+    outline: none;
+}
+
+/*////////////////////////////////////////////////////// Tables //////////////////////////////////////////////////////*/
+
+#heading{
+
+}
+
+.data-table{
+    margin: auto;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
+}
+
+.data-table__item{
+    line-height: 15px;
+    max-line-height: 15px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.data-table__data{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.data-table__item:nth-child(odd){
+    background-color: rgba(255,255,255,0.1);
+}
+
+.data-table__item:nth-child(even){
+    background-color: rgba(255,255,255,0.2);
+}
+
+.data-table__create{
+
+}
+
+.data-table__create--active{
+
+}
+
+.data-table__update{
+
+}
+
+.data-table__update--active{
+
+}
+
+.data-table__delete{
+
+}
+
+.data-table__delete--active{
+
+}
+
+.data-table__confirm{
+
+}
+
+.data-table__confirm--active{
+
+}
+
+.data-table__cancel{
+
+}
+
+.data-table__cancel--active{
+
+}
+
+.no-data{
+    margin-left: 45%;
+    margin-top: 20%;
+}
+
+.data-table{
+    max-height: 767px;
+    overflow-y: auto;
+}
+
 /*///////////////////////////////////////////////// Notifications Popup //////////////////////////////////////////////*/
 
 .notifications-popup{
@@ -196,21 +388,6 @@ body{
 .notification-popup-show{
     top: 5%;
     transition: top 0.5s;
-}
-
-
-/*////////////////////////////////////////////////////// Titles //////////////////////////////////////////////////////*/
-
-h1,h2,h3,h4,h5,h6{
-    color: #FFFFFF;
-}
-
-/*////////////////////////////////////////////////////// Tables //////////////////////////////////////////////////////*/
-
-
-.data-table{
-    max-height: 767px;
-    overflow-y: auto;
 }
 
 /*////////////////////////////////////////////////////// Status //////////////////////////////////////////////////////*/
@@ -303,72 +480,6 @@ h1,h2,h3,h4,h5,h6{
     height: 100%;
 }
 
-/*////////////////////////////////////////////////////// Inputs //////////////////////////////////////////////////////*/
-
-/*form{
-    animation: show-up 0.5s linear;
-}*/
-
-
-/*////////////////////////////////////////////////////// Inputs //////////////////////////////////////////////////////*/
-
-input{
-    text-align: center;
-    color: #FFFFFF;
-    background-color: transparent;
-    font-family: 'Nunito', sans-serif;
-    border: none;
-    border-bottom: 1px solid #FFFFFF;
-    height: 30px;
-    width: 60%;
-    transition: width 0.5s;
-}
-
-input:focus{
-    outline: none;
-}
-
-.input-hover{
-  width: 75%;
-  transition: width 0.5s;
-}
-
-textarea{
-  font-family: 'Nunito', sans-serif;
-  color: #FFFFFF;
-  background-color: transparent;
-  border: 1px solid #FFFFFF;
-  padding: 5px;
-  resize: none;
-  transition: 0.5s;
-}
-
-textarea:focus{
-  outline: none;
-}
-
-textarea::-webkit-input-placeholder {
-  color: #FFFFFF;
-}
-
-select{
-  font-family: 'Nunito', sans-serif;
-  text-align-last: center;
-  color: #FFFFFF;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #FFFFFF;
-  height: 30px;
-  width:60%;
-  margin: 5px;
-  transition: 0.5s;
-}
-
-select:focus{
-    outline: none;
-}
-
-
 /*////////////////////////////////////////////////////// Buttons //////////////////////////////////////////////////////*/
 
 button{
@@ -416,7 +527,7 @@ button:focus{
   background: rgba(0,0,0,0);
 }
 
-/*///////////////////////////////////////////////// Icons ////////////////////////////////////////////////////////////*/
+/*//////////////////////////////////////////////// Controllers ///////////////////////////////////////////////////////*/
 
 .fa-long-arrow-alt-left{
     position: relative;
@@ -548,6 +659,8 @@ a {
     color: #FFFFFF;
 }
 
+/*///////////////////////////////////////////////////// BASE CSS /////////////////////////////////////////////////////*/
+
 /*////////////////////////////////////////////////// Global Navigator ////////////////////////////////////////////////*/
 
 .global-navigator{
@@ -567,12 +680,12 @@ a {
     transition: all 0.5s;
 }
 
-.global-navigator-show{
+.global-navigator--display{
     margin-left: 0%;
     transition: margin-left 0.5s;
 }
 
-.global-navigator-tab{
+.global-navigator__tab{
     width: 100%;
     height: 12%;
     margin-top: 0px;
@@ -581,14 +694,14 @@ a {
     transition: 0.5s;
 }
 
-.global-navigator-tab-hover{
+.global-navigator__tab--active{
     background-color: #FFFFFF;
     cursor: pointer;
     color: #000000;
     transition: 0.5s;
 }
 
-.global-navigator-tab i{
+.global-navigator__icon{
     padding: 10px;
     font-size: 25px;
     float: left;
@@ -596,7 +709,7 @@ a {
     margin-top: 18%;
 }
 
-#watermark{
+.global-navigator__watermark{
     font-size: 10px;
     margin-left: 33%;
 }
@@ -621,12 +734,12 @@ a {
     transition: 0.5s;
 }
 
-.social-section-show{
+.social-section--display{
     margin-right: 0%;
     transition: margin-right 0.5s;
 }
 
-.social-section-tab{
+.social-section__tab{
     display: inline-block;
     border-bottom: 1px solid #FFFFFF;
     width: 33.3%;
@@ -635,14 +748,7 @@ a {
     transition: 0.5s;
 }
 
-.social-section-tab-hover{
-    background-color: #FFFFFF;
-    color: #000000;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.social-section-tab-active{
+.social-section__tab--active{
     background-color: #FFFFFF;
     color: #000000;
     cursor: pointer;
@@ -657,60 +763,51 @@ a {
     transform: translate(-50%, -50%);
 }
 
-.contact-profile-picture{
-    width: 25px;
-    height: 25px;
+.social-section__cell{
+    display: grid;
+    grid-template-columns: 20% 50% 15% 15%;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.social-section__profile-picture{
+    margin-top: 8%;
+    margin-left: 20%;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
-.accept-contact-request{
-    font-size: 18px;
-    float: right;
-    margin-right: 10px;
+.social-section__cell:nth-child(odd){
+    background-color: rgba(255,255,255,0.1);
 }
 
-.accept-contact-request-hover{
+.social-section__cell:nth-child(even){
+    background-color: rgba(255,255,255,0.2);
+}
+
+.social-section__contact-identification{
+    margin-top: 10%;
+    margin-left: 20%;
+}
+
+.social-section__accept-contact-request, .social-section__deny-contact-request{
+    font-size: 20px;
+    margin-top: 30%;
+    margin-left: 35%;
+}
+
+.social-section__accept-contact-request--active{
     color: #25BB41;
     cursor: pointer;
     transition: 0.5s;
 }
 
-.deny-contact-request{
-    font-size: 20px;
-    float: right;
-    margin-right: 20px;
-}
-
-.deny-contact-request-hover{
+.social-section__deny-contact-request--active{
     color: #A31621;
     cursor: pointer;
     transition: 0.5s;
-}
-
-.cell{
-    width: 95%;
-    height: 5%;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.cell:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-}
-
-.cell:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-}
-
-.contact-profile-picture{
-    display: inline;
-    float: left;
-}
-
-.contact-identification{
-    display: inline;
-    margin-left: 15px;
 }
 
 .chat-identification{
@@ -718,14 +815,7 @@ a {
     margin-left: 15px;
 }
 
-.request-identification{
-    display: inline;
-    margin-left: 15px;
-}
-
-/*//////////////////////////////////////////////////////// Chat //////////////////////////////////////////////////////*/
-
-.messages-loader:first-child{
+.social-section__chat-loader:first-child{
     border: 2px solid rgba(0,0,0,0);
     border-top: 2px solid #FFFFFF;
     height: 40px;
@@ -736,7 +826,7 @@ a {
     animation: spin 1s linear infinite;
 }
 
-.messages-loader{
+.social-section__chat-loader{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -744,11 +834,11 @@ a {
     transform: translate(-50%, -50%);
 }
 
-.messages-loader-hide{
+.social-section__chat-loader--fade-out{
     display: none;
 }
 
-#destination-profile-picture{
+.social-section__chat-destination-profile-picture{
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -757,13 +847,13 @@ a {
     top: 7%;
 }
 
-#destination-user{
+.social-section__destination-user{
     position: absolute;
     top: 6%;
     left: 15.5%;
 }
 
-#chat-content{
+.social-section__chat-content{
     margin-top: 20%;
     width: 94%;
     height: 670px;
@@ -772,7 +862,7 @@ a {
     padding: 10px;
 }
 
-.reply{
+.social-section__reply{
     position: relative;
     display: inline;
     padding: 10px;
@@ -788,7 +878,7 @@ a {
     max-width: 60%;
 }
 
-.message{
+.social-section__message{
     position: relative;
     display: inline;
     clear: both;
@@ -806,32 +896,19 @@ a {
 }
 
 #id_message{
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px;
-    border: 1px solid #FFFFFF;
-    resize: none;
-    color: #FFFFFF;
     margin-left: 10px;
 }
 
-#id_message:focus{
-    outline: none;
-}
-
-#id_message::placeholder{
-    color: #FFFFFF;
-}
-
-#send-message-btn{
+.social_section__send-message-button{
     cursor: pointer;
     position: absolute;
-    right: 4%;
-    bottom: 4.5%;
+    right: 8%;
+    bottom: 5%;
     font-size: 22px;
     transition: 0.5s;
 }
 
-.send-message-btn-hover{
+.social-section__send-message-button--active{
     color: #00CCFF;
     transition: 0.5s;
 }
@@ -853,15 +930,35 @@ a {
     transition: visibility 0.3s, opacity 0.3s;
 }
 
-.modal-show{
+.modal--display{
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s;
 }
 
+.modal__button{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    border: 1px solid #FFFFFF;
+    border-radius: 20px;
+    background-color: transparent;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.modal__button--active{
+    color: #000000;
+    background-color: #FFFFFF;
+    transition: background-color 0.5s, color 0.5s,;
+}
+
+.modal__button:focus{
+    outline: none;
+}
+
 /*////////////////////////////////////////////////// Global Loader ///////////////////////////////////////////////////*/
 
-.loader-modal{
+.global-loader-modal{
     position: absolute;
     top: 0%;
     left: 0%;
@@ -874,14 +971,14 @@ a {
     background-clip: padding-box;
 }
 
-.loader-modal-show{
+.global-loader-modal--display{
     display: block;
 }
 
-.global-loader{
-    position: relative;
-    top: 40%;
-    left: 45%;
+.global-loader-modal__spinner{
+    position: absolute;
+    top: 33%;
+    left: 44.2%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     height: 150px;
@@ -892,19 +989,19 @@ a {
     animation: spin 1s linear infinite;
 }
 
-.fa-heart{
+.global-loader-modal__heart-icon{
     font-size: 32px;
     position: absolute;
-    top: 47%;
-    left: 49%;
+    top: 40%;
+    left: 48.5%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     animation: beat 1s infinite alternate;
 }
 
-#global-loader-message{
+.global-loader-modal__message{
     position: absolute;
-    top: 60%;
+    top: 55%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);

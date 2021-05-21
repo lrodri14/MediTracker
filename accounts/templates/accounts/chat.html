@@ -2,18 +2,18 @@
 <!-- Destination Profile Picture -->
 {% if not destination.profile.profile_pic %}
     {% if destination.profile.gender == 'Masculine' %}
-        <img id="destination-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
+        <img class="social-section__chat-destination-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
     {% else %}
-        <img id="destination-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
+        <img class="social-section__chat-destination-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
     {% endif %}
 {% else %}
-    <img id="destination-profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
+    <img class="social-section__chat-destination-profile-picture" src="{{ MEDIA_URL }}{{ destination.profile.profile_pic }}" alt="">
 {% endif %}
-<h4 id="destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
+<h4 class="social-section__destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
 <!-- Chat content area -->
-<div id="chat-content">
-    <div class="messages-loader"></div>
-    <p class="messages-loader">Loading messages...</p>
+<div class="social-section__chat-content">
+    <div class="social-section__chat-loader"></div>
+    <p class="social-section__chat-loader">Loading messages...</p>
 </div>
 <!-- Chat message input field and send button -->
-<p>{{ chat_form.message }}</p><i id="send-message-btn" class="fas fa-paper-plane"></i>
+<p>{{ chat_form.message }}</p><i class="fas fa-paper-plane social_section__send-message-button"></i>

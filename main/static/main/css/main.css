@@ -132,10 +132,6 @@ form{
     transition: background-color 0.5s, color 0.5s, opacity 0.5s;
 }
 
-.submit-button:focus{
-    outline: none;
-}
-
 .submit-button--active{
     background-color: #FFFFFF;
     color: #000000;
@@ -147,6 +143,11 @@ form{
     visibility: visible;
     transition: 0.5s;
 }
+
+.submit-button:focus{
+    outline: none;
+}
+
 
 input{
     width: 50%;
