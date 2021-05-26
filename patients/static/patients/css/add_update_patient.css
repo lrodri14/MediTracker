@@ -4,62 +4,39 @@
 
 /*################################################### Wrapper ########################################################*/
 
-.wrapper{
+/* Check this icon, why only float:left sets it aside */
+.fa-long-arrow-alt-left{
+    float: left;
+}
+
+.patient-form__container{
     height: 100vh;
     display: grid;
     grid-template-columns: 30% 70%;
 }
 
-.fa-users{
-    position: absolute;
-    top: 0%;
-    right: 0%;
-    z-index: 1;
-}
-
-.fa-long-arrow-alt-left{
-    float: left;
-}
-
-.general-info{
+.patient-form__general-information{
     padding: 10px;
     border-right: 1px solid #FFFFFF;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
 }
 
-.info{
-    height: 69vh;
-    overflow: auto;
+.patient-form__general-information-container{
+    height: 71vh;
+    overflow-y: auto;
 }
-
-.extra-info{
-    padding: 10px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-}
-
 
 /*##################################################### Form #########################################################*/
 
-form{
-    text-align: center;
-}
-
-.error{
+.form__error{
     color: #FFFFFF;
 }
 
-.allergies-form{
+.patient-form__allergies-form-container{
     overflow: auto;
     max-height: 150px;
 }
 
-.antecedents-form{
+.patient-form__antecedents-form-container{
     overflow: auto;
     max-height: 150px;
 }
@@ -67,10 +44,6 @@ form{
 h1{
     padding: 25px;
     overflow: auto;
-}
-
-table{
-    margin: auto;
 }
 
 td{
@@ -100,41 +73,13 @@ td{
     display: none;
 }
 
-.form-hide{
-    display: none;
-}
-
-.hidden{
+.form--hide{
     display: none;
 }
 
 button{
-    margin: 20px;
-    width: 30%;
-    height: 30px;
-    border-radius: 10px;
-    transition: 0.5s;
-}
-
-button:focus{
-    outline: none;
-}
-
-
-/*#################################################### Modal #########################################################*/
-
-/*Modal Forms*/
-.modal-content > form{
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
     width: 25%;
-    height: 45%;
+    height: 30px;
 }
 
 /*######################################## Save confirmation modal ###################################################*/
@@ -154,23 +99,25 @@ button:focus{
     transition: opacity 0.3s;
 }
 
-.save-confirmation-modal-show{
+.save-confirmation-modal--display{
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s;
 }
 
-.save-confirmation-modal-content{
-    width: 50%;
-    padding: 2%;
-    margin-left: 25%;
-    margin-top: 20%;
+.save-confirmation-modal__content{
     text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 45%;
     border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
+    padding: 25px;
+    background-color: rgba(255,255,255,0.2);
 }
 
-.save-confirmation-modal-content button{
+.save-confirmation-modal button{
     width: 20%;
-    margin: 0;
 }

@@ -1,63 +1,28 @@
 /*This consults.css stylesheet contains all the styles needed to display the consults main page, it is divided in 4
 sections, Table, PopUp and Modal and No Data*/
 
-h2{
-    margin-left: 1%;
+/*##################################################### Body #########################################################*/
+
+button{
+    width: 10%;
 }
 
 /*#################################################### Table #########################################################*/
 
-.data-table{
-    max-height: 726px;
+.data-table-container{
+    margin-top: 1%;
 }
 
-table{
-    width: 100%;
-    margin: auto;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
+.data-table__item{
+    line-height: 20px;
 }
 
-#heading{
-    cursor: default;
-    color: #FFFFFF;
-    background-color: rgba(255,255,255,0.3);
+.data-table__data{
+    text-align: center;
 }
 
 .fa-exclamation-circle{
     color: #CBA415;
-}
-
-tr{
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-    transition: background-color 0.5s;
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-    transition: background-color 0.5s;
 }
 
 /*#################################################### PopUp #########################################################*/
@@ -76,20 +41,20 @@ tr:nth-child(even){
     z-index: 1;
 }
 
-.popup-show{
+.popup--display{
     opacity: 1;
     visibility: visible;
     transition: opacity 0.5s;
 }
 
-.popup-text{
+.popup__text{
     font-size: 10px;
     color: #FFFFFF;
     padding: 5px;
 }
 
 /*Needed to display the arrow in the popup*/
-.popup-text:after{
+.popup__text:after{
     content: " ";
     border-width: 5px;
     border-style: solid;
@@ -99,29 +64,7 @@ tr:nth-child(even){
     left: 92%;
 }
 
-/*#################################################### Modal #########################################################*/
-
-.modal{
-    z-index: 1;
-}
-
-.modal-content{
-    display: inline-block;
-    margin-left: 25%;
-    width: 50%;
-}
-
-/*Modal Form*/
-
-form{
-    border-radius: 25px;
-    text-align: center;
-    width: 50%;
-    margin-top: 5.5%;
-    margin-left: 22%;
-    padding: 10px 30px 10px 30px;
-    background-color: rgba(255,255,255,0.1);
-}
+/*################################################# Modal Form #######################################################*/
 
 .create-update-appointment-loader{
     height: 20px;
@@ -130,65 +73,31 @@ form{
     border: 2px solid rgba(0,0,0,0);
     border-bottom: 2px solid #FFFFFF;
     position: absolute;
-    top: 8%;
-    left: 61.5%;
+    top: 2%;
+    right: 4%;
     visibility: hidden;
     animation: spin 1s linear infinite;
 }
 
-.create-update-appointment-loader-show{
+.create-update-appointment-loader--display{
     visibility: visible;
 }
 
 .error{
     color: #FFFFFF;
 }
+/*#################################################### Modal #########################################################*/
 
-#add_new_patient{
-    text-decoration: underline;
-    transition: all 0.5s;
+.modal__add-patient{
+    position: absolute;
+    right: 11%;
+    top: 19%;
 }
 
-.add_new_patient_hover{
-    font-size: 16px;
-    transition: font-size 0.5s;
+.modal__form{
+    width: 25%;
 }
 
-form button{
+.modal__form button{
     width: 30%;
-    height: 30px;
-    border-radius: 10px;
-}
-
-/*Button above the table*/
-
-button{
-    margin: 0px 0px 10px 10px;
-    width: 10%;
-    height: 30px;
-}
-
-/*#################################################### No Data #######################################################*/
-
-#no-consults{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-#add-consult{
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    font-size: 25px;
-    transition: top 0.5s, color 0.5s;
-}
-
-.add-consult-hover{
-    color: #25BB41;
-    transition: color 0.5s;
 }

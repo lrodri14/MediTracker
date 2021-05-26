@@ -7,9 +7,9 @@
 <h2>Registers</h2>
 <p id="item-count">{{ items }} items have been scheduled</p>
 {% if registers %}
-    <div class="wrapper">
-        <div class="data-table">
-            <table>
+    <div class="data">
+        <div class="data-table-container">
+            <table class="data-table">
                 <thead>
                     <tr id="heading">
                         <th>ID</th>
@@ -24,9 +24,9 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <i class="fas fa-filter"></i>
-            <form method="GET" action="{% url 'appointments:filter_registers' %}" autocomplete="off" class="filter-form">
+        <div class="filter-container">
+            <i class="fas fa-filter filter-container__filter-display-button"></i>
+            <form method="GET" action="{% url 'appointments:filter_registers' %}" autocomplete="off" class="filter-container__filter-form">
                 <h3>Filter Results</h3>
                 <p>{{ form.patient.label }}</p>
                 <p>{{ form.patient }}</p>
@@ -39,7 +39,7 @@
         </div>
     </div>
 {% else %}
-    <p id="no-consults">There are no appointments created</p>
+    <p id="no-data">There are no appointments created</p>
 {% endif %}
 <script src="{%static 'appointments/js/registers.js'%}"></script>
 {% endblock %}

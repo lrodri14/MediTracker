@@ -1,6 +1,6 @@
 {% load static %}
 {% block body_block %}
-<form method="POST" autocomplete="off" action="{% url 'settings:add_insurance' %}" class="add add-insurance">
+<form method="POST" autocomplete="off" action="{% url 'settings:add_insurance' %}" id="add-insurance-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Add Insurance Carrier</h2>
     <p>{{ insurance_carrier_form.company.label }}</p>

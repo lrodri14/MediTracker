@@ -5,134 +5,144 @@
 {% block return %}{% endblock %}{% block home %}{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" />
-<link rel="stylesheet" href="{% static 'patients/css/add_patient.css' %}">
+<link rel="stylesheet" href="{% static 'patients/css/add_update_patient.css' %}">
 
-    <form method="POST" autocomplete="off">
+<form method="POST" autocomplete="off" class="patient-form">
 
-        {% csrf_token %}
+    {% csrf_token %}
 
-        <!-- Allergies Management Form -->
-        <div class="allergies_management_form">
-            {{ allergies_form.management_form }}
-        </div>
+    <!-- Allergies Management Form -->
+    <div class="allergies_management_form">
+        {{ allergies_form.management_form }}
+    </div>
 
-        <!-- Antecedetns Management Form -->
-        <div class="antecedents_management_form">
-            {{ antecedents_form.management_form }}
-        </div>
+    <!-- Antecedetns Management Form -->
+    <div class="antecedents_management_form">
+        {{ antecedents_form.management_form }}
+    </div>
 
 
-        <div class="wrapper">
-            <!-- General Info -->
-            <div class="general-info">
-                <a href="{% url 'patients:patients' %}"><i class="fas fa-long-arrow-alt-left"></i></a>
-                <h1>Add Patient</h1>
-                <div class="info">
+    <div class="patient-form__container">
 
-            <!-- Errors -->
+        <!-- General Info -->
+        <div class="patient-form__information-container patient-form__general-information">
+
+            <a href="{% url 'patients:patients' %}"><i class="fas fa-long-arrow-alt-left"></i></a>
+
+            <h1>Add Patient</h1>
+
+            <div class="patient-form__general-information-container">
+
+                <!-- Errors -->
                 {% if patient_form.errors %}
                     {% for error in patient_form.errors %}
-                        <p class="error"><small>{{ error.as_text }}</small></p>
+                        <p class="form__error"><small>{{ error.as_text }}</small></p>
                     {% endfor %}
                 {% endif %}
 
                 {% for form in allergies_form %}
                     {% if form.non_field_errors %}
-                        <p class="error"><small>{{ form.non_field_errors.as_text }}</small></p>
+                        <p class="form__error"><small>{{ form.non_field_errors.as_text }}</small></p>
                     {% endif %}
                 {% endfor %}
 
                 {% for form in antecedents_form %}
                     {% if form.non_field_errors %}
-                        <p class="error"><small>{{ form.non_field_errors.as_text }}</small></p>
+                        <p class="form__error"><small>{{ form.non_field_errors.as_text }}</small></p>
                     {% endif %}
                 {% endfor %}
 
-
                 {% if insurance_form.non_field_errors %}
-                    <p class="error"><small>{{ insurance_form.non_field_errors.as_text }}</small></p>
+                    <p class="form__error"><small>{{ insurance_form.non_field_errors.as_text }}</small></p>
                 {% endif %}
 
-                    <p>{{ patient_form.id_number.label }}</p>
-                    <p>{{ patient_form.id_number }}</p>
-                    <p>{{ patient_form.first_names.label }}</p>
-                    <p>{{ patient_form.first_names }}</p>
-                    <p>{{ patient_form.last_names.label }}</p>
-                    <p>{{ patient_form.last_names }}</p>
-                    <p>{{ patient_form.gender.label }}</p>
-                    <p>{{ patient_form.gender }}</p>
-                    <p>{{ patient_form.birthday.label }}</p>
-                    <p>{{ patient_form.birthday }}</p>
-                    <p>{{ patient_form.phone_number.label }}</p>
-                    <p><span class="flag-icon {{ country_code }}"></span>{{ patient_form.country_code }}{{ patient_form.phone_number }}</p>
-                    <p>{{ patient_form.email.label }}</p>
-                    <p>{{ patient_form.email }}</p>
-                    <p>{{ patient_form.civil_status.label }}</p>
-                    <p>{{ patient_form.civil_status }}</p>
-                    <p>{{ patient_form.origin.label }}</p>
-                    <p>{{ patient_form.origin }}</p>
-                    <p>{{ patient_form.residence.label }}</p>
-                    <p>{{ patient_form.residence }}</p>
-                </div>
+                <p>{{ patient_form.id_number.label }}</p>
+                <p>{{ patient_form.id_number }}</p>
+                <p>{{ patient_form.first_names.label }}</p>
+                <p>{{ patient_form.first_names }}</p>
+                <p>{{ patient_form.last_names.label }}</p>
+                <p>{{ patient_form.last_names }}</p>
+                <p>{{ patient_form.gender.label }}</p>
+                <p>{{ patient_form.gender }}</p>
+                <p>{{ patient_form.birthday.label }}</p>
+                <p>{{ patient_form.birthday }}</p>
+                <p>{{ patient_form.phone_number.label }}</p>
+                <p><span class="flag-icon {{ country_code }}"></span>{{ patient_form.country_code }}{{ patient_form.phone_number }}</p>
+                <p>{{ patient_form.email.label }}</p>
+                <p>{{ patient_form.email }}</p>
+                <p>{{ patient_form.civil_status.label }}</p>
+                <p>{{ patient_form.civil_status }}</p>
+                <p>{{ patient_form.origin.label }}</p>
+                <p>{{ patient_form.origin }}</p>
+                <p>{{ patient_form.residence.label }}</p>
+                <p>{{ patient_form.residence }}</p>
                 <button type="submit">Save</button>
+
             </div>
 
+        </div>
 
-            <div class="extra-info">
-            <!-- Extra Info -->
-                <h1>Extra Information</h1>
+
+        <div class="patient-form__information-container">
+
+            <!-- Extra Information -->
+            <h1>Extra Information</h1>
+
+            <div class="patient-form__extra-information-container">
+
+                <!-- Allergies Information -->
                 <h2>Allergies</h2>
-                    <div class="allergies-form">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>About</th>
-                                    <th><i class="fas fa-plus add-allergy-form"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <!-- Allergies ModelFormset Info, used to display as many forms as needed -->
-                            {% for allergy_form in allergies_form %}
-                                <tr class="form-container">
-                                    <td>{{ allergy_form.allergy_type }} <i class="fas fa-plus add-allergy" data-url="{% url 'settings:add_allergy' %}"></i></td>
-                                    <td>{{ allergy_form.about }}</td>
-                                    <td><i class="fas fa-trash delete-allergy-form"></i></td>
-                                    <td class="allergy-delete-check">{{ allergy_form.DELETE }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="patient-form__allergies-form-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>About</th>
+                                <th><i class="fas fa-plus form__create-allergy-form"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Allergies ModelFormset Info, used to display as many forms as needed -->
+                        {% for allergy_form in allergies_form %}
+                            <tr class="form-container">
+                                <td>{{ allergy_form.allergy_type }} <i class="fas fa-plus form__create-allergy" data-url="{% url 'settings:add_allergy' %}"></i></td>
+                                <td>{{ allergy_form.about }}</td>
+                                <td><i class="fas fa-trash form__delete-allergy-form"></i></td>
+                                <td class="allergy-delete-check">{{ allergy_form.DELETE }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-
+                <!-- Antecedents Information -->
                 <h2>Antecedents</h2>
-                    <div class="antecedents-form">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Antecedent</th>
-                                    <th>Info</th>
-                                    <th><i class="fas fa-plus add-antecedent-form"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <!-- Antecedents ModelFormset Info, used to display as many forms as needed -->
-                            {% for antecedent_form in antecedents_form %}
-                                <tr class="form-container">
-                                    <td>{{ antecedent_form.antecedent }}</td>
-                                    <td>{{ antecedent_form.info }}</td>
-                                    <td><i class="fas fa-trash delete-antecedent-form"></i></td>
-                                    <td class="antecedent-delete-check">{{ antecedent_form.DELETE }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="patient-form__antecedents-form-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Antecedent</th>
+                                <th>Info</th>
+                                <th><i class="fas fa-plus form__create-antecedent-form"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Antecedents ModelFormset Info, used to display as many forms as needed -->
+                        {% for antecedent_form in antecedents_form %}
+                            <tr class="form-container">
+                                <td>{{ antecedent_form.antecedent }}</td>
+                                <td>{{ antecedent_form.info }}</td>
+                                <td><i class="fas fa-trash form__delete-antecedent-form"></i></td>
+                                <td class="antecedent-delete-check">{{ antecedent_form.DELETE }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- Insurance Form-->
                 <h2>Insurance</h2>
-                <div class="insurance-form">
+                <div class="patient-form__insurance-form-container">
                     <table>
                         <thead>
                             <tr>
@@ -143,7 +153,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ insurance_form.insurance_carrier }} <i class="fas fa-plus add-insurance" data-url="{% url 'settings:add_insurance' %}"></i></td>
+                                <td>{{ insurance_form.insurance_carrier }} <i class="fas fa-plus form__create-insurance" data-url="{% url 'settings:add_insurance' %}"></i></td>
                                 <td>{{ insurance_form.type_of_insurance }}</td>
                                 <td>{{ insurance_form.expiration_date }}</td>
                             </tr>
@@ -155,26 +165,28 @@
 
         </div>
 
-    </form>
-
-    <!-- Confirmation modal, this modal will be displayed every time the patient information is not full,
-         this will warn the user, the patient can be updated whenever needed-->
-    <div class="save-confirmation-modal">
-        <div class="save-confirmation-modal-content">
-            <h2>Are you sure you want to save this patient? Some fields are not filled</h2>
-            <p><small class="reminder">*Reminder: You can update this patient later</small></p>
-            <button type="button">Yes</button>
-            <button type="button">No</button>
-        </div>
     </div>
 
-    <!-- Modal used to add as many elements as required for the filling of the form, such as allergies or insurance carriers.-->
-    <div class="modal">
-        <div class="modal-content">
+</form>
 
-        </div>
+<!-- Confirmation modal, this modal will be displayed every time the patient information is not full,
+     this will warn the user, the patient can be updated whenever needed-->
+<div class="save-confirmation-modal">
+    <div class="save-confirmation-modal__content">
+        <h3>Are you sure you want to save this patient? Some fields are not filled</h3>
+        <p><small>*Reminder: You can update this patient later</small></p>
+        <button type="button">Yes</button>
+        <button type="button">No</button>
     </div>
+</div>
+
+<!-- Modal used to add as many elements as required for the filling of the form, such as allergies or insurance carriers.-->
+<div class="modal">
+    <div class="modal__content">
+
+    </div>
+</div>
 
 
-<script src="{% static 'patients/js/add_patient.js' %}"></script>
+<script src="{% static 'patients/js/add_update_patient.js' %}"></script>
 {% endblock %}

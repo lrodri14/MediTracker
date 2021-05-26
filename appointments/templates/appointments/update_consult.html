@@ -5,10 +5,19 @@
 <link rel="stylesheet" href="{% static 'appointments/css/update_consult.css' %}">
 {% block return %}{% endblock %}{% block home %}{% endblock %}
 
+<!-- Lock Consult Pop-up -->
+
+<div class="consult-lock-popup popup">
+    <span class="consult-lock-popup__popup-text">
+        This lock is used if you need to perform further changes for this consult in a short term,<br>
+        if the padlock is secured, the consult will be closed permanently once it's saved
+    </span>
+</div>
+
 <!-- Patient Information Pop-up -->
 
-<div class="popup patient-info-popup">
-    <div class="patient-info-popup-text">
+<div class="patient-information-popup popup">
+    <div class="patient-information-popup__popup-text">
         <h3>Information</h3>
         <p>Name: {{ consult.patient.first_names }} {{ consult.patient.last_names }}</p>
         <p>ID Number: {{ consult.patient.id_number }}</p>
@@ -18,7 +27,7 @@
         <p>Origin: {{ consult.patient.get_origin_display }}</p>
         <p>Residence: {{ consult.patient.get_residence_display }}</p>
     </div>
-    <div class="patient-info-popup-text">
+    <div class="patient-information-popup__popup-text">
         <h3>Background</h3>
         <h4>Allergies</h4>
         {% for allergy in consult.patient.allergies.all %}
@@ -35,54 +44,45 @@
     </div>
 </div>
 
-<!-- Lock Consult Pop-up -->
-
-<div class="popup lock-popup">
-    <span class="popup-text">
-        This lock is used if you need to perform further changes for this consult in a short term,<br>
-        if the padlock is secured, the consult will be closed permanently once it's saved
-    </span>
-</div>
-
 <!-- Form -->
 
-<form method="POST" action="{% url 'appointments:update_consult' consult.pk %}" enctype="multipart/form-data">
+<form method="POST" action="{% url 'appointments:update_consult' consult.pk %}" enctype="multipart/form-data" class="consult">
 
     {% csrf_token %}
     {{ medical_test_result_formset.management_form }}
 
-    <div class="wrapper">
+    <div class="consult__container">
 
         <!-- General Information  -->
 
-        <i class="fas fa-book-medical" data-url="{% url 'records:personal_records' consult.patient.pk %}"></i>
-        <i class="fas fa-file-medical-alt"></i>
+        <i class="fas fa-book-medical consult__records-icon" data-url="{% url 'records:personal_records' consult.patient.pk %}"></i>
+        <i class="fas fa-file-medical-alt consult__examination-icon"></i>
         {% if user.doctor.speciality == 'PED' %}
-            <i class="fas fa-syringe" data-url="{% url 'appointments:add_vaccination_record' consult.patient.pk %}"></i>
+            <i class="fas fa-syringe consult__vaccination-icon" data-url="{% url 'appointments:add_vaccination_record' consult.patient.pk %}"></i>
         {% endif %}
 
-        <div class="lock-container">
-            <i class="fas fa-lock"></i>
-            <div class="lock lock-active">
-                <div class="lock-switch">
+        <div class="consult__lock-container">
+            <i class="fas fa-lock consult__lock-icon"></i>
+            <div class="consult__lock lock-active">
+                <div class="consult__lock-switch">
                 </div>
             </div>
         </div>
 
-        <div class="general-info">
+        <div class="consult__general-information">
             <a href="{% url 'appointments:appointments' %}"><i class="fas fa-long-arrow-alt-left"></i></a>
             <h2>Consult</h2>
             {{ consult_form.lock }}
-            <h4 id="patient-info">Patient</h4>
+            <h4 class="consult__patient-identification consult__general-information-title">Patient</h4>
             <p>{{ consult.patient.first_names }} {{ consult.patient.last_names }}</p>
-            <h4>Identification</h4>
+            <h4 class="consult__general-information-title">Identification</h4>
             <p>{{ consult.patient.id_number }}</p>
-            <h4>Date & Time</h4>
+            <h4 class="consult__general-information-title">Date & Time</h4>
             <p>{{ consult.datetime|date }} - {{ consult.datetime|time }}</p>
-            <h4>Motive</h4>
-            <p class="motive">{{ consult.motive }}</p>
-            <h4>Suffering</h4>
-            <p class="suffering">{{ consult.suffering }}</p>
+            <h4 class="consult__general-information-title">Motive</h4>
+            <p class="consult__motive">{{ consult.motive }}</p>
+            <h4 class="consult__general-information-title">Suffering</h4>
+            <p class="consult__suffering">{{ consult.suffering }}</p>
             {% if consult_form.errors %}
                 <p class="error"><small>{{ consult_form.non_field_errors.as_text }}</small></p>
             {% endif %}
@@ -97,13 +97,13 @@
 
         <i class="fas fa-angle-left"></i><i class="fas fa-angle-right"></i>
 
-        <div class="diagnose">
+        <div class="consult__diagnose">
 
             {% if user.doctor.speciality == 'GM' or user.doctor.speciality == 'IM' or user.doctor.speciality == 'PED' %}
 
             <!-- Vital Signs -->
             <div>
-                <div class="data">
+                <div class="consult__diagnose-data">
                     <h3>Vital Signs</h3>
                     <p>{{ consult_form.blood_pressure.label }}</p>
                     <p>{{ consult_form.blood_pressure }}</p>
@@ -118,7 +118,7 @@
 
             <!-- Examination -->
             <div>
-                <div class="data">
+                <div class="consult__diagnose-data">
                     <h2>Examination</h2>
                     <h3>Organ System</h3>
                     <p>{{ consult_form.digestive_system.label }} {{ consult_form.digestive_system }}</p>
@@ -126,7 +126,7 @@
                     <p>{{ consult_form.renal_system.label }} {{ consult_form.renal_system }}</p>
                     <p>{{ consult_form.lymphatic_system.label }} {{ consult_form.lymphatic_system }}</p>
                     <p>{{  consult_form.respiratory_system.label }} {{ consult_form.respiratory_system }}</p>
-                    <h3>Physical Exploration</h3>
+                    <h3 class="consult__physical-exploration-title">Physical Exploration</h3>
                     <p>{{ consult_form.head_exploration.label }} {{ consult_form.head_exploration }}</p>
                     <p>{{ consult_form.thorax_exploration.label }} {{ consult_form.thorax_exploration }}</p>
                     <p>{{ consult_form.medical_exams }}</p>
@@ -135,7 +135,7 @@
             {% else %}
                 <!-- General Notes -->
                 <div>
-                    <div class="data">
+                    <div class="consult__diagnose-data">
                         <h2>General Notes</h2>
                         <p>{{ consult_form.general_notes }}</p>
                     </div>
@@ -144,7 +144,7 @@
 
                 <!-- Diagnose -->
                 <div>
-                    <div class="data">
+                    <div class="consult__diagnose-data">
                         <h2>Diagnose</h2>
                         <p>{{ consult_form.cie_10_group.label }}</p>
                         <p>{{ consult_form.cie_10_group }}</p>
@@ -157,11 +157,11 @@
                 </div>
 
                 <!-- Medical Testing -->
-                <div class="data">
+                <div class="consult__diagnose-data">
                     <h2>Medical Testing</h2>
                     <p>{{ medical_test_filter_form.test_type.label }}</p>
                     <p data-url="{% url 'settings:medical_test_type_filter' %}">{{ medical_test_filter_form.test_type }}</p>
-                    <p>{{ consult_form.testing.label }} <i class="fas fa-plus add-test" data-url="{% url 'settings:add_medical_test' %}"></i></p>
+                    <p>{{ consult_form.testing.label }} <i class="fas fa-plus consult__add-test" data-url="{% url 'settings:add_medical_test' %}"></i></p>
                     <div id="medical-tests">
                         <p>{{ consult_form.testing }}</p>
                     </div>
@@ -169,11 +169,11 @@
                 </div>
 
                 <!-- Treatment -->
-                <div class="data">
+                <div class="consult__diagnose-data">
                     <h2>Treatment</h2>
                     <p>{{ drug_category_filter_form.category.label }}</p>
                     <p data-url="{% url 'settings:drug_category' %}">{{ drug_category_filter_form.category }}</p>
-                    <p>{{ consult_form.drugs.label }}<i class="fas fa-plus add-drug" data-url="{% url 'settings:add_drug' %}"></i></p>
+                    <p>{{ consult_form.drugs.label }}<i class="fas fa-plus consult__add-drug" data-url="{% url 'settings:add_drug' %}"></i></p>
                     <div id="drugs">
                         <p>{{ consult_form.drugs }}</p>
                     </div>
@@ -183,54 +183,52 @@
         </div>
     </div>
 
-    <ul class="navigation"></ul>
-
-    <!-- Exam Results Modal -->
-
-    <div class="exam-results-modal">
-        <div class="exam-results-data">
-            <h2>Medical Test Results <i class="far fa-eye" id="show-preview"></i></h2>
-            <div class="exam-results-list">
-                <table class="exam-results-table">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>File</th>
-                            <th>Filename</th>
-                            <th><i class="fas fa-plus add-exam-result-form"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for form in medical_test_result_formset %}
-                            <tr class="form-container">
-                                <td>{{ form.type }}</td>
-                                <td>{{ form.image }}<label class="add-exam-result" for="id_exam-{{ forloop.counter0 }}-image">Add Image</label></td>
-                                <td class="filename"></td>
-                                <td><i class="fas fa-trash remove-exam-result-form"></i></td>
-                                <td class="delete-exam-result-form">{{ form.DELETE }}</td>
-                            </tr>
-                        {%  endfor%}
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" id="save">Save</button>
-        </div>
-    </div>
-
-    <!-- Examination image preview  -->
-
-    <div class="data-preview">
-        <img class="exam-result-data" src="" alt="">
-    </div>
+    <ul class="consult__navigation"></ul>
 
 </form>
 
+<!-- Exam Results Modal -->
+
+<div class="exams">
+    <div class="exams__data">
+        <h2>Medical Test Results <i class="far fa-eye exams__preview-button"></i></h2>
+        <div class="exams__container">
+            <table class="exams__table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>File</th>
+                        <th>Filename</th>
+                        <th><i class="fas fa-plus exams__add-result-form"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in medical_test_result_formset %}
+                        <tr class="exams__form-container">
+                            <td>{{ form.type }}</td>
+                            <td>{{ form.image }}<label class="exams__add-exam-result" for="id_exam-{{ forloop.counter0 }}-image">Add Image</label></td>
+                            <td class="exams__filename"></td>
+                            <td><i class="fas fa-trash exams__delete-result-form"></i></td>
+                            <td class="delete-exam-result-form">{{ form.DELETE }}</td>
+                        </tr>
+                    {%  endfor%}
+                </tbody>
+            </table>
+        </div>
+        <button type="button">Save</button>
+    </div>
+</div>
+
+<!-- Examination image preview  -->
+<div class="exams-preview">
+    <img class="exams-preview__image" src="" alt="">
+</div>
 
 <!-- Modal -->
 <div class="modal">
-    <div class="modal-content">
+    <div class="modal__content">
         <!-- Reminder contained in another division because of modal reusability -->
-        <div class="reminder">
+        <div class="modal__reminder">
             <h3>Are you sure you want to continue? Some fields are not filled</h3>
             <p><small>*Reminder: Once this record is saved, it can't be updated or deleted</small></p>
             <button type="button" data-url="{% url 'appointments:appointments' %}">Yes</button>
@@ -239,9 +237,9 @@
     </div>
 </div>
 
-
+<!-- Prescription Modal -->
 <div class="prescription-modal">
-    <div class="prescription-modal-content">
+    <div class="prescription-modal__content">
 
     </div>
     <button data-url="{% url 'appointments:appointments' %}" class="save-consult-btn">Save Consult</button>

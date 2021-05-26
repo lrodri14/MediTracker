@@ -2,7 +2,7 @@
 {% if appointments %}
     {% for m in months %}
         <h3>{{ m }}</h3>
-        <table>
+        <table class="data-table">
             <thead>
                 <tr id="heading">
                     <th>ID</th>
@@ -17,23 +17,22 @@
             <tbody>
             {% for a in appointments %}
                 {% if a.datetime|date:"F" == m %}
-                    <tr>
-                        <td>{{ a.patient.id_number }}</td>
-                        <td>{{ a.patient.first_names }} {{ a.patient.last_names }}</td>
-                        <td>{{ a.datetime }}</td>
+                    <tr class="data-table__item">
+                        <td class="data-table__data">{{ a.patient.id_number }}</td>
+                        <td class="data-table__data">{{ a.patient.first_names }} {{ a.patient.last_names }}</td>
+                        <td class="data-table__data">{{ a.datetime }}</td>
                         {% if a.status == 'OPEN' %}
-                            <td id="Open">Open</td>
+                            <td id="Open" class="data-table__data">Open</td>
                         {% elif a.status == 'CONFIRMED' %}
-                             <td id="Confirmed">Confirmed</td>
+                             <td id="Confirmed" class="data-table__data">Confirmed</td>
                         {% elif a.status == 'CANCELLED' %}
-                            <td id="Cancelled">Cancelled</td>
+                            <td id="Cancelled" class="data-table__data">Cancelled</td>
                         {% elif a.status == 'CLOSED' %}
-                            <td id="Closed">Closed</td>
+                            <td id="Closed" class="data-table__data">Closed</td>
                         {% endif %}
-                        </td>
-                        <td data-url="{% url 'appointments:appointment_date_update' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-edit"></i>{% endif %}</td>
-                        <td data-url="{% url 'appointments:confirm_appointment' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-check"></i>{% endif %}</td>
-                        <td data-url="{% url 'appointments:cancel_appointment' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-times-circle"></i>{% endif %}</td>
+                        <td class="data-table__data" data-url="{% url 'appointments:appointment_date_update' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-edit data-table__update"></i>{% endif %}</td>
+                        <td class="data-table__data" data-url="{% url 'appointments:confirm_appointment' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-check data-table__confirm"></i>{% endif %}</td>
+                        <td class="data-table__data" data-url="{% url 'appointments:cancel_appointment' a.pk %}">{% if a.status == 'OPEN' %}<i class="fas fa-times-circle data-table__cancel"></i>{% endif %}</td>
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -41,5 +40,5 @@
         </table>
     {% endfor %}
 {% else %}
-    <p id="no-appointments">Clear section, no data stored</p>
+    <p id="no-data">Clear section, no data stored</p>
 {% endif %}

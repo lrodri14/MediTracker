@@ -1,26 +1,26 @@
 {% load static %}
 {% for surgery in surgeries %}
-    <tr>
-        <td>{{ surgery.get_surgery_type_display }}</td>
-        <td>{{ surgery.datetime.date }} - {{ surgery.datetime.time }}</td>
+    <tr class="data-table__item">
+        <td class="data-table__data">{{ surgery.get_surgery_type_display }}</td>
+        <td class="data-table__data">{{ surgery.datetime.date }} - {{ surgery.datetime.time }}</td>
         {% if surgery.status == 'OPEN' %}
-            <td id="Open">Open</td>
+            <td id="Open" class="data-table__data">Open</td>
         {% elif surgery.status == 'CONFIRMED' %}
-            <td id="Confirmed">Confirmed</td>
+            <td id="Confirmed" class="data-table__data">Confirmed</td>
         {% elif surgery.status == 'CANCELLED' %}
-            <td id="Cancelled">Cancelled</td>
+            <td id="Cancelled" class="data-table__data">Cancelled</td>
         {% elif surgery.status == 'CLOSED' %}
-            <td id="Closed">Closed</td>
+            <td id="Closed" class="data-table__data">Closed</td>
         {% endif %}
         {% if surgery.medical_status == False and surgery.status == 'CLOSED' or surgery.medical_status == False and surgery.status == 'CANCELLED' %}
-            <td id="never_attended">Never Attended</td>
+            <td id="never_attended" class="data-table__data">Never Attended</td>
         {% elif surgery.medical_status == False and surgery.status == 'OPEN' or surgery.medical_status == False and r.status == 'CONFIRMED' %}
-            <td id="pending">Pending</td>
+            <td id="pending" class="data-table__data">Pending</td>
         {% else %}
-            <td id="attended">Attended</td>
+            <td id="attended" class="data-table__data">Attended</td>
         {% endif %}
-        <td><i class="fas fa-edit" data-url="{% url 'appointments:update_surgery_record' surgery.pk %}"></i></td>
-        <td><i class="fas fa-times-circle"></i></td>
-        <td></td>
+        <td class="data-table__data"><i class="fas fa-edit" data-url="{% url 'appointments:update_surgery_record' surgery.pk %}"></i></td>
+        <td class="data-table__data"><i class="fas fa-times-circle"></i></td>
+        <td class="data-table__data"></td>
     </tr>
 {% endfor %}

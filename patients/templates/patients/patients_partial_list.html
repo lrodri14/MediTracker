@@ -1,31 +1,29 @@
 <!-- Template used to display specific patients dinamically-->
 {% load static %}
 <!--If patients are present this code will be rendered-->
-{% if patients %}
-    {% for p in patients %}
-        <tr onclick="window.location='{% url 'patients:patients_details' p.pk %}'">
-            <td>{% if p.id_number %}{{ p.id_number }}{% else %}-------------{% endif %}</td>
-            <td>{{ p.first_names }}</td>
-            <td>{{ p.last_names }}</td>
-            <td>{{ p.age }}</td>
-            <td>{{ p.get_origin_display }}</td>
-            <td>{{ p.get_residence_display }}</td>
-            <td>{% if p.insurance.insurance_carrier != None %}{{ p.insurance.insurance_carrier }}{% else %}Not Available{% endif %}</td>
-            {% if doctor %}
-                <td data-url="{% url 'patients:update_patient' p.pk %}"><i class="fas fa-edit"></i></td>
-                <td data-url="{% url 'patients:delete_patient' p.pk %}"><i class="fas fa-trash"></i></td>
-            {% endif %}
-            <!-- This condition is used to notify the user that some information inside that patient instance, presents
-                 anomallies, and must be corrected. We will also display a small pop-up -->
-            {% if p.age >= 18 and not p.id_number and p.insurance.expiration_date <= today %}
-                <td><i class="fas fa-exclamation-circle" data-message-code="out-of-date-info"></i></td>
-            {% elif p.age >= 18 and not p.id_number %}
-                <td><i class="fas fa-exclamation-circle" data-message-code="no-id-registered"></i></td>
-            {% elif p.insurance.insurance_carrier and p.insurance.expiration_date <= today %}
-                <td><i class="fas fa-exclamation-circle" data-message-code="expired-insurance"></i></td>
-            {% else %}
-                <td><i class="fas fa-check-circle" data-message-code="in-order"></i></td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-{% endif %}
+{% for p in patients %}
+    <tr class="data-table__item" onclick="window.location='{% url 'patients:patients_details' p.pk %}'">
+        <td class="data-table__data">{% if p.id_number %}{{ p.id_number }}{% else %}-------------{% endif %}</td>
+        <td class="data-table__data">{{ p.first_names }}</td>
+        <td class="data-table__data">{{ p.last_names }}</td>
+        <td class="data-table__data">{{ p.age }}</td>
+        <td class="data-table__data">{{ p.get_origin_display }}</td>
+        <td class="data-table__data">{{ p.get_residence_display }}</td>
+        <td class="data-table__data">{% if p.insurance.insurance_carrier != None %}{{ p.insurance.insurance_carrier }}{% else %}Not Available{% endif %}</td>
+        {% if doctor %}
+            <td class="data-table__data" data-url="{% url 'patients:update_patient' p.pk %}"><i class="fas fa-edit data-table__update" onclick="updateItem(event)"></i></td>
+            <td class="data-table__data" data-url="{% url 'patients:delete_patient' p.pk %}"><i class="fas fa-trash data-table__delete" onclick="deleteItem(event)"></i></td>
+        {% endif %}
+        <!-- This condition is used to notify the user that some information inside that patient instance, presents
+             anomallies, and must be corrected. We will also display a small pop-up -->
+        {% if p.age >= 18 and not p.id_number and p.insurance.expiration_date <= today %}
+            <td class="data-table__data"><i class="fas fa-exclamation-circle data-table__warning" data-message-code="out-of-date-info"></i></td>
+        {% elif p.age >= 18 and not p.id_number %}
+            <td class="data-table__data"><i class="fas fa-exclamation-circle data-table__warning" data-message-code="no-id-registered"></i></td>
+        {% elif p.insurance.insurance_carrier and p.insurance.expiration_date <= today %}
+            <td class="data-table__data"><i class="fas fa-exclamation-circle data-table__warning" data-message-code="expired-insurance"></i></td>
+        {% else %}
+            <td class="data-table__data"><i class="fas fa-check-circle data-table__in-order" data-message-code="in-order"></i></td>
+        {% endif %}
+    </tr>
+{% endfor %}

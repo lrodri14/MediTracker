@@ -81,7 +81,7 @@ if (body){
         /* This event will be fired every time the target contains the login or sign-up class in it's classList, it will
            add the hover-over class */
         if (e.target === loginBtn || e.target === signUpBtn){
-            e.target.classList.add('container__auth-button--hover')
+            e.target.classList.add('container__auth-button--active')
         }
 
         /* This event will be fired every time the target contains the doctor-type or assistant-type class in it's
@@ -98,7 +98,7 @@ if (body){
         /* This event will be fired every time the target contains the login or sign-up class in it's classList, it will
            remove the hover-over class */
         if (e.target === loginBtn || e.target === signUpBtn){
-            e.target.classList.remove('container__auth-button--hover')
+            e.target.classList.remove('container__auth-button--active')
         }
 
         /* This event will be fired every time the target contains the doctor-type or assistant-type class in it's
@@ -176,7 +176,7 @@ if (modal){
 
         // This event will be fired when the target is submit, the button-hover class will be added.
         if (e.target === submitBtn){
-            submitBtn.classList.add('submit-button--active')
+            submitBtn.classList.add('button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be added.
@@ -200,7 +200,7 @@ if (modal){
 
         // This event will be fired when the target is submit, the button-hover class will be removed.
         if (e.target === submitBtn){
-            submitBtn.classList.remove('submit-button--active')
+            submitBtn.classList.remove('button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be removed.

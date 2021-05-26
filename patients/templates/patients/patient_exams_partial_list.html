@@ -4,12 +4,12 @@
 <!--If exams are present this code will be rendered-->
 {% if exams %}
     {% for e in exams %}
-        <tr onclick="window.location='{% url 'appointments:consult_details' e.consult.pk %}'">
-            <td>{{ e.consult.datetime|date }}</td>
-            <td>{{ e.consult.datetime|time }}</td>
-            <td>{{ e.consult.created_by }}</td>
-            <td>{{ e.get_type_display }}</td>
-            <td data-img-src="{{ MEDIA_URL }}{{ e.image }}" class="exam-filename">{{e}}</td>
+        <tr class="data-table__item" onclick="window.location='{% url 'appointments:consult_details' e.consult.pk %}'">
+            <td class="data-table__data">{{ e.consult.datetime|date }}</td>
+            <td class="data-table__data">{{ e.consult.datetime|time }}</td>
+            <td class="data-table__data">{{ e.consult.created_by }}</td>
+            <td class="data-table__data">{{ e.get_type_display }}</td>
+            <td class="data-table__data exam-filename" data-img-src="{{ MEDIA_URL }}{{ e.image }}">{{e}}</td>
         </tr>
     {% endfor %}
 {% endif %}

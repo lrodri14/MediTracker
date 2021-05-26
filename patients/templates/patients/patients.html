@@ -5,29 +5,33 @@
 {% block return %}<a href="{%url 'home:home'%}"><i class="fas fa-long-arrow-alt-left"></i></a>{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="{% static 'patients/css/patients.css' %}">
-<h2>Patients</h2>
+<h2 class="title">Patients</h2>
 <!-- If any patients are present, this code will be rendered-->
 {% if patients %}
-    <div class="wrapper">
+
+    <div class="data">
         {% include 'patients/patients_list.html' %}
     </div>
 
     <!-- Pop-up to show any warning in the patients instances -->
     <div class="popup">
-        <span class="popup-text"></span>
+        <span class="popup__text"></span>
     </div>
 
     <!--Modal-->
     <!--Modal used to confirm or cancel patient deletion.-->
     <div class="modal">
-        <div class="modal-content">
+        <div class="modal__content">
 
         </div>
     </div>
+
 <!-- If no patients are present, this code will be rendered-->
 {% else %}
-    <p id="no-patients">There are no patients listed</p>
-    <a  id="add-patients" href="{% url 'patients:add_patient' %}"><i class="fas fa-plus"></i></a>
+
+    <p id="no-data">There are no patients listed</p>
+    <a class="add-data" href="{% url 'patients:add_patient' %}"><i class="fas fa-plus"></i></a>
+
 {% endif %}
 
 <script src="{% static 'patients/js/patients.js' %}"></script>

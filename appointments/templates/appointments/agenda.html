@@ -6,14 +6,14 @@
 <link rel="stylesheet" href="{% static 'appointments/css/agenda.css' %}">
 <h2>Agenda</h2>
 {% if appointments %}
-    <div class="wrapper">
-        <div class="data-table">
+    <div class="data">
+        <div class="data-table-container">
             {% include 'appointments/partial_agenda_list.html' %}
         </div>
 
-        <div>
-            <i class="fas fa-filter"></i>
-            <form method="GET" action="{% url 'appointments:filter_agenda' %}" class="filter-results-form filter-form">
+        <div class="filter-container">
+            <i class="fas fa-filter filter-container__filter-display-button"></i>
+            <form method="GET" action="{% url 'appointments:filter_agenda' %}" class="filter-container__filter-form">
                 <h3>Filter Results</h3>
                 <p>{{ form.date_from.label }}</p>
                 <p>{{ form.date_from }}</p>
@@ -24,13 +24,13 @@
         </div>
 
         <div class="modal">
-            <div class="modal-content">
+            <div class="modal__content">
 
             </div>
         </div>
     </div>
 {% else %}
-    <p id="no-appointments">There are no appointments ahead</p>
+    <p id="no-data">There are no appointments ahead</p>
 {% endif %}
 </div>
 <script src="{% static 'appointments/js/agenda.js' %}"></script>

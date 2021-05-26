@@ -4,33 +4,11 @@
 
 /*#################################################### Variables #####################################################*/
 
-// Data Available
-
-var body = document.querySelector('body')
-
-if (document.querySelectorAll('table') !== 'undefined' && document.querySelectorAll('table') !== 'null'){
-    var table = document.querySelector('table')
-    var tbody = document.querySelector('tbody')
-}
-
-if (document.querySelectorAll('button') !== 'undefined' && document.querySelectorAll('button') !== 'null'){
-    var button = document.querySelectorAll('button')
-}
-
-if (document.querySelector('.modal') !== 'undefined' && document.querySelector('.modal') !== 'null'){
-    var modal = document.querySelector('.modal')
-    var modalContent = document.querySelector('.modal-content')
-}
-
-// No Data Available
-
-if (document.querySelector('#add-consult') !== 'undefined' && document.querySelector('#add-consult') !== 'null'){
-    var addConsult = document.querySelector('#add-consult')
-    var noConsults = document.querySelector('#no-consults')
-}
+let body = document.querySelector('body')
+let modal = document.querySelector('.modal')
+let modalContent = document.querySelector('.modal__content')
 
 /*#################################################### Functions #####################################################*/
-
 
 async function addConsultAW(url){
 
@@ -70,68 +48,37 @@ async function submitConsultAW(url, method,csrfmiddlewaretoken, formData){
 
 if (body){
 
-    // Body Click Events
-    body.addEventListener('click', (e) => {
-    /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
-       GET request, then the response will be added to the tbody, as well as the paginator will be deleted
-       to get the current one.*/
-    if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-        const url = e.target.getAttribute('data-url')
-        requestPageAW(url)
-        .then(data => {
-            document.querySelector('#paginator') && document.querySelector('#paginator').remove()
-            tbody.innerHTML = data['html']
-        })
-    }
-    })
-
-
-    // Body Mouseover events
+    // Body mouseover events
     body.addEventListener('mouseover', (e) => {
-        // This event will be fired every time the target is a 'fa-angle', this event will add the 'fa-angle-hover' to its classList.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.add('fa-angle-hover')
+
+        // This event will be fired everytime a mouseout occurs over an add-data item, it will add the button--active class from the target.
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.add('add-data--active')
         }
 
-    })
-
-    body.addEventListener('mouseout', (e) => {
-        // This event will be fired every time the target is a 'fa-angle', this event will remove the 'fa-angle-hover' to its classList.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.remove('fa-angle-hover')
+        // This event will be fired everytime a mouseout occurs over a button, it will remove the button--active class from the target.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
         }
-
-    })
-
-}
-
-// Table Event Listeners
-
-if (table){
-
-    // Table Mouseover Events
-
-    table.addEventListener('mouseover', (e) => {
 
         /*This event will be fired every time a mouseover occurs over a 'TD' or the target contains 'fa-edit'
         class in it's classList, This will make changes inside this row.*/
-        if (e.target.nodeName === 'TD' ||  e.target.classList.contains('fa-edit')){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = '#FFFFFF'
             row.style.color = '#000000'
         }
 
         /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-plus' class in it's
         classList, it will add the 'fa-plus-hover' class to the target.*/
-        if (e.target.classList.contains('fa-plus')){
-            e.target.classList.add('fa-plus-hover')
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.add('data-table__create--active')
         }
 
         /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-edit' class in it's
         classList, it will add the 'fa-edit-hover' class to the target.*/
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.add('fa-edit-hover')
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.add('data-table__update--active')
         }
 
         /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-exlamation circle'
@@ -139,64 +86,71 @@ if (table){
          remains unlocked for further changes.*/
         if (e.target.classList.contains('fa-exclamation-circle')){
             popUp = e.target.parentNode.childNodes[1]
-            popUp.classList.add('popup-show')
+            popUp.classList.add('popup--display')
         }
 
     })
 
-    // Table Mouseout Events
+    // Body mouseout events
+    body.addEventListener('mouseout', (e) => {
 
-    table.addEventListener('mouseout', (e) => {
+        // This event will be fired everytime a mouseout occurs over an add-data item, it will remove the button--active class from the target.
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.remove('add-data--active')
+        }
 
-        /*This event will be fired every time a mouse out occurs from a 'TD' or the target contains 'fa-edit'
+    // This event will be fired everytime a mouseout occurs over a button, it will remove the button--active class from the target.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
+        }
+
+        /*This event will be fired every time a mouseover occurs over a 'TD' or the target contains 'fa-edit'
         class in it's classList, This will make changes inside this row.*/
-          if (e.target.nodeName === 'TD' ||  e.target.classList.contains('fa-edit')){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = ''
             row.style.color = ''
-          }
+        }
 
-        /*This event will be fired every time a mouse out occurs from a target which contains the 'fa-plus' class in it's
+        /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-plus' class in it's
         classList, it will remove the 'fa-plus-hover' class to the target.*/
-          if (e.target.classList.contains('fa-plus')){
-            e.target.classList.remove('fa-plus-hover')
-          }
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.remove('data-table__create--active')
+        }
 
-        /*This event will be fired every time a mouse out occurs from a target which contains the 'fa-edit' class in it's
+        /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-edit' class in it's
         classList, it will remove the 'fa-edit-hover' class to the target.*/
-         if (e.target.classList.contains('fa-edit')){
-            e.target.classList.remove('fa-edit-hover')
-         }
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.remove('data-table__update--active')
+        }
 
-        /*This event will be fired every time a mouse out occurs from a target which contains the 'fa-exclamation-circle'
-         class in it's classList, this will hide the popup over the target, indicating the user, that the consult
+        /*This event will be fired every time a mouseover occurs over a target which contains the 'fa-exlamation circle'
+         class in it's classList, this will display the popup over the target, indicating the user, that the consult
          remains unlocked for further changes.*/
-         if (e.target.classList.contains('fa-exclamation-circle')){
+        if (e.target.classList.contains('fa-exclamation-circle')){
             popUp = e.target.parentNode.childNodes[1]
-            popUp.classList.remove('popup-show')
-         }
+            popUp.classList.add('popup--display')
+        }
 
     })
 
-    // Table Click Events
-
-    table.addEventListener('click', (e) => {
+    // Body click events
+    body.addEventListener('click', (e) => {
 
         /* This event will fired every time an icon with the 'fa-plus' is clicked, this event will display a modal
         containing the add consults form, this form will be retrieved from the server side, making an AJAX GET request.*/
-        if (e.target.classList.contains('fa-plus')){
+        if (e.target.classList.contains('data-table__create') || e.target.classList.contains('add-data')){
             let url = e.target.getAttribute('data-url')
             addConsultAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
+
     })
 
 }
-
 // Modal Event Listeners
 
 if (modal){
@@ -207,12 +161,8 @@ if (modal){
 
         /* This event will be fired every time the target is the modal or the modalContent, if each of these elements
         is clicked, then it will remove the modal and remove the 'no-consults-hide' class from the noConsults element.*/
-        if (e.target === modal || e.target === modalContent){
-        modal.classList.remove('modal-show')
-        if (noConsults && addConsult){
-                addConsult.classList.remove('add-consults-hide')
-                noConsults.classList.remove('no-consults-hide')
-            }
+        if (e.target === modal){
+            modal.classList.remove('modal--display')
         }
 
     })
@@ -221,33 +171,19 @@ if (modal){
 
     modal.addEventListener('mouseover', (e) => {
 
-        /* This event will be fired every time the target's nodeName is 'A' and it will add the 'add_new_patient_hover'
-            class to the target.*/
-        if (e.target.nodeName === 'A'){
-            e.target.classList.add('add_new_patient_hover')
+        /* This event will be fired every time the target class is modal__add-patient, it will add the add-data--active class.*/
+        if (e.target.classList.contains('modal__add-patient')){
+            e.target.classList.add('add-data--active')
         }
-        /* This event will be fired every time the target's nodeName is 'BUTTON' and it will add the 'button-hover'
-            class to the target.*/
-        if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
-        }
-
     })
 
     // Modal MouseOut Events
 
     modal.addEventListener('mouseout', (e) => {
 
-        /* This event will be fired every time the target's nodeName is 'A' and it will remove the 'add_new_patient_hover'
-            class to the target.*/
-        if (e.target.nodeName === 'A'){
-            e.target.classList.remove('add_new_patient_hover')
-        }
-
-        /* This event will be fired every time the target's nodeName is 'BUTTON' and it will remove the 'button-hover'
-            class to the target.*/
-        if (e.target.nodeName === 'BUTTON' ){
-            e.target.classList.remove('button-hover')
+        /* This event will be fired every time the target class is modal__add-patient, it will remove the add-data--active class.*/
+        if (e.target.classList.contains('modal__add-patient')){
+            e.target.classList.remove('add-data--active')
         }
 
     })
@@ -262,95 +198,24 @@ if (modal){
          form.method attribute, we also collect the 'action' from the form.action attribute, and finally the value of the
          csrfmiddlewaretoken value from the hidden input. The form will be hidden and the data will be sent to the server,
          errors will be displayed depending on the data we received back from the server, once we send the data to the server.*/
-        if (e.target.nodeName === 'FORM'){
+        if (e.target.id === 'appointment-create-form'){
             e.preventDefault()
             e.stopPropagation()
             const formData = new FormData(e.target)
             const method = e.target.method
             const action = e.target.action
             const csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
-            document.querySelector('.create-update-appointment-loader').classList.add('create-update-appointment-loader-show')
+            document.querySelector('.create-update-appointment-loader').classList.add('create-update-appointment-loader--display')
             submitConsultAW(action, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 if (data['success']){
-                    modal.classList.remove('modal-show')
+                    modal.classList.remove('modal--display')
                     notificationWebsocket.send(JSON.stringify({'to': data['to'], 'created_by': data['created_by'], 'message': `Appointment has been created successfully for ${data['datetime']} by `, 'nf_type': 'appointment_created'}))
                 } else {
                     modalContent.innerHTML = data['html']
                 }
             })
         }
+
     })
-}
-
-// Button Event Listeners
-
-if (button){
-    for (let i = 0; i<button.length; i++){
-
-        // Button Mouseover Events
-
-        /*This event will be fired every time the target is a button, it will add the button-hover class to the target.*/
-        button[i].addEventListener('mouseover', function(){
-            this.classList.add('button-hover')
-        })
-
-        // Button Mouseout Events
-
-        /*This event will be fired every time the target is a button, it will remove the button-hover class to the target.*/
-        button[i].addEventListener('mouseout', function(){
-            this.classList.remove('button-hover')
-        })
-    }
-}
-
-//Add Consult Event Listeners
-
-if (addConsult){
-
-    // addConsult Levitating Effect
-
-    /* This setInterval function will be executed every 0.5 seconds and will change the 'top' style attribute of the
-    addConsult element from '90%' to '88%' and vice versa*/
-    setInterval(function(){
-        if (addConsult.style.top == '90%'){
-            addConsult.style.top = '88%'
-        } else {
-            addConsult.style.top = '90%'
-        }
-    },500)
-
-    // addConsult Click Event
-
-    /* This event will fired every time an icon with the 'fa-plus' is clicked, this event will display a modal
-    containing the add consults form, this form will be retrieved from the server side, making an AJAX GET request.*/
-    addConsult.addEventListener('click', (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        addConsultAW(e.target.getAttribute('data-url'))
-        .then(data => {
-            modal.classList.add('modal-show')
-            modalContent.innerHTML = data['html']
-            if (noConsults && addConsult){
-                addConsult.classList.add('add-consults-hide')
-                noConsults.classList.add('no-consults-hide')
-            }
-        })
-        
-    })
-
-    // addConsult Mouseover Event
-
-    /*This event will be fired every time the target is a button, it will add the add-consult-hover class to the target.*/
-    addConsult.addEventListener('mouseover', () => {
-        addConsult.classList.add('add-consult-hover')
-    })
-
-    // addConsult Mouseout Event
-
-    /*This event will be fired every time the target is a button, it will remove the add-consult-hover class to the target.*/
-    addConsult.addEventListener('mouseout', () => {
-        addConsult.classList.remove('add-consult-hover')
-    })
-
 }

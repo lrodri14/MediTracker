@@ -9,22 +9,24 @@
 <h2 id="patient-name">{{ patient.first_names }} {{ patient.last_names }}</h2>
 
 {% if user.roll == 'DOCTOR' %}
-    {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
     <!--Info Navigation, this is used to select what information the user wants to see.-->
-    <div class="info">
-        <div class="info-tab tab-active"><p>General</p></div><div class="info-tab"><p>Appointments</p></div><div class="info-tab"><p>Exams</p></div><div class="info-tab"><p>Charges</p></div>{% if user.doctor.speciality == 'PED'%}<div class="info-tab"><p>Vaccines</p></div>{% elif user.doctor.speciality == 'SRG' %}<!--<div class="info-tab"><p>Surgeries</p></div>-->{% endif %}
+    <div class="navigation">
+        <div class="navigation__tab navigation__tab--active"><p>General</p></div><div class="navigation__tab"><p>Appointments</p></div><div class="navigation__tab"><p>Exams</p></div><div class="navigation__tab"><p>Charges</p></div>{% if user.doctor.speciality == 'PED'%}<div class="navigation__tab"><p>Vaccines</p></div>{% elif user.doctor.speciality == 'SRG' %}<!--<div class="info-tab"><p>Surgeries</p></div>-->{% endif %}
     </div>
 {% endif %}
 
-<div class="wrapper">
+<div class="details-container">
+
     <!-- General Information of the patient-->
-    <div class="general-info">
-        <div class="general">
+    <div class="details-container__personal-information">
+
+        <div class="details-container__general-information">
             <h2>General</h2>
-            <div class="title">General Information</div>
+            <h4 class="details-container__title">General Information</h4>
+            {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
             <p>Id Card Number: {{ patient.id_number }}</p>
-            <p class="name">First Name: {{ patient.first_names }}</p>
-            <p class="name">Last Name: {{ patient.last_names }}</p>
+            <p>First Name: {{ patient.first_names }}</p>
+            <p>Last Name: {{ patient.last_names }}</p>
             <p>Gender: {{ patient.get_gender_display }}</p>
             <p>Birthday: {{ patient.birthday|date:"d M, Y" }}</p>
             <p>Age: {{ patient.age }}</p>
@@ -34,25 +36,26 @@
             <p>Origin: {{ patient.get_origin_display }}</p>
             <p>Residence: {{ patient.get_residence_display }}</p>
         </div>
-        <div class="background">
+
+        <div class="details-container__background">
             <h2>Background</h2>
-            <div class="title">Allergies</div>
-            {% if patient.allergy_info %}
-                {% for allergy in patient.allergy_info.all %}
+            <h4 class="details-container__title">Allergies</h4>
+            {% if patient.allergy_information.all %}
+                {% for allergy in patient.allergy_information.all %}
                     <p>{{ forloop.counter }}. {{ allergy.allergy_type }} - {{ allergy.about }}</p>
                 {% endfor %}
             {% else %}
                 <p class="no-data">No Data</p>
             {% endif %}
-            <div class="title">Antecedents</div>
-            {% if patient.antecedent_info %}
-                {% for antecedent in patient.antecedent_info.all %}
+            <h4 class="details-container__title">Antecedents</h4>
+            {% if patient.antecedent_information.all %}
+                {% for antecedent in patient.antecedent_information.all %}
                     <p>{{ forloop.counter }}. {{ antecedent.antecedent }} - {{ antecedent.info }}</p>
                 {% endfor %}
             {% else %}
                 <p class="no-data">No Data</p>
             {% endif %}
-            <div class="title">Insurance</div>
+            <h4 class="details-container__title">Insurance</h4>
             {% if patient.insurance.insurance_carrier or patient.type_of_insurance %}
                 <p>Insurance Carrier: {{ patient.insurance.insurance_carrier }}</p>
                 <p>Insurance Type: {{ patient.insurance.insurance_type }}</p>
@@ -61,14 +64,16 @@
                 <p class="no-data">No Data</p>
             {% endif %}
         </div>
+
     </div>
-    <div class="filterable appointments">
+
+    <div class="data appointments">
         <!--If no consults are present this code will be rendered-->
         {% if consults %}
-            <div class="data-table">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
-                        <tr class="heading">
+                        <tr id="heading">
                             <th>Date</th>
                             <th>Time</th>
                             <th>Medical Status</th>
@@ -82,11 +87,12 @@
                     </tbody>
                 </table>
             </div>
-            <div>
+
+            <div class="filter-container">
                 <!--Filtering form-->
-                <i class="fas fa-filter appointments-filter"></i>
-                <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="appointments-form">
-                    <h3>Filter Results</h3>
+                <i class="fas fa-filter filter-container__display-filter-button appointments-filter"></i>
+                <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form appointments-form">
+                    <h3 class="filter-container__form-title">Filter Results</h3>
                     <p>{{ consults_form.date_from.label }}</p>
                     <p>{{ consults_form.date_from }}</p>
                     <p>{{ consults_form.date_to.label }}</p>
@@ -99,12 +105,13 @@
             <p id="no-consults-data">No Data</p>
         {% endif %}
     </div>
-    <div class="filterable exams">
+
+    <div class="data exams">
         {% if exams %}
-            <div class="data-table">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
-                        <tr class="heading">
+                        <tr id="heading">
                             <th>Date</th>
                             <th>Time</th>
                             <th>Created By</th>
@@ -118,11 +125,12 @@
                     </tbody>
                 </table>
             </div>
-            <div>
+
+            <div class="filter-container">
                 <!-- Filtering form -->
-                <i class="fas fa-filter exams-filter"></i>
-                <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="exams-form">
-                    <h3>Filter Results</h3>
+                <i class="fas fa-filter filter-container__display-filter-button"></i>
+                <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form exams-form">
+                    <h3 class="filter-container__filter-form">Filter Results</h3>
                     <p>{{ consults_form.date_from.label }}</p>
                     <p>{{ consults_form.date_from }}</p>
                     <p>{{ consults_form.date_to.label }}</p>
@@ -136,13 +144,14 @@
             <p id="no-exams-data">No Data</p>
         {% endif %}
     </div>
-    <div class="filterable charges">
+
+    <div class="data charges">
         <!--If charges are present this code will be rendered-->
         {% if charges %}
-            <div class="data-table">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
-                        <tr class="heading">
+                        <tr id="heading">
                             <th>Date</th>
                             <th>Time</th>
                             <th>Created By</th>
@@ -155,11 +164,12 @@
                     </tbody>
                 </table>
             </div>
-            <div>
+
+            <div class="filter-container">
             <!-- Filtering Form -->
-            <i class="fas fa-filter charges-filter"></i>
-            <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="charges-form">
-                <h3>Filter Results</h3>
+            <i class="fas fa-filter filter-container__display-filter-button charges-filter"></i>
+            <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form charges-form">
+                <h3 class="filter-container__form-title">Filter Results</h3>
                 <p>{{ consults_form.date_from.label }}</p>
                 <p>{{ consults_form.date_from }}</p>
                 <p>{{ consults_form.date_to.label }}</p>
@@ -175,19 +185,19 @@
     </div>
 
     {% if user.doctor.speciality == 'PED' %}
-        <div class="filterable vaccines">
+        <div class="data vaccines">
             {% if vaccines %}
-                <div class="data-table">
-                    <table>
+                <div class="data-table-container">
+                    <table class="data-table">
                         <thead>
-                            <tr class="heading">
+                            <tr id="heading">
                                 <th>Vaccine</th>
                                 <th>Scientific Name</th>
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
-                                <th><i class="fas fa-plus" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i></th>
+                                <th><i class="fas fa-plus data-table__create" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i></th>
                             </tr>
                         </thead>
                         <tbody id="vaccine-records">
@@ -197,8 +207,8 @@
                     </table>
                 </div>
                 <div>
-                    <i class="fas fa-filter vaccines-filter"></i>
-                    <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="vaccines-form">
+                    <i class="fas fa-filter filter-container__display-filter-button vaccines-filter"></i>
+                    <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="filter-container__filter-form vaccines-form">
                         <h3>Filter Results</h3>
                         <p>{{ consults_form.date_from.label }}</p>
                         <p>{{ consults_form.date_from }}</p>
@@ -221,7 +231,7 @@
 <!--                <div class="data-table">-->
 <!--                    <table>-->
 <!--                        <thead>-->
-<!--                            <tr class="heading">-->
+<!--                            <tr id="heading">-->
 <!--                                <th>Surgery Type</th>-->
 <!--                                <th>Date & Time</th>-->
 <!--                                <th>Status</th>-->
@@ -253,19 +263,20 @@
 <!--                <p id="no-surgeries-data">No Data</p>-->
 <!--            {% endif %}-->
 <!--        </div>-->
+
     {% endif %}
 </div>
 
 <!-- Email Sending Modal -->
 <div class="modal">
-    <div class="modal-content">
+    <div class="modal__content">
 
     </div>
 </div>
 
 <!--Modal used for image previewing.-->
-<div class="image-preview">
-    <img class="previewed-image" src="" alt="">
+<div class="exam-preview">
+    <img class="exam-preview__image" src="" alt="">
 </div>
 
 <script src="{% static 'patients/js/patient_details.js' %}"></script>

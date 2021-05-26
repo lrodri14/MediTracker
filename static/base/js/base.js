@@ -144,10 +144,10 @@ url = 'ws://' + window.location.host
 let notificationWebsocket = new WebSocket(url)
 
 notificationWebsocket.addEventListener('message', (e) => {
-    notificationsPopup.classList.add('notification-popup-show')
+    notificationsPopup.classList.add('notification-popup--display')
     notificationsPopup.textContent = e.data
     setTimeout(function(){
-        notificationsPopup.classList.remove('notification-popup-show')
+        notificationsPopup.classList.remove('notification-popup--display')
     }, 5000)
 })
 
@@ -230,7 +230,7 @@ if (socialSection){
 
         // This event will be triggered every time the target contains the 'social-section-tab' class, social-section-tab-hover class will be added
          if (e.target.classList.contains('social-section__tab')){
-            e.target.classList.add('social-section__tab--active')
+            e.target.classList.add('social-section__tab--active-hover')
          }
 
         // This event will be triggered every time the target contains the accept-contact-request class, accept-contact-request-hover class will be added
@@ -262,7 +262,7 @@ if (socialSection){
 
         // This event will be triggered every time the target contains the 'social-section-tab' class, social-section-tab-hover class will be removed
         if (e.target.classList.contains('social-section__tab')){
-            e.target.classList.remove('social-section__tab--active')
+            e.target.classList.remove('social-section__tab--active-hover')
         }
 
         // This event will be triggered every time the target contains the accept-contact-request class, accept-contact-request-hover class will be removed

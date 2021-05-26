@@ -2,8 +2,9 @@
 
 <!-- This code will be executed if there are instances available-->
 {% if patients %}
-    <div class="data-table">
-        <table>
+
+    <div class="data-container">
+        <table class="data-table">
             <thead>
                 <tr id="heading">
                     <th>ID</th>
@@ -18,7 +19,7 @@
                         <th>Edit</th>
                         <th>Delete</th>
                     {% endif %}
-                    <th><i class="fas fa-plus" onclick="window.location='{% url 'patients:add_patient' %}'"></i></th>
+                    <th><i class="fas fa-plus data-table__create" onclick="window.location='{% url 'patients:add_patient' %}'"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -28,19 +29,20 @@
         </table>
     </div>
 
-    <div>
+    <div class="filter-container">
         <!-- Patient filtering form -->
-        <i class="fas fa-filter"></i>
-        <form method="GET" action="{% url 'patients:filter_patients' %}" autocomplete="off" class="result-filter filter-form">
-            <h3>Filter Results</h3>
+        <i class="fas fa-filter filter-container__filter-display-button"></i>
+        <form method="GET" action="{% url 'patients:filter_patients' %}" autocomplete="off" class="filter-container__filter-form">
+            <h3 class="filter-container__filter-form-title">Filter Results</h3>
             <p>{{ form.patient.label }} Name</p>
             <p>Or</p>
             <p>ID Number</p>
-            <p>{{ form.patient  }}</p>
+            <p>{{ form.patient }}</p>
         </form>
     </div>
+
 {% else %}
     <!-- This code will be executed if there are no instances available -->
-    <p id="no-patients">There are no patients listed</p>
-    <a  id="add-patients" href="{% url 'patients:add_patient' %}"><i class="fas fa-plus"></i></a>
+    <p id="no-data">There are no patients listed</p>
+    <a class="add-data" href="{% url 'patients:add_patient' %}"><i class="fas fa-plus"></i></a>
 {% endif %}

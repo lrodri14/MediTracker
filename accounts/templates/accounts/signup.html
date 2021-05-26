@@ -36,7 +36,7 @@
                 <p>{{ profile_creation_form.phone_number }}</p>
                 <p>{{ profile_creation_form.address.label }}</p>
                 <p>{{ profile_creation_form.address }}</p>
-                <button type="submit" class="signup-form__submit-button submit-button">Sign Up</button>
+                <button type="submit" class="signup-form__submit-button">Sign Up</button>
                 {% if user_creation_form.errors %}
                     {% for error in user_creation_form.email.errors %}
                         <p class="signup-form__error"><small>{{ error }}</small></p>
@@ -70,7 +70,7 @@
                 <p>{{ user_creation_form.password1 }}</p>
                 <p>Password Confirmation</p>
                 <p>{{ user_creation_form.password2 }}</p>
-                <button type="submit" class="signup-form__submit-button submit-button">Sign Up</button>
+                <button type="submit" class="signup-form__submit-button">Sign Up</button>
                 {% if user_creation_form.errors %}
                     {% for error in user_creation_form.email.errors %}
                         <p class="signup-form__error"><small>{{ error }}</small></p>

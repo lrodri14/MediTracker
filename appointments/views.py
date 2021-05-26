@@ -458,7 +458,7 @@ def appointment_date_update(request, pk):
     tzone = timezone.get_current_timezone()
     consult = BaseConsult.objects.get(pk=pk)
     form = AgendaDateFilterForm
-    creation_form = speciality_mapping[request.user.speciality]['creation_form']
+    creation_form = speciality_mapping[aimed_user.doctor.speciality]['creation_form']
     consult_form = creation_form(request.POST or None, instance=consult, user=aimed_user)
     template = 'appointments/appointment_date_update.html'
     context = {'consult_form': consult_form, 'consult':consult}

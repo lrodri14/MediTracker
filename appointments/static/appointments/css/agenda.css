@@ -2,13 +2,7 @@
 sections: Wrapper, Table, Forms, Cancel and Update Form, Pagination and No Data*/
 
 
-/*######################################################## Wrapper ###################################################*/
-
-.wrapper{
-    display: grid;
-    grid-template-columns: 80% 18%;
-    grid-gap: 1%;
-}
+/*######################################################## Titles ###################################################*/
 
 h2,h3{
     margin-left: 1%;
@@ -20,116 +14,17 @@ h3:first-child{
     display: none;
 }
 
-.data-table{
-    max-height: 765px;
-}
-
-table{
-    width: 100%;
-    margin: auto;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards
-}
-
-#heading{
-    color: #FFFFFF;
-    line-height: 25px;
-    cursor: default;
-    background-color: rgba(255,255,255,0.3)
-}
-
-tr{
-    line-height: 20px;
-    margin: 10px;
-    cursor: pointer;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-}
-
 /*########################################################## Forms ###################################################*/
 
-form{
-    text-align: center;
-    padding: 10px;
-    background-color: rgba(255,255,255,0.1);
-    transition: 0.5s;
-}
-
-.filter-form{
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    transform: translateY(-200%);
-    transition: 0.5s;
-}
-
-#add_new_patient{
-    text-decoration: underline;
-    transition: 0.5s;
-}
-
-.add_new_patient_hover{
-    font-size: 16px;
-    transition: 0.5s;
-}
-
-.link-hover{
-    font-size: 16px;
-}
-
-.error{
-    color: #FFFFFF;
-}
-
-.show-form{
-    visibility: visible;
-    transform: translateY(8%);
-    transition: transform 0.5s ease-out;
-}
-
-button{
-    width: 30%;
-    height: 30px;
-    cursor: pointer;
-}
-
-/*########################################################## Modal ###################################################*/
-
-.modal-content{
-    margin-left: 25%;
-    width: 50%;
-}
-
-#cancel-consult h4{
-    text-align: left;
+.filter-container__filter-form--display{
+    transform: translateY(7%);
 }
 
 /*######################################### Cancel and Update Form Modal #############################################*/
+
+#cancel-appointment-form h4{
+    text-align: left;
+}
 
 .create-update-appointment-loader{
     height: 20px;
@@ -144,39 +39,6 @@ button{
     animation: spin 1s linear infinite;
 }
 
-.create-update-appointment-loader-show{
+.create-update-appointment-loader--display{
     visibility: visible;
-}
-
-.cancel-form{
-    border-radius: 25px;
-    margin-top: 25%;
-    padding: 50px;
-}
-
-.update-date-form{
-    border-radius: 25px;
-    margin-top: 4.5%;
-    width: 50%;
-    margin-left: 22%;
-    padding: 25px;
-}
-
-#close{
-    border: none;
-    width: 5%;
-    border-radius: 0px;
-    float: right;
-    margin-top: 5%;
-    margin-right: 21%;
-}
-
-/*########################################################## No Data #################################################*/
-
-#no-appointments{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
 }

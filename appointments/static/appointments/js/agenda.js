@@ -3,27 +3,14 @@
 
 /*#################################################### Variables #####################################################*/
 
-if (document.querySelector('.wrapper') !== 'undefined' && document.querySelector('.wrapper') !== 'null'){
-    var wrapper = document.querySelector('.wrapper')
-    var dataTable = document.querySelector('.data-table')
-    var form = document.querySelector('.filter-form')
-}
-
-if (document.querySelector('.modal') !== 'undefined' && document.querySelector('.modal') !== 'null'){
-    var modal = document.querySelector('.modal')
-    var modalContent = document.querySelector('.modal-content')
-}
+let container = document.querySelector('.data')
+let dataTable = document.querySelector('.data-table-container')
+let modal = document.querySelector('.modal')
+let modalContent = document.querySelector('.modal__content')
+let form = document.querySelector('.filter-container__filter-form')
+let loader = document.querySelector('.create-update-appointment-loader')
 
 /*#################################################### Functions #####################################################*/
-
-async function requestPageAW(url){
-    /* This async function will be used to collect the data from the previous or next page, this content will be
-    received as a promise, so we need to return it in JSON format so we can process it, this content will be set to
-    the dataTable dynamically.*/
-    const result = await fetch(url)
-    const data = result.json()
-    return data
-}
 
 async function cancelAW(url){
     /* This cancelAW async function is used to cancel consults that were previously scheduled, this function will display
@@ -85,152 +72,129 @@ async function filterResultsAW(url, method, csrfmiddlewaretoken, formData){
 /*#################################################### Event Listeners ###############################################*/
 
 
-if (wrapper){
+if (container){
 
-    //Wrapper MouseOver
+    //Container MouseOver
 
-    wrapper.addEventListener('mouseover', (e) => {
-
-        // This event will be fired every time the target is a 'fa-angle', this event will add the 'fa-angle-hover' to its classList.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.add('fa-angle-hover')
-        }
+    container.addEventListener('mouseover', (e) => {
 
         /* This event will be fired every time a hover occurs on a target which nodeName is 'BUTTON', this will add the
-        button-form-hover class to the target.*/
+        button--active class to the target.*/
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-form-hover')
+            e.target.classList.add('button--active')
         }
 
-        /* This event will be fired every time a hover occurs on a target which classList contains 'fa-filter' this will add the
-        fa-filter-hover class to the target.*/
-        if (e.target.classList.contains('fa-filter')){
-            e.target.classList.add('fa-filter-hover')
+        /* This event will be fired every time a hover occurs on a target is the show filter button, this will add the
+        filter_container__filter-display-button--active class to the target.*/
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            e.target.classList.add('filter-container__filter-display-button--active')
         }
 
-        /* This event will be fired every time a hover occurs on a target which is a table data cell or classList
-        contains 'fa-edit' or 'fa-check' this will add the some styles to the parent's row of this elements.*/
-        if (e.target.nodeName === 'TD' || (e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-check') || e.target.classList.contains('fa-times-circle'))){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        /* This event will be fired every time a hover occurs on a target which is a table data cell
+           this will add the some styles to the row.*/
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = '#FFFFFF'
             row.style.color = '#000000'
         }
 
-        /* This event will be fired every time a hover occurs on a target which classList contains 'fa-edit' this will add the
-        fa-edit-hover class to the target.*/
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.add('fa-edit-hover')
+        /* This event will be fired every time a hover out occurs on a target which is an update button this will add the
+        data-table__update--active class to the target.*/
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.add('data-table__update--active')
         }
 
-        /* This event will be fired every time a hover occurs on a target which classList contains 'fa-check' this will add the
-        fa-check-hover class to the target.*/
-        if (e.target.classList.contains('fa-check')){
-            e.target.classList.add('fa-check-hover')
+        /* This event will be fired every time a hover out occurs on a target which is a confirmation button this will add the
+        data-table__confirm--active class to the target.*/
+        if (e.target.classList.contains('data-table__confirm')){
+            e.target.classList.add('data-table__confirm--active')
         }
 
-        /* This event will be fired every time a hover occurs on a target which classList contains 'fa-times-circle' this will add the
-        fa-times-circle-hover class to the target.*/
-        if (e.target.classList.contains('fa-times-circle')){
-            e.target.classList.add('fa-times-circle-hover')
+        /* This event will be fired every time a hover out occurs on a target which is an cancellation button this will add the
+        data-table__cancel--active class to the target.*/
+        if (e.target.classList.contains('data-table__cancel')){
+            e.target.classList.add('data-table__cancel--active')
         }
 
     })
 
-    //Wrapper MouseOut
+    //Container MouseOut
 
-    wrapper.addEventListener('mouseout', (e) => {
-
-        // This event will be fired every time the target is a 'fa-angle', this event will remove the 'fa-angle-hover' to its classList.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.remove('fa-angle-hover')
-        }
+    container.addEventListener('mouseout', (e) => {
 
         /* This event will be fired every time a hover out occurs on a target which nodeName is 'BUTTON', this will remove the
         button-form-hover class to the target.*/
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-form-hover')
+            e.target.classList.remove('button--active')
         }
 
         /* This event will be fired every time a hover out occurs on a target which classList contains 'fa-filter' this will remove the
         fa-filter-hover class to the target.*/
-        if (e.target.classList.contains('fa-filter')){
-            e.target.classList.remove('fa-filter-hover')
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            e.target.classList.remove('filter-container__filter-display-button--active')
         }
 
-        /* This event will be fired every time a hover out occurs on a target which is a table data cell or classList
-        contains 'fa-edit' or 'fa-check' this will remove some styles to the parent's row of this elements.*/
-        if (e.target.nodeName === 'TD' || !e.target.classList.contains('fa-filter')){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        /* This event will be fired every time a hover occurs on a target which is a table data cell
+           this will add the some styles to the row.*/
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = ''
             row.style.color = ''
         }
 
-        /* This event will be fired every time a hover out occurs on a target which classList contains 'fa-edit' this will remove the
-        fa-edit-hover class to the target.*/
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.remove('fa-edit-hover')
+        /* This event will be fired every time a hover out occurs on a target which is an update button this will remove the
+        data-table__update--active class to the target.*/
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.remove('data-table__update--active')
         }
 
-        /* This event will be fired every time a hover out occurs on a target which classList contains 'fa-check' this will remove the
-        fa-check-hover class to the target.*/
-        if (e.target.classList.contains('fa-check')){
-            e.target.classList.remove('fa-check-hover')
+        /* This event will be fired every time a hover out occurs on a target which is a confirmation button this will remove the
+        data-table__confirm--active class to the target.*/
+        if (e.target.classList.contains('data-table__confirm')){
+            e.target.classList.remove('data-table__confirm--active')
         }
 
-        /* This event will be fired every time a hover out occurs on a target which classList contains 'fa-times-circle' this will remove the
-        fa-times-circle-hover class to the target.*/
-        if (e.target.classList.contains('fa-times-circle')){
-            e.target.classList.remove('fa-times-circle-hover')
+        /* This event will be fired every time a hover out occurs on a target which is a confirmation button this will remove the
+        data-table__cancel--active class to the target.*/
+        if (e.target.classList.contains('data-table__cancel')){
+            e.target.classList.remove('data-table__cancel--active')
         }
 
     })
 
-    //Wrapper Click
+    //Container Click
 
-    wrapper.addEventListener('click', (e) => {
-
-        /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
-           GET request, then the response will be added to the tbody, as well as the paginator will be deleted
-           to get the current one.*/
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            url = e.target.getAttribute('data-url')
-            requestPageAW(url)
-            .then(data => {
-                dataTable.innerHTML = data['html']
-            })
-        }
+    container.addEventListener('click', (e) => {
 
         /*This target will be fired every time the target is the modal or the modalContent itself, this will remove the
           modal-show class from the modal, hiding it.*/
-        if (e.target.classList.contains('modal') || e.target.classList.contains('modal-content')){
-            e.target.classList.remove('modal-show')
+        if (e.target.classList.contains('modal') || e.target.classList.contains('modal__content')){
+            e.target.classList.remove('modal--display')
         }
 
         /* This event will be fired every time a click occurs on the fa-filter icon, this will check if the filter form
         is shown or hidden, and perform the displaying or hiding depending on the previous condition.*/
-        if (e.target.classList.contains('fa-filter')){
-            form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            form.classList.contains('filter-container__filter-form--display') ? form.classList.remove('filter-container__filter-form--display') : form.classList.add('filter-container__filter-form--display')
         }
 
         /*This event will be fired every time the target contains the 'fa-edit' class in it's classList, this event will
         call the updateAW async function to show the corresponding form for updating the consult, it will collect the
         url from the target data-url attribute.*/
-        if (e.target.classList.contains('fa-edit')){
+        if (e.target.classList.contains('data-table__update')){
             e.preventDefault()
             e.stopPropagation()
             let url = e.target.parentNode.getAttribute('data-url')
             updateAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
         /*This event will be fired every time the target contains the 'fa-check' class in it's classList, this event will
         call the confirmAW async function to show the confirm the current consult, finally will dynamically update results.*/
-        if (e.target.classList.contains('fa-check')){
+        if (e.target.classList.contains('data-table__confirm')){
             e.preventDefault()
             e.stopPropagation()
             confirmAW(e.target.parentNode.getAttribute('data-url'))
@@ -243,13 +207,13 @@ if (wrapper){
         /*This event will be fired every time the target contains the 'fa-times-circle' class in it's classList, this event will
         call the cancelAW async function to show the corresponding form for cancelling the consult, it will collect the
         url from the target data-url attribute.*/
-        if (e.target.classList.contains('fa-times-circle')){
+        if (e.target.classList.contains('data-table__cancel')){
             e.stopPropagation()
             e.preventDefault()
             cancelAW(e.target.parentNode.getAttribute('data-url'))
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
@@ -257,20 +221,21 @@ if (wrapper){
           class from the modal.*/
         if (e.target.value === 'no'){
             e.preventDefault()
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
         }
 
     })
 
 
-    //Wrapper Submit
+    //Container Submit
 
-    wrapper.addEventListener('submit', (e) => {
-        /*This event will be fired every time a submit occurs and the target contains the 'modal-cancel-form' class in it's
-        classlist, this event will stop the itself, and collect the data needed to cancel the consult, this consists of
+    container.addEventListener('submit', (e) => {
+
+        /*This event will be fired every time a submit occurs and the target's id is 'cancel-appointment-form'
+         this event will stop the itself, and collect the data needed to cancel the consult, this consists of
         the url, method, csrfmiddlewaretoken and the form data, once this data is collected from the form, we proceed to
         call our asynchronous function, the response is dynamically displayed in our table.*/
-        if (e.target.nodeName === 'FORM' && e.target.classList.contains('cancel-form')){
+        if (e.target.id === 'cancel-appointment-form'){
             e.preventDefault()
             const form = e.target
             const url = form.action
@@ -281,12 +246,14 @@ if (wrapper){
                 dataTable.innerHTML = data['html']
                 notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `${data['patient']} cancelled an appointment for ${data['datetime']}`, 'nf_type':'appointment_update'}))
             })
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
+        }
+
         /*This event will be fired every time a submit occurs and the target contains the 'update-date-form' class in it's
         classlist, this event will stop the itself, and collect the data needed to update the consult, this consists of
         the url, method, csrfmiddlewaretoken and the form data, once this data is collected from the form, we proceed to
         call our asynchronous function, the response is dynamically displayed in our table.*/
-        }else if (e.target.nodeName === 'FORM' && e.target.classList.contains('update-date-form')){
+        if (e.target.id === 'update-appointment-form'){
             e.preventDefault()
             const form = e.target
             const method = form.method
@@ -305,7 +272,9 @@ if (wrapper){
                     modalContent.innerHTML = data['html']
                 }
             })
-        } else{
+        }
+
+        if (e.target.classList.contains('filter-container__filter-form')){
             /*This event will be fired every time a submit occurs and the target is the filter results form
             this event will stop the itself, and collect the data needed to filter the consults, this consists of
             the url , once this data is collected from the form, we proceed to call our asynchronous function, the
@@ -326,30 +295,17 @@ if (wrapper){
             })
         }
     })
-
 }
 
 // Modal
 
 if (modal){
 
-    /* Modal Mouseover */
+    // Modal Click Events
 
-    modal.addEventListener('mouseover', (e) => {
-    /*This event is fired every time a hover occurs over an element which id is add_new_patient, this will add the
-      add_new_patient_hover class to the target.*/
-        if (e.target.id === 'add_new_patient'){
-            e.target.classList.add('add_new_patient_hover')
-        }
-    })
+    // This event will be fired every time the target is the modal, it will remove the modal--display class from the element.
+    if (e.target.classList.contains('modal')){
+        e.target.classList.remove('modal--display')
+    }
 
-    /*Modal Mouseout*/
-
-    modal.addEventListener('mouseout', (e) => {
-    /*This event is fired every time a hover out occurs over an element which id is add_new_patient, this will remove the
-      add_new_patient_hover class to the target.*/
-        if (e.target.id === 'add_new_patient'){
-            e.target.classList.remove('add_new_patient_hover')
-        }
-    })
 }

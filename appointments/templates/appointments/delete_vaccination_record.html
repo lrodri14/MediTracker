@@ -1,5 +1,5 @@
 {% load static %}
-<form action="{% url 'appointments:delete_vaccination_record' record.pk patient.pk %}" method="POST" id="delete-vaccine-record" class="vaccination-operation-form">
+<form action="{% url 'appointments:delete_vaccination_record' record.pk patient.pk %}" method="POST" id="delete-vaccine-record-form" class="modal__form deletion-form">
     {% csrf_token %}
     <h2>{{ record }}</h2>
     <p>Are you sure you want to delete this record?</p>

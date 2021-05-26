@@ -290,6 +290,8 @@ class Chat(models.Model):
     """
 
     participants = models.ManyToManyField(to=CustomUser, blank=True, verbose_name='Participants', related_name='participants', help_text='Chat Participants')
+    last_message = models.TextField(blank=True, null=True, help_text="Chat's last message", verbose_name="Chat's last message")
+    last_message_sender = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='Last message sender', verbose_name='Last message sender')
 
     def __str__(self):
         try:

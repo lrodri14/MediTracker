@@ -1,25 +1,23 @@
 {% load static %}
 {% if records %}
-<div class="records-content">
+<div class="data">
 
 <!-- Records Table Content -->
-    <div class="records-listing">
-        <table class="records-table">
+    <div class="data-table-container">
+        <table class="data-table">
             <thead>
                 <tr id="heading">
                     <th>ID</th>
                     <th>Patient</th>
                     <th>Date and Time</th>
-                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for r in records %}
-                    <tr class="record" data-url="{% url 'appointments:consult_summary' r.pk %}">
-                        <td>{{ r.patient.id_number }}</td>
-                        <td>{{ r.patient.first_names }} {{ r.patient.last_names }}</td>
-                        <td>{{ r.datetime }}</td>
-                        <td id="status-1">Attended</td>
+                    <tr class="data-table__item record" data-url="{% url 'appointments:consult_summary' r.pk %}">
+                        <td class="data-table__data">{{ r.patient.id_number }}</td>
+                        <td class="data-table__data">{{ r.patient.first_names }} {{ r.patient.last_names }}</td>
+                        <td class="data-table__data">{{ r.datetime }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

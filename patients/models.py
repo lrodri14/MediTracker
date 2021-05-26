@@ -184,7 +184,7 @@ class AllergyInformation(models.Model):
     """
     allergy_type = models.ForeignKey(Allergy, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Allergy Type', help_text='Allergy type of the patient')
     about = models.TextField('About Allergy', blank=True, null=True)
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Patient', related_name='allergy_info')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Patient', related_name='allergy_information')
 
     class Meta:
         verbose_name = 'Allergy Information'
@@ -209,7 +209,7 @@ class Antecedent(models.Model):
     """
     antecedent = models.CharField('Antecedent', max_length=150, blank=True, null=True, help_text='Antecedent Type')
     info = models.TextField('Antecedent Information', blank=True, null=True, help_text='About this antecedent')
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Patient', related_name='antecedent_info')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Patient', related_name='antecedent_information')
 
     class Meta:
         verbose_name = 'Antecedent'

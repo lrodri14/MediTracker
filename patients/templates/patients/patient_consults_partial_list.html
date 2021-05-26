@@ -4,24 +4,24 @@
 <!--If consults are present this code will be rendered-->
 {% if consults %}
     {% for c in consults %}
-        <tr {% if c.medical_status %} onclick="window.location='{% url 'appointments:consult_details' c.pk %}'" {% endif %}>
-            <td>{{ c.datetime|date }}</td>
-            <td>{{ c.datetime|time }}</td>
+        <tr class="data-table__item" {% if c.medical_status %} onclick="window.location='{% url 'appointments:consult_details' c.pk %}'" {% endif %}>
+            <td class="data-table__data">{{ c.datetime|date }}</td>
+            <td class="data-table__data">{{ c.datetime|time }}</td>
             {% if c.medical_status %}
-            <td class="attended">Attended</td>
+            <td class="attended data-table__data">Attended</td>
             {% else %}
-            <td class="not-attended">Not Attended</td>
+            <td class="not-attended data-table__data">Not Attended</td>
             {% endif %}
             {% if c.status == 'OPEN' %}
-                <td class="Open">Open</td>
+                <td class="Open data-table__data">Open</td>
             {% elif c.status == 'CONFIRMED' %}
-                <td class="Confirmed">Confirmed</td>
+                <td class="Confirmed data-table__data">Confirmed</td>
             {% elif c.status == 'CANCELLED' %}
-                <td class="Canceled">Cancelled</td>
+                <td class="Canceled data-table__data">Cancelled</td>
             {% elif c.status == 'CLOSED' %}
-                <td class="Closed">Closed</td>
+                <td class="Closed data-table__data">Closed</td>
             {% endif %}
-            <td>{{ c.created_by }}</td>
+            <td class="data-table__data">{{ c.created_by }}</td>
         </tr>
     {% endfor %}
 {% endif %}

@@ -1,18 +1,18 @@
 {% load static %}
 {% for vaccine in vaccines %}
-    <tr class="vaccine-details" data-url="{% url 'appointments:vaccination_record_details' vaccine.pk %}">
-        <td>{{ vaccine.vaccine_applied.name }}</td>
-        <td>
+    <tr class="data-table__item vaccine-details" data-url="{% url 'appointments:vaccination_record_details' vaccine.pk %}">
+        <td class="data-table__data">{{ vaccine.vaccine_applied.name }}</td>
+        <td class="data-table__data">
             {% if vaccine.vaccine_applied.scientific_name is not None %}
                 {{ vaccine.vaccine_applied.scientific_name }}
             {% else %}
                 -------------
             {% endif %}
         </td>
-        <td>{{ vaccine.datetime.date }}</td>
-        <td>{{ vaccine.datetime.time }}</td>
-        <td><i class="fas fa-edit" data-url="{% url 'appointments:update_vaccination_record' vaccine.pk patient.pk %}"></i></td>
-        <td><i class="fas fa-trash" data-url="{% url 'appointments:delete_vaccination_record' vaccine.pk patient.pk %}"></i></td>
-        <td></td>
+        <td class="data-table__data">{{ vaccine.datetime.date }}</td>
+        <td class="data-table__data">{{ vaccine.datetime.time }}</td>
+        <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'appointments:update_vaccination_record' vaccine.pk patient.pk %}"></i></td>
+        <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'appointments:delete_vaccination_record' vaccine.pk patient.pk %}"></i></td>
+        <td class="data-table__data"></td>
     </tr>
 {% endfor %}

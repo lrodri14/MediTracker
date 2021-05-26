@@ -1,11 +1,11 @@
 {% load static %}
 {% block body_block %}
-<form method="POST" action="{% url 'appointments:create_appointment' %}">
+<form method="POST" action="{% url 'appointments:create_appointment' %}" id="appointment-create-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Create Appointment</h2><div class="create-update-appointment-loader"></div>
     <p>{{ consults_form.patient.label }}</p>
+    <i class="fas fa-plus modal__add-patient" onclick="window.location.href='{% url 'patients:add_patient' %}'"></i>
     <p>{{ consults_form.patient }}</p>
-    <small>Patient not in listing? <a href="{% url 'patients:add_patient' %}" id="add_new_patient">Add new one</a></small>
     <p>{{ consults_form.datetime.label }}</p>
     <p class="error"><small>{{ error }}</small></p>
     {% if consults_form.errors %}

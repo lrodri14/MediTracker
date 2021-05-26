@@ -5,23 +5,21 @@
 
 // ##################################################### Variables #####################################################
 
-let body = document.querySelector('body')
 
 // Containers
-let generalInfo = document.querySelector('.general-info')
-let extras = document.querySelector('.extras')
+let navigation = document.querySelector('.navigation')
+let container = document.querySelector('.details-container')
 let appointments = document.querySelector('.appointments')
 let exams = document.querySelector('.exams')
 let charges = document.querySelector('.charges')
 let title = document.querySelector('#patient-name')
 
-// Image Preview
-let previewImg = document.querySelector('.image-preview')
-let image = document.querySelector('.previewed-image')
+let examPreview = document.querySelector('.exam-preview')
+let examImage = document.querySelector('.exam-preview__image')
 
 // Modal
 let modal = document.querySelector('.modal')
-let modalContent = document.querySelector('.modal-content')
+let modalContent = document.querySelector('.modal__content')
 
 // Title
 let titleOriginalContent = title.innerText
@@ -78,7 +76,7 @@ function defineQuerystring(classList){
     let monthTo
     let yearTo
     let filterRequestType
-    switch (classList[0]){
+    switch (classList[1]){
         case 'appointments-form':
             dayFrom = document.querySelector('.appointments-form #id_date_from_day').value
             monthFrom = document.querySelector('.appointments-form #id_date_from_month').value
@@ -208,368 +206,275 @@ async function displayDetailsAW(url){
 
 // ##################################################### Event Listeners ###############################################
 
-// Body Event Listeners
-// Body Mouseover events
-body.addEventListener('mouseover', (e) => {
+if (navigation){
 
-    // This event will be fired, every time the user hovers over a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be added.
-    if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-        e.target.classList.add('fa-angle-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be added.
-    if (e.target.classList.contains('fa-plus')){
-        e.target.classList.add('fa-plus-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be added.
-    if (e.target.classList.contains('fa-edit')){
-        e.target.classList.add('fa-edit-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be added.
-    if (e.target.classList.contains('fa-trash')){
-        e.target.classList.add('fa-trash-hover')
-    }
-
-    /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
-       properties from the row and add tr-hover and td-hover class*/
-    if (e.target.nodeName === 'TD' || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-trash')){
-        let row
-        e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
-        row.style.backgroundColor = '#FFFFFF'
-        row.style.color = '#000000'
-    }
-
-    /* This event will be fired every time a hover occurs over the target and the target or parentNode contains the
-       info-tab class, and will add the tab-hover class*/
-    if (e.target.classList.contains('info-tab') || e.target.parentNode.classList.contains('info-tab')){
-        let tab = e.target.classList.contains('info-tab') ? e.target : e.target.parentNode
-        tab.classList.add('tab-hover')
-    }
-
-    /*This event will be fired every time a hover occurs over the fa-envelope icon and the fa-envelope-hover class will be added*/
-    if (e.target.classList.contains('fa-envelope')){
-        e.target.classList.add('fa-envelope-hover')
-    }
-
-
-    /*This event will be fired every time a hover occurs over the fa-filter icon and the fa-filter-hover class will be added*/
-    if (e.target.classList.contains('fa-filter')){
-        e.target.classList.add('fa-filter-hover')
-    }
-
-    /*This event will be fired every time a hover occurs over the fa-sync-alt icon and the fa-sync-alt-hover class will be added*/
-    if (e.target.classList.contains('fa-sync-alt')){
-        e.target.classList.add('fa-sync-alt-hover')
-    }
-
-    /*This event will be fired every time a hover occurs over a button and the button-form--hover class will be added*/
-    if (e.target.nodeName === 'BUTTON'){
-        const button = e.target
-        button.classList.add('button-form-hover')
-    }
-
-})
-
-// Body Mouseout Events
-body.addEventListener('mouseout', (e) => {
-
-    // This event will be fired, every time the user hover out occurs on a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be removed.
-    if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-        e.target.classList.remove('fa-angle-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be removed.
-    if (e.target.classList.contains('fa-plus')){
-        e.target.classList.remove('fa-plus-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be removed.
-    if (e.target.classList.contains('fa-edit')){
-        e.target.classList.remove('fa-edit-hover')
-    }
-
-    // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be removed.
-    if (e.target.classList.contains('fa-trash')){
-        e.target.classList.remove('fa-trash-hover')
-    }
-
-  /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
-     properties from the row and removed tr-hover and td-hover class*/
-      if (e.target.nodeName === 'TD' || e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit')){
-        let row
-        e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
-            row.style.backgroundColor = ''
-            row.style.color = ''
-      }
-
-/* This event will be fired every time a mouseout occurs off a target and the target or parentNode contains the
-   info-tab class, and the tab-hover class will be removed*/
-  if (e.target.classList.contains('info-tab') || e.target.parentNode.classList.contains('info-tab')){
-        let tab = e.target.classList.contains('info-tab') ? e.target : e.target.parentNode
-        tab.classList.remove('tab-hover')
-    }
-
-    /*This event will be fired every time a mouseout occurs off the fa-envelope icon and the fa-envelope-hover class will be removed*/
-    if (e.target.classList.contains('fa-envelope')){
-        e.target.classList.remove('fa-envelope-hover')
-    }
-
-    /*This event will be fired every time a mouseout occurs off the fa-filter icon and the fa-filter-hover class will be removed*/
-    if (e.target.classList.contains('fa-filter')){
-        e.target.classList.remove('fa-filter-hover')
-    }
-
-    /*This event will be fired every time a mouseout occurs off a fa-sync-alt icon and the fa-sync-alt-hover class will be removed*/
-    if (e.target.classList.contains('fa-sync-alt')){
-        e.target.classList.remove('fa-sync-alt-hover')
-    }
-
-    /*This event will be fired every time a mouseout occurs off a button and the button-hover class will be removed*/
-    if (e.target.nodeName === 'BUTTON'){
-        const button = e.target
-        button.classList.remove('button-form-hover')
-    }
-
-})
-
-body.addEventListener('click', (e) => {
-
-    /* This event will be fired every time the target contains the 'fa-plus' class, this will display the modal and the
-       content that it's been requested.*/
-    if (e.target.classList.contains('fa-plus') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-trash')){
-        let url = e.target.getAttribute('data-url')
-        requestFormAW(url)
-        .then(data => {
-            modalContent.innerHTML = data['html']
-            modal.classList.add('modal-show')
-        })
-    }
-
-
-    /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
-       GET request, then the response will be added to the dataTable, as well as the paginator will be deleted
-       to get the current one.*/
-    if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-        let requestedDetails
-        let paginator
-        let tableData
-        let url
-        switch (e.target.parentNode.parentNode.id){
-            case 'consults-paginator':
-                requestedDetails = 'consults'
-                paginator = document.querySelector('#consults-paginator')
-                tableData = document.querySelector('.appointments tbody')
-                break
-            case 'exams-paginator':
-                requestedDetails = 'exams'
-                paginator = document.querySelector('#exams-paginator')
-                tableData = document.querySelector('.exams tbody')
-                break
-            case 'charges-paginator':
-                requestedDetails = 'charges'
-                paginator = document.querySelector('#charges-paginator')
-                tableData = document.querySelector('.charges tbody')
-                break
-        }
-
-        if (e.target.getAttribute('data-url').includes('requested_details')){
-            url = e.target.getAttribute('data-url')
-        }else{
-            url = e.target.getAttribute('data-url') + '&requested_details=' + requestedDetails
-        }
-
-        requestPageAW(url)
-        .then(data => {
-            if (data['html']){
-                paginator && paginator.remove()
-                tableData.innerHTML = data['html']
+    navigation.addEventListener('mouseover', (e) => {
+        /* This event will be fired every time a mouseout occurs off a target and the target or parentNode contains the
+           info-tab class, and the tab-hover class will be removed*/
+          if (e.target.classList.contains('navigation__tab') || e.target.parentNode.classList.contains('navigation__tab')){
+                let tab = e.target.classList.contains('navigation__tab') ? e.target : e.target.parentNode
+                tab.classList.add('navigation__tab--hover')
             }
-        })
-    }
+    })
 
-    /* This event will be fired every time a click occurs over the target and the target or parentNode contains the
+    navigation.addEventListener('mouseout', (e) => {
+        /* This event will be fired every time a mouseout occurs off a target and the target or parentNode contains the
+           info-tab class, and the tab-hover class will be removed*/
+          if (e.target.classList.contains('navigation__tab') || e.target.parentNode.classList.contains('navigation__tab')){
+                let tab = e.target.classList.contains('navigation__tab') ? e.target : e.target.parentNode
+                tab.classList.remove('navigation__tab--hover')
+            }
+    })
+
+    navigation.addEventListener('click', (e) => {
+
+        /* This event will be fired every time a click occurs over the target and the target or parentNode contains the
        info-tab class, and will add the tab-hover class, the function will grab the tab clicked, and all the exiting
        tabs, will remove the tab-active class from all the tabs and finally add it to the tab clicked, afterwards, it
        will read the tab clicked innerText and depending of this value will set the title.innerText to the tab's inner text,
        call the corresponding sync function for the scrolling functionality.*/
-    if (e.target.classList.contains('info-tab') || e.target.parentNode.classList.contains('info-tab')){
-        let tab = e.target.classList.contains('info-tab') ? e.target : e.target.parentNode
-        let tabs = document.querySelectorAll('.info-tab')
-        for (let i = 0; i<tabs.length; i++){
-            tabs[i].classList.remove('tab-active')
+        if (e.target.classList.contains('navigation__tab') || e.target.parentNode.classList.contains('navigation__tab')){
+            let tab = e.target.classList.contains('navigation__tab') ? e.target : e.target.parentNode
+            let tabs = document.querySelectorAll('.navigation__tab')
+            for (let i = 0; i<tabs.length; i++){
+                tabs[i].classList.remove('navigation__tab--active')
+            }
+            tab.classList.add('navigation__tab--active')
+
+            if (tab.innerText === 'General'){
+                generalScroll()
+                title.innerText = titleOriginalContent
+            }else if (tab.innerText === 'Appointments'){
+                appointmentsScroll()
+                title.innerText = tab.innerText
+            }else if (tab.innerText === 'Exams'){
+                examsScroll()
+                title.innerText = tab.innerText
+            }else if (tab.innerText === 'Charges'){
+                chargesScroll()
+                title.innerText = tab.innerText
+            }else{
+                vaccinesAndSurgeriesScroll()
+                title.innerText = tab.innerText
+            }
         }
-        tab.classList.add('tab-active')
+    })
 
-        if (tab.innerText === 'General'){
-            generalScroll()
-            title.innerText = titleOriginalContent
-        }else if (tab.innerText === 'Appointments'){
-            appointmentsScroll()
-            title.innerText = tab.innerText
-        }else if (tab.innerText === 'Exams'){
-            examsScroll()
-            title.innerText = tab.innerText
-        }else if (tab.innerText === 'Charges'){
-            chargesScroll()
-            title.innerText = tab.innerText
-        }else{
-            vaccinesAndSurgeriesScroll()
-            title.innerText = tab.innerText
+}
+
+// Container Event Listeners
+
+if (container){
+
+    // Container Mouseover events
+    container.addEventListener('mouseover', (e) => {
+
+        // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be added.
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.add('data-table__create--active')
         }
-    }
 
-    /* These event listeners are used to show and hide the filtering form, as well as creating a backup of the data that
-       is present in the container at the time the form is showed, to every time we reload the results, the backedUpData
-       will be displayed.*/
-    if (e.target.classList.contains('fa-filter') && e.target.classList.contains('appointments-filter')){
+        // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be added.
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.add('data-table__update--active')
+        }
 
-        let form = document.querySelector('.appointments-form')
-        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
-        appointmentsBackUp = document.querySelector('.appointments').innerHTML
+        // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be added.
+        if (e.target.classList.contains('data-table__delete')){
+            e.target.classList.add('data-table__delete--active')
+        }
 
-    } else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('exams-filter')){
+        /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
+           properties from the row and add tr-hover and td-hover class*/
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
+            row.style.backgroundColor = '#FFFFFF'
+            row.style.color = '#000000'
+        }
 
-        let form = document.querySelector('.exams-form')
-        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
-        examsBackUp = document.querySelector('.exams').innerHTML
+        /*This event will be fired every time a hover occurs over the fa-envelope icon and the fa-envelope-hover class will be added*/
+        if (e.target.classList.contains('fa-envelope')){
+            e.target.classList.add('fa-envelope-hover')
+        }
 
-    } else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('charges-filter')){
-
-        let form = document.querySelector('.charges-form')
-        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
-        chargesBackUp = document.querySelector('.charges').innerHTML
-
-    }else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('vaccines-filter')){
-
-        let form = document.querySelector('.vaccines-form')
-        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
-        vaccinesBackUp = document.querySelector('.vaccines').innerHTML
-
-    }else if (e.target.classList.contains('fa-filter') && e.target.classList.contains('surgeries-filter')){
-
-        let form = document.querySelector('.surgeries-form')
-        form.classList.contains('show-form') ? form.classList.remove('show-form') : form.classList.add('show-form')
-        surgeriesBackup = document.querySelector('.surgeries').innerHTML
-
-    }
-
-
-    /* This event will be fired every time a vaccine row is clicked, this will display vaccine details */
-    if (e.target.parentNode.classList.contains('vaccine-details')){
-        let url = e.target.parentNode.getAttribute('data-url')
-        displayDetailsAW(url)
-        .then(data => {
-            modalContent.innerHTML = data['html']
-            modal.classList.add('modal-show')
-        })
-    }
-
-    // If the target contains the 'fa-envelope' class, the modal will be displayed along with the email form.
-
-    if (e.target.classList.contains('fa-envelope')){
-        let url = e.target.getAttribute('data-url')
-        sendEmailFormAW(url).
-        then(data => {
-            modalContent.innerHTML = data['html']
-            modal.classList.add('modal-show')
-        })
-    }
-
-})
-
-// Body Submit event Listeners
-
-/* All these event listeners will be fired every time a filtering is done to request data from the BackEnd through a query,
-   depending on the class the target contains a specific data will be retrieved. This function will collect some data from
-   the target as the 'url' which we will retrieve from the action attribute in the target, the 'method' we retrieve from the
-   method attribute from the target, the 'type' of data we will retrieve, the 'csrfmiddlewaretoken', data that we collect
-   from the hidden input in our form, and lastly our data, we create a new FormData obj with the content inside our form,
-   we also set the wrapper variable to the actual container active, and the data received from the backend will be set to
-   the container active.*/
-
-body.addEventListener('submit', (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        let tableData
-        let queryString = defineQuerystring(e.target.classList)
-    if (e.target.classList.contains('appointments-form')){
-        tableData = document.querySelector('.appointments tbody')
-        const url = e.target.action + queryString
-        filterResultsAW(url)
-        .then(data => {
-            tableData.innerHTML = data['html']
-        })
-    } else if (e.target.classList.contains('exams-form')){
-        tableData = document.querySelector('.exams tbody')
-        const url = e.target.action + queryString
-        filterResultsAW(url)
-        .then(data => {
-            tableData.innerHTML = data['html']
-        })
-    } else if (e.target.classList.contains('charges-form')){
-        tableData = document.querySelector('.charges tbody')
-        const url = e.target.action + queryString
-        filterResultsAW(url)
-        .then(data => {
-            tableData.innerHTML = data['html']
-        })
-    }else if (e.target.classList.contains('vaccines-form')){
-        tableData = document.querySelector('.vaccines tbody')
-        const url = e.target.action + queryString
-        filterResultsAW(url)
-        .then(data => {
-            tableData.innerHTML = data['html']
-        })
-    }else{
-        tableData = document.querySelector('.surgeries tbody')
-        const url = e.target.action + queryString
-        filterResultsAW(url)
-        .then(data => {
-            tableData.innerHTML = data['html']
-        })
-    }
-})
-
-// Exams Event Listeners
-if (exams){
-
-    // Exams Mouseouver events
-
-    exams.addEventListener('mouseover', (e) => {
+        /*This event will be fired every time a hover occurs over the fa-filter icon and the fa-filter-hover class will be added*/
+        if (e.target.classList.contains('fa-filter')){
+            e.target.classList.add('filter-container__filter-display-button--active')
+        }
 
         /* This event will be fired every time the target contains the exam-filename class in it's classlist, it will add
            the previewImg element the image-preview-show class to make visible the container where the image will be
            displayed, and we will remove the form if it's shown. Also we will set the src attribute to the data-img-src
            attribute of the target*/
-
         if (e.target.classList.contains('exam-filename')){
-            previewImg.classList.add('image-preview-show')
+            examPreview.classList.add('exam-preview--display')
             image.src = e.target.getAttribute('data-img-src')
-            document.querySelector('.exams-form').classList.remove('show-form')
+            document.querySelector('.exams-form').classList.remove('filter-container__filter-form--display')
         }
+
+        /*This event will be fired every time a hover occurs over a button and the button-form--hover class will be added*/
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+
     })
 
-    // Exams mouseout events
+    // Contaienr Mouseout Events
+    container.addEventListener('mouseout', (e) => {
 
-    exams.addEventListener('mouseout', (e) => {
+
+        // This event will be fired, every time the user hovers over a 'fa-plus', the fa-plus-hover class will be removed.
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.remove('data-table__create--active')
+        }
+
+        // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be removed.
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.remove('data-table__update--active')
+        }
+
+        // This event will be fired, every time the user hovers over a 'fa-trash', the fa-trash-hover class will be removed.
+        if (e.target.classList.contains('data-table__delete')){
+            e.target.classList.remove('data-table__delete--active')
+        }
+
+      /* This event will be fired every time a hover occurs in the icons or a td cell, this will change many style
+         properties from the row and removed tr-hover and td-hover class*/
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
+            row.style.backgroundColor = ''
+            row.style.color = ''
+        }
+
+        /*This event will be fired every time a mouseout occurs off the fa-envelope icon and the fa-envelope-hover class will be removed*/
+        if (e.target.classList.contains('fa-envelope')){
+            e.target.classList.remove('fa-envelope-hover')
+        }
+
+        /*This event will be fired every time a mouseout occurs off the fa-filter icon and the fa-filter-hover class will be removed*/
+        if (e.target.classList.contains('fa-filter')){
+            e.target.classList.remove('filter-container__filter-display-button--active')
+        }
 
         /* This event will be fired every time the target contains the exam-filename class in it's classlist and the
            previewImg element will be hidden by removing the image-preview-show class, also the src attribute from the
            image will be removed.*/
-
         if (e.target.classList.contains('exam-filename')){
-            previewImg.classList.remove('image-preview-show')
+            examPreview.classList.remove('image-preview--display')
             image.src = ''
         }
+
+        /*This event will be fired every time a mouseout occurs off a button and the button-hover class will be removed*/
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
+        }
+
+    })
+
+    // Container Click Events
+    container.addEventListener('click', (e) => {
+
+        /* This event will be fired every time the target contains the 'fa-plus' class, this will display the modal and the
+           content that it's been requested.*/
+        if (e.target.classList.contains('data-table__create') ||
+            e.target.classList.contains('data-table__update') ||
+            e.target.classList.contains('data-table__delete')){
+            let url = e.target.getAttribute('data-url')
+            requestFormAW(url)
+            .then(data => {
+                modalContent.innerHTML = data['html']
+                modal.classList.add('modal--display')
+            })
+        }
+
+        /* These event listeners are used to show and hide the filtering form, as well as creating a backup of the data that
+           is present in the container at the time the form is showed, to every time we reload the results, the backedUpData
+           will be displayed.*/
+        if (e.target.classList.contains('filter-container__display-filter-button')){
+            let form = e.target.parentNode.children[1]
+            form.classList.contains('filter-container__filter-form--display') ? form.classList.remove('filter-container__filter-form--display') : form.classList.add('filter-container__filter-form--display')
+        }
+
+        /* This event will be fired every time a vaccine row is clicked, this will display vaccine details */
+        if (e.target.parentNode.classList.contains('vaccine-details')){
+            let url = e.target.parentNode.getAttribute('data-url')
+            displayDetailsAW(url)
+            .then(data => {
+                modalContent.innerHTML = data['html']
+                modal.classList.add('modal--display')
+            })
+        }
+
+        // If the target contains the 'fa-envelope' class, the modal will be displayed along with the email form.
+
+        if (e.target.classList.contains('fa-envelope')){
+            let url = e.target.getAttribute('data-url')
+            sendEmailFormAW(url).
+            then(data => {
+                modalContent.innerHTML = data['html']
+                modal.classList.add('modal--display')
+            })
+        }
+
+    })
+
+    // Container Submit event Listeners
+
+    /* All these event listeners will be fired every time a filtering is done to request data from the BackEnd through a query,
+       depending on the class the target contains a specific data will be retrieved. This function will collect some data from
+       the target as the 'url' which we will retrieve from the action attribute in the target, the 'method' we retrieve from the
+       method attribute from the target, the 'type' of data we will retrieve, the 'csrfmiddlewaretoken', data that we collect
+       from the hidden input in our form, and lastly our data, we create a new FormData obj with the content inside our form,
+       we also set the wrapper variable to the actual container active, and the data received from the backend will be set to
+       the container active.*/
+
+    container.addEventListener('submit', (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            let queryString = defineQuerystring(e.target.classList)
+            tableData = e.target.parentNode.parentNode.querySelector('tbody')
+            const url = e.target.action + queryString
+            filterResultsAW(url)
+            .then(data => {
+                tableData.innerHTML = data['html']
+            })
     })
 }
-
 
 // Modal Event Listeners
 
 if (modal){
+
+    // Modal mouseover Events
+    modal.addEventListener('mouseover', (e) => {
+
+        /*This event will be fired every time a hover occurs over a #add-new-vaccine icon and the data-table__create--active class will be added*/
+        if (e.target.id === 'add-new-vaccine'){
+            e.target.classList.add('data-table__create--active')
+        }
+
+        /*This event will be fired every time a hover occurs over a button and the button-form--hover class will be added*/
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+
+    })
+
+
+    // Modal mouseout Events
+    modal.addEventListener('mouseout', (e) => {
+
+        /*This event will be fired every time a hover occurs over a #add-new-vaccine icon and the data-table__create--active class will be remove*/
+        if (e.target.id === 'add-new-vaccine'){
+            e.target.classList.remove('data-table__create--active')
+        }
+
+        /*This event will be fired every time a hover occurs over a button and the button-form--hover class will be removed*/
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
+        }
+
+    })
 
     // Click Events
 
@@ -579,7 +484,7 @@ if (modal){
 
         if (e.target === modal || e.target.textContent === 'Continue' || e.target.textContent === 'Cancel'){
             modalContent.innerHTML = ''
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
         }
 
 
@@ -587,7 +492,7 @@ if (modal){
            a formed based on the url collected.
         */
 
-        if (e.target.id == 'add-vaccine' || e.target.id == 'add-surgery'){
+        if (e.target.id == 'add-new-vaccine'){
             let url = e.target.getAttribute('data-url')
             requestFormAW(url)
             .then(data => {
@@ -609,24 +514,26 @@ if (modal){
         let csrfmiddlewaretoken = document.querySelector('.modal [name=csrfmiddlewaretoken]').value
         let formData = new FormData(form)
 
-        /* This event will be fired every time the target's id is 'add-vaccine-record' it is used to create vaccine records */
-
-        if (e.target.id === 'add-vaccine-record' || e.target.id === 'update-vaccine-record' || e.target.id === 'delete-vaccine-record'){
-            addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
-            .then(data => {
-                document.querySelector('#vaccine-records').innerHTML = data['html']
-                modal.classList.remove('modal-show')
-                modalContent.innerHTML = ''
-            })
-        }
-
         /* This event will be fired every time the target's id is 'add-vaccine-operation' it is used to create vaccines */
 
-        if (e.target.id === 'add-vaccine-operation'){
+        if (e.target.id === 'add-new-vaccine-form'){
             let primary_key = e.target.getAttribute('data-primary-key')
             addVaccineTypeAW(url  + '/' + primary_key, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 modalContent.innerHTML = data['html']
+            })
+        }
+
+        /* This event will be fired every time the target's id is 'add-vaccine-record' it is used to create vaccine records */
+
+        if (e.target.id === 'add-vaccine-record-form' ||
+            e.target.id === 'update-vaccine-record-form' ||
+            e.target.id === 'delete-vaccine-record-form'){
+            addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                document.querySelector('#vaccine-records').innerHTML = data['html']
+                modal.classList.remove('modal--display')
+                modalContent.innerHTML = ''
             })
         }
 

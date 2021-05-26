@@ -4,36 +4,6 @@
 
     Global Classes and ID's
 
-    .modal
-    .modal--display
-    .modal__button
-    .modal__button--active
-    .filter-form
-    .filter-form--display
-    #table-header
-    .submit-button
-    .submit-button--active
-    input
-    input:focus
-    .input-active
-    select
-    select:focus
-    textarea
-    textarea:focus
-    .data-table
-    .data-table__icons
-    .data-table__create
-    .data-table__create--active
-    .data-table__delete
-    .data-table__delete--active
-    .data-table__update
-    .data-table__update--active
-    .data-table__confirm
-    .data-table__confirm--active
-    .data-table__cancel
-    .data-table__cancel--active
-    .no-data
-
 
     Global Styles
     ------------------
@@ -177,20 +147,44 @@ body{
     z-index: -1;
 }
 
+.fa-long-arrow-alt-left{
+    font-size: 25px;
+    margin-top: 1%;
+    margin-left: 1%;
+    transition: 0.5s;
+}
+
+.fa-long-arrow-alt-left:hover{
+    color: #00CCFF;
+    transition: 0.5s;
+}
+
 /*////////////////////////////////////////////////////// Titles //////////////////////////////////////////////////////*/
 
 h1,h2,h3,h4,h5,h6{
     color: #FFFFFF;
 }
 
-/*////////////////////////////////////////////////////// Form ////////////////////////////////////////////////////////*/
-
-.filter-form{
-
+.title{
+    margin-top: 0.5%;
+    margin-left: 5px;
 }
 
-.filter-form--display{
+/*////////////////////////////////////////////////////// Form ////////////////////////////////////////////////////////*/
 
+form{
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    background-clip: padding-box;
+    text-align: center;
+}
+
+.creation-update-form{
+    width: 25%;
+}
+
+.deletion-form{
+    width: 35%;
 }
 
 input{
@@ -249,53 +243,48 @@ select:focus{
     outline: none;
 }
 
-.submit-button{
+.form__create--active{
     cursor: pointer;
-    margin-top: 5%;
-    width: 100px;
-    height: 30px;
-    border: 1px solid #FFFFFF;
-    border-radius: 25px;
-    background-color: transparent;
-    opacity: 0;
-    visibility: hidden;
-    transition: background-color 0.5s, color 0.5s, opacity 0.5s;
-}
-
-.submit-button--active{
-    background-color: #FFFFFF;
-    color: #000000;
-    transition: all 0.5s ease;
-}
-
-.submit-button--fade-in{
-    opacity: 1;
-    visibility: visible;
+    color: #25BB41;
     transition: 0.5s;
 }
 
-.submit-button:focus{
-    outline: none;
+.form__delete--active{
+    cursor: pointer;
+    color: #A31621;
+    transition: 0.5s;
 }
-
-/*////////////////////////////////////////////////////// Tables //////////////////////////////////////////////////////*/
+/*////////////////////////////////////////////////////// Data ////////////////////////////////////////////////////////*/
 
 #heading{
+    color: #FFFFFF;
+    background-color: rgba(255,255,255,0.3);
+    line-height: 45px;
+    cursor: default;
+}
 
+.data{
+    display: grid;
+    grid-template-columns: 80% 18%;
+    grid-gap: 1%;
+}
+
+.data-table-container{
+    max-height: 787px;
+    overflow-y: auto;
+    animation: show-up 0.5s linear;
 }
 
 .data-table{
-    margin: auto;
     width: 100%;
     border-collapse: collapse;
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
 }
 
 .data-table__item{
-    line-height: 15px;
+    line-height: 18px;
     max-line-height: 15px;
     cursor: pointer;
     transition: 0.5s;
@@ -320,53 +309,98 @@ select:focus{
 }
 
 .data-table__create{
-
+    cursor: pointer;
+    padding: 5px 10px 5px 5px;
+    transition: 0.5s;
 }
 
 .data-table__create--active{
-
-}
-
-.data-table__update{
-
+    color: #25BB41;
+    transition: 0.5s;
 }
 
 .data-table__update--active{
-
-}
-
-.data-table__delete{
-
+    color: #CBA415;
+    cursor: pointer;
+    transition: 0.5s;
 }
 
 .data-table__delete--active{
-
-}
-
-.data-table__confirm{
-
+    color: #A31621;
+    cursor: pointer;
+    transition: 0.5s;
 }
 
 .data-table__confirm--active{
-
-}
-
-.data-table__cancel{
-
+    color: #25BB41;
+    transition: 0.5s;
 }
 
 .data-table__cancel--active{
-
+    color: #D73533;
+    transition: 0.5s;
 }
 
-.no-data{
-    margin-left: 45%;
-    margin-top: 20%;
+.filter-container__filter-display-button{
+    float: left;
+    transition: 0.5s;
 }
 
-.data-table{
-    max-height: 767px;
-    overflow-y: auto;
+.filter-container__filter-display-button--active{
+    cursor: pointer;
+    color: #00CCFF;
+    transition: 0.5s;
+}
+
+.filter-container__filter-form{
+    text-align: center;
+    padding: 10px;
+    border-radius: 25px;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-clip: padding-box;
+    transform: translateY(-200%);
+    transition: transform 0.5s;
+}
+
+.filter-container__filter-form button{
+    width: 25%;
+}
+
+.filter-container__filter-form--display{
+    transform: translateY(9%);
+    transition: transform 0.5s ease-out;
+}
+
+.error{
+    color: #FFFFFF;
+}
+
+#no-data{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.add-data{
+    cursor: pointer;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    transition: top 0.5s;
+    animation: levitate 2s linear infinite;
+}
+
+.add-data--active{
+    cursor: pointer;
+    color: #25BB41;
+    transition: 0.5s;
 }
 
 /*///////////////////////////////////////////////// Notifications Popup //////////////////////////////////////////////*/
@@ -385,7 +419,7 @@ select:focus{
     transition: top 0.5s;
 }
 
-.notification-popup-show{
+.notification-popup--display{
     top: 5%;
     transition: top 0.5s;
 }
@@ -483,30 +517,27 @@ select:focus{
 /*////////////////////////////////////////////////////// Buttons //////////////////////////////////////////////////////*/
 
 button{
+    cursor: pointer;
     font-family: 'Nunito', sans-serif;
-    border-radius: 20px;
+    border-radius: 10px;
     border: 1px solid #FFFFFF;
     background-color: transparent;
     color: #FFFFFF;
+    width: 20%;
+    height: 27px;
     z-index: 1;
+    transition: 0.5s;
 }
 
 button:focus{
     outline: none;
 }
 
-.button-form-hover{
-    color: #000000;
-    background-color: #FFFFFF;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.button-hover{
+.button--active{
     background-color: #FFFFFF;
     color: #000000;
-    transition: 0.5s;
     cursor: pointer;
+    transition: 0.5s;
 }
 
 /*///////////////////////////////////////////////// ScrollBar ////////////////////////////////////////////////////////*/
@@ -529,60 +560,6 @@ button:focus{
 
 /*//////////////////////////////////////////////// Controllers ///////////////////////////////////////////////////////*/
 
-.fa-long-arrow-alt-left{
-    position: relative;
-    font-size: 25px;
-    transition: 0.5s;
-    margin-top: 1%;
-    margin-left: 1%;
-}
-
-.fa-long-arrow-alt-left:hover{
-    color: #00CCFF;
-    transition: 0.5s;
-}
-
-.fa-bars{
-    position: relative;
-    font-size: 25px;
-    transition: 0.5s;
-    margin-top: 0.5%;
-    margin-left: 0.5%;
-}
-
-.fa-bars:hover{
-    color: #00CCFF;
-    transition: 0.5s;
-    cursor: pointer;
-}
-
-.fa-bars-hide{
-    display: none;
-}
-
-.fa-users{
-    position: relative;
-    float: right;
-    font-size: 25px;
-    transition: 0.5s;
-    margin-top: 1%;
-    margin-right: 1.5%;
-}
-
-.fa-users:hover{
-    color: #00CCFF;
-    transition: 0.5s;
-    cursor: pointer;
-}
-
-.fa-search{
-    position: absolute;
-    top: 4.5%;
-    left: 80%;
-    font-size: 20px;
-    color: #FFFFFF;
-}
-
 .fa-angle-left{
     cursor: pointer;
     transition: 0.5s;
@@ -600,56 +577,7 @@ button:focus{
     transition: 0.5s;
 }
 
-.fa-plus{
-    cursor: pointer;
-    padding: 5px 10px 5px 5px;
-    transition: 0.5s;
-}
-
-.fa-plus-hover{
-    color: #25BB41;
-    transition: 0.5s;
-}
-
-.fa-trash-hover{
-    color: #A31621;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.fa-edit-hover{
-    color: #CBA415;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
 .fa-envelope-hover{
-    color: #00CCFF;
-    transition: 0.5s;
-}
-
-.fa-edit-hover{
-    color: #CBA415;
-    transition: color 0.5s;
-}
-
-.fa-check-hover{
-    color: #25BB41;
-    transition: 0.5s;
-}
-
-.fa-times-circle-hover{
-    color: #D73533;
-    transition: 0.5s;
-}
-
-.fa-filter{
-    float: left;
-    transition: 0.5s;
-}
-
-.fa-filter-hover{
-    cursor: pointer;
     color: #00CCFF;
     transition: 0.5s;
 }
@@ -749,6 +677,13 @@ a {
 }
 
 .social-section__tab--active{
+    background-color: #FFFFFF;
+    color: #000000;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.social-section__tab--active-hover{
     background-color: #FFFFFF;
     color: #000000;
     cursor: pointer;
@@ -930,32 +865,23 @@ a {
     transition: visibility 0.3s, opacity 0.3s;
 }
 
+.modal__form{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    border-radius: 25px;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 15px;
+}
+
 .modal--display{
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s;
 }
-
-.modal__button{
-    width: 100px;
-    height: 30px;
-    cursor: pointer;
-    border: 1px solid #FFFFFF;
-    border-radius: 20px;
-    background-color: transparent;
-    transition: background-color 0.5s, color 0.5s;
-}
-
-.modal__button--active{
-    color: #000000;
-    background-color: #FFFFFF;
-    transition: background-color 0.5s, color 0.5s,;
-}
-
-.modal__button:focus{
-    outline: none;
-}
-
 /*////////////////////////////////////////////////// Global Loader ///////////////////////////////////////////////////*/
 
 .global-loader-modal{
@@ -1009,6 +935,12 @@ a {
 }
 
 /*//////////////////////////////////////////////////// Animations ////////////////////////////////////////////////////*/
+
+@keyframes levitate{
+	0% {transform: translatey(0px);}
+	50% {transform: translatey(-20px);}
+	100% {transform: translatey(0px);}
+}
 
 @keyframes show-up{
     from {opacity: 0;}

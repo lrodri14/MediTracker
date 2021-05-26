@@ -1,111 +1,20 @@
 /*Checked*/
 /*This patients.css file contains all the styles needed for the patients main page.*/
-/*This file is divided into 4 sections: Body, Data Available, No Data and Modal*/
-
-/*##################################################### No Data ######################################################*/
-/*Patients*/
-#no-patients{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-#add-patients{
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    font-size: 25px;
-    transition: top 0.5s;
-}
-
-.add-patient-hover{
-    cursor: pointer;
-    color: #25BB41;
-    transition: 0.5s;
-}
 
 /*##################################################### Data #########################################################*/
-/*Wrapper*/
-.wrapper{
-    display: grid;
-    grid-template-columns: 80% 18%;
-    grid-gap: 1%;
-}
 
-h2{
-    margin-left: 1%;
-}
-
-/*Table*/
-
-table{
-    margin: auto;
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
-}
-
-#heading{
-    color: #FFFFFF;
-    background-color: rgba(255,255,255,0.3);
-    line-height: 25px;
-    cursor: default;
-}
-
-.fa-exclamation-circle{
+.data-table__warning{
     color: #CBA415;
 }
 
-.fa-check-circle{
+.data-table__in-order{
+    cursor: pointer;
     color: #25BB41;
     transition: 0.5s;
 }
 
-.fa-check-circle-hover{
-    cursor: pointer;
-    transition: 0.5s;
-}
+/*##################################################### PopUp #########################################################*/
 
-tr{
-    line-height: 20px;
-    cursor: pointer;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    text-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    text-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-}
-
-/* Pop-Up */
 .popup{
     position: absolute;
     left: 81%;
@@ -118,71 +27,16 @@ tr:nth-child(even){
     background-clip: padding-box;
 }
 
-.popup-show{
+.popup--display{
     opacity: 1;
     visibility: visible;
     transition: opacity 0.5s;
 }
 
-.popup-text{
+.popup__text{
     max-width: 29%;
     height: 5%;
     color: #FFFFFF;
     font-size: 10px;
     padding: 5px;
-}
-
-.popup-text-in-order{
-    background-color: rgba(255,255,255,0.1);
-}
-
-/*Form*/
-
-.fa-filter-hide{
-    display: none;
-}
-
-.filter-form{
-    text-align: center;
-    padding: 10px;
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    transform: translateY(-200%);
-    transition: transform 0.5s;
-}
-
-.show-form{
-    transform: translateY(15%);
-    transition: transform 0.5s ease-out;
-}
-
-button{
-    width: 25%;
-    height: 30px;
-}
-
-button:focus{
-    outline: none;
-}
-
-.button-form-hover{
-    cursor: pointer;
-    color: #000000;
-    background-color: #FFFFFF;
-    transition: 0.5s;
-}
-
-/*##################################################### Modal ########################################################*/
-
-.modal-content{
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    width: 40%;
-    margin-left: 30%;
-    margin-top: 20%;
-    text-align: center;
-    padding: 15px;
 }

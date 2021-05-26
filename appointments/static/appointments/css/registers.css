@@ -1,122 +1,20 @@
 /*This registers.css stylesheet contains all the styles needed to display the registers template, it is divided into 5
 sections: Wrapper, Table, Forms, Pagination, No Data*/
 
-/*########################################################## Wrapper #################################################*/
-
-.wrapper{
-    display: grid;
-    grid-template-columns: 80% 18%;
-    grid-gap: 1%;
-}
+/*########################################################## Title and Info #################################################*/
 
 h2, #item-count{
     margin-left: 1%;
 }
 
-/*########################################################## Table ###################################################*/
-
-.data-table{
-    max-height: 725px;
+.data-table-container{
+    max-height: 731px;
 }
 
-table{
-    width: 100%;
-    margin: auto;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
+.filter-container__filter-form--display{
+    transform: translateY(8%);
 }
 
-#heading{
-    cursor: default;
-    line-height: 25px;
-    background-color: rgba(255,255,255,0.3);
-}
-
-tr{
-    cursor: pointer;
-    line-height: 20px;
-    margin: 10px;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-    transition: 0.5s;
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-    transition: 0.5s;
-}
-
-/*########################################################## Forms ###################################################*/
-
-.fa-filter{
-    float: left;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.fa-filter-hover{
-    color: #00CCFF;
-    transition: 0.5s;
-}
-
-form{
-    text-align: center;
-    padding: 10px;
-    transform: translateY(-200%);
-    transition: 0.5s;
-    visibility: hidden;
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    transition: 0.5s;
-}
-
-.error{
-    color: #FFFFFF;
-}
-
-.show-form{
-    visibility: visible;
-    transform: translateY(10%);
-    transition: transform 0.5s ease-out;
-}
-
-button{
-    width: 30%;
-    height: 30px;
-}
-
-button:focus{
-    outline: none;
-}
-
-/*########################################################## No Data #################################################*/
-
-#no-consults{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
+.filter-container__filter-form button{
+    width: 25%;
 }

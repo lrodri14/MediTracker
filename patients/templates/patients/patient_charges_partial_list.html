@@ -3,11 +3,11 @@
 
 {% if charges %}
     {% for c in charges %}
-        <tr {% if c.medical_status %} onclick="window.location='{% url 'appointments:consult_details' c.pk %}'" {% endif %}>
-            <td>{{ c.datetime|date }}</td>
-            <td>{{ c.datetime|time }}</td>
-            <td>{{ c.created_by }}</td>
-            <td>{{ c.charge }}</td>
+        <tr class="data-table__item" {% if c.medical_status %} onclick="window.location='{% url 'appointments:consult_details' c.pk %}'" {% endif %}>
+            <td class="data-table__data">{{ c.datetime|date }}</td>
+            <td class="data-table__data">{{ c.datetime|time }}</td>
+            <td class="data-table__data">{{ c.created_by }}</td>
+            <td class="data-table__data">{{ c.charge }}</td>
         </tr>
     {% endfor %}
 {% endif %}

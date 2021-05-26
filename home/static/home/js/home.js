@@ -119,6 +119,26 @@ logoutTile.addEventListener('click', (e) => {
 // Modal Event Listeners
 if (modal){
 
+    // Mouseover events
+    modal.addEventListener('mouseover', (e) => {
+
+        // This event will be fired every time the target is a button, the button-hover class will be added.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+
+    })
+
+    // Mouse over events
+    modal.addEventListener('mouseout', (e) => {
+
+        // This event will be fired every time the target is a button, the button-hover class will be added.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
+        }
+
+    })
+
     // Click Events
     modal.addEventListener('click', (e) => {
 
@@ -128,32 +148,12 @@ if (modal){
         }
 
         // This event will be fired every time the target is a button and its textContent is 'Yes', this event will show the loader.
-        if (e.target.classList.contains('modal__button')){
+        if (e.target.nodeName === 'BUTTON'){
             if (e.target.textContent === 'Yes'){
                 document.querySelector('.modal__logout-loader').classList.add('modal__logout-loader--display')
             }else{
                 modal.classList.remove('modal--display')
             }
-        }
-
-    })
-
-    // Mouseover events
-    modal.addEventListener('mouseover', (e) => {
-
-        // This event will be fired every time the target is a button, the button-hover class will be added.
-        if (e.target.classList.contains('modal__button')){
-            e.target.classList.add('modal__button--active')
-        }
-
-    })
-
-    // Mouse over events
-    modal.addEventListener('mouseout', (e) => {
-
-        // This event will be fired every time the target is a button, the button-hover class will be added.
-        if (e.target.classList.contains('modal__button')){
-            e.target.classList.remove('modal__button--active')
         }
 
     })
