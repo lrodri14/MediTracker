@@ -5,17 +5,16 @@
 {% block return %}<a href="{% url 'home:home' %}"><i class="fas fa-long-arrow-alt-left"></i></a>{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="{% static 'records/css/records_list.css' %}">
-<h2>Records</h2>
+<h2 class="title">Records</h2>
 {% if records %}
-    <div class="wrapper">
-        <div class="data-table">
-            <table>
+    <div class="data">
+        <div class="data-table-container">
+            <table class="data-table">
                 <thead>
                     <tr id="heading">
                         <th>ID</th>
                         <th>Patient</th>
                         <th>Date and Time</th>
-                        <th>Created By</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -24,9 +23,9 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <i class="fas fa-filter"></i>
-            <form method="GET" action="{% url 'records:filter_records' %}">
+        <div class="filer-container">
+            <i class="fas fa-filter filter-container__filter-display-button"></i>
+            <form method="GET" action="{% url 'records:filter_records' %}" class="filter-container__filter-form">
                 <h2>Filter Results</h2>
                 <p>{{ form.date_from.label }}</p>
                 <p>{{ form.date_from }}</p>
@@ -38,7 +37,7 @@
          </div>
     </div>
 {% else %}
-    <p id="no-records">There are no records filled</p>
+    <p id="no-data">There are no records filled</p>
 {% endif %}
 <script src="{% static 'records/js/records_list.js' %}"></script>
 {% endblock %}
