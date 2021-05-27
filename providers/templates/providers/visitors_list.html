@@ -3,8 +3,8 @@
 <!--If data is present this will execute and rendered-->
 {% if visitors %}
 <!--First Container, with the content of each instance-->
-    <div class="data-table">
-        <table>
+    <div class="data-table-container">
+        <table class="data-table">
             <thead>
                 <tr id="heading">
                     <th>First Name</th>
@@ -14,7 +14,7 @@
                     <th>Email</th>
                     <th>Edit</th>
                     <th>Delete</th>
-                    <th><i class="fas fa-plus" data-url="{%url 'providers:create_visitor'%}"></i></th>
+                    <th><i class="fas fa-plus data-table__create" data-url="{%url 'providers:create_visitor'%}"></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,10 +22,10 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="filter-container">
         <!--Form for visitors filtering -->
-        <i class="fas fa-filter"></i>
-        <form method="GET" action="{% url 'providers:filter_visitors' %}" class="filter-form" autocomplete="off">
+        <i class="fas fa-filter filter-container__filter-display-button"></i>
+        <form method="GET" action="{% url 'providers:filter_visitors' %}" class="filter-form filter-container__filter-form" autocomplete="off">
             <h3>Visitors Filter</h3>
             <p>{{ filter_form.name.label }}</p>
             <p>{{ filter_form.name }}</p>
@@ -33,6 +33,6 @@
     </div>
 <!--If no data is present this will be rendered.-->
 {% else %}
-    <p class="no-providers">No visitors listed</p>
-    <i class="fas fa-plus add-providers" data-url="{% url 'providers:create_visitor' %}"></i>
+    <p id="no-data">No visitors listed</p>
+    <i class="fas fa-plus add-data" data-url="{% url 'providers:create_visitor' %}"></i>
 {% endif %}

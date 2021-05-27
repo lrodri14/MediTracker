@@ -6,23 +6,23 @@
 {% block body_block %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" />
 <link rel="stylesheet" href="{% static 'providers/css/providers.css' %}">
-<h2>Providers</h2>
+<h2 class="title">Providers</h2>
 <!--Navigation bar, each of this tabs contains an data-url attribute and data-provider-type which is used to request
     data from the server side.-->
 
-<div id="providers-navigation">
-    <div class="tab" data-provider-type="LP" data-url="{% url 'providers:providers_list' %}">Laboratories</div><div class="tab" data-provider-type="MP" data-url="{% url 'providers:providers_list' %}">Medical Providers</div><div class="tab" data-url="{% url 'providers:visitors' %}"> Visitors </div>
+<div class="providers-navigation">
+    <div class="providers-navigation__tab" data-provider-type="LP" data-url="{% url 'providers:providers_list' %}">Laboratories</div><div class="providers-navigation__tab" data-provider-type="MP" data-url="{% url 'providers:providers_list' %}">Medical Providers</div><div class="providers-navigation__tab" data-url="{% url 'providers:visitors' %}"> Visitors </div>
 </div>
 
 <!--Wrapper, this container will be filled with the content retrieved from the server side asynchronously.-->
-<div class="wrapper">
+<div class="data">
 
 </div>
 
 <!--This container will be filled with content retrieved from the server side, and will perform
     operations as adding, updating, deleting instances of the Providers or visitors class.-->
 <div class="modal">
-    <div class="modal-content">
+    <div class="modal__content">
 
     </div>
 </div>

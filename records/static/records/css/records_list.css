@@ -1,2 +1,6 @@
 /* This records_list.css stylesheet contains all the styles needed to display the records app nicely, this
    file is divided into 5 sections: wrapper, paginator, table, forms and no data*/
+
+.filter-container__filter-form--display{
+    transform: translateY(5%);
+}

@@ -2,14 +2,14 @@
 {% if providers %}
     <!--For each instance-->
     {% for provider in providers %}
-    <tr data-url="{% url 'providers:provider_details' provider.pk %}">
-        <td>{{ provider.company }}</td>
-        <td>{{ provider.address }}</td>
-        <td>{{ provider.contact }}</td>
-        <td>{{ provider.email }}</td>
-        <td><i class="fas fa-edit" data-url="{% url 'providers:update_provider' provider.pk %}"></i></td>
-        <td><i class="fas fa-trash" data-url="{% url 'providers:delete_provider' provider.pk %}"></i></td>
-        <td><i class="fas fa-envelope" data-url="{% url 'providers:send_email' provider.pk %}"></i></td>
+    <tr class="data-table__item" data-url="{% url 'providers:provider_details' provider.pk %}">
+        <td class="data-table__data">{{ provider.company }}</td>
+        <td class="data-table__data">{{ provider.address }}</td>
+        <td class="data-table__data">{{ provider.contact }}</td>
+        <td class="data-table__data">{{ provider.email }}</td>
+        <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'providers:update_provider' provider.pk %}"></i></td>
+        <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'providers:delete_provider' provider.pk %}"></i></td>
+        <td class="data-table__data"><i class="fas fa-envelope data-table__send-mail" data-url="{% url 'providers:send_email' provider.pk %}"></i></td>
     </tr>
     {% endfor %}
 {% endif %}

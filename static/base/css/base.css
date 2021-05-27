@@ -369,7 +369,7 @@ select:focus{
 }
 
 .filter-container__filter-form--display{
-    transform: translateY(9%);
+    transform: translateY(8%);
     transition: transform 0.5s ease-out;
 }
 

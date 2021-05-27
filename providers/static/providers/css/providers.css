@@ -2,54 +2,25 @@
   It is divided into two sections, no data specific styles and available data specific style, the Data Available
   section is composed of five parts: Wrapper, navigation, table, forms and modal.*/
 
+/*######################################################### Data #####################################################*/
 
-/*##################################################### No Data ######################################################*/
-/*No data available styles.*/
-#no-providers{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-.add-providers{
-    cursor: pointer;
-    font-size: 25px;
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    transition: 0.5s;
-}
-
-.add-providers-hide{
-    opacity: 0;
-    transition: 0.5s;
-}
-
-.add-providers-hover{
-    color: #25BB41;
-    transition: 0.5s;
-}
-
-/*##################################################### Wrapper ######################################################*/
-
-.wrapper{
-    display: grid;
-    grid-template-columns: 80% 18%;
-    grid-gap: 1%;
+.data{
     margin-top: 6%;
 }
 
-h2{
-    margin-left: 1%;
+/*######################################################### Form #####################################################*/
+
+#id_provider_type{
+    display: none;
+}
+
+.creation-update-form button{
+    margin-top: 10px;
 }
 
 /*##################################################### Navigation ###################################################*/
 
-#providers-navigation{
+.providers-navigation{
     position: absolute;
     top: 0%
     left: 0%;
@@ -61,143 +32,31 @@ h2{
     animation: show-up 0.5s linear forwards;
 }
 
-.tab{
+.providers-navigation__tab{
     padding: 15px;
     text-align: center;
     display: inline-block;
     transition: 0.5s;
 }
 
-.tab-hover{
+.providers-navigation__tab--hover{
     cursor: pointer;
     color: #000000;
     background-color: #FFFFFF;
     transition: 0.5s;
 }
 
-.tab-active{
+.providers-navigation__tab--active{
     color: #000000;
     background-color: #FFFFFF;
     transition: 0.5s;
-}
-
-
-/*##################################################### Data Table ###################################################*/
-
-/*If no data is available for the category, this style will be added.*/
-.no-providers{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-.data-table{
-    max-height: 687px;
-}
-
-table{
-    margin: auto;
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
-}
-
-#heading{
-    cursor: default;
-    line-height: 25px;
-    background-color: rgba(255,255,255,0.3);
-}
-
-tr{
-    cursor: pointer;
-    line-height: 20px;
-    margin: 10px;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.3);
 }
 
 /*##################################################### Forms ########################################################*/
 
-
-/*Initial Model Provider Type Input Hidden*/
-#id_provider_type{
-    display: none;
-}
-
-.error{
-    color: #FFFFFF;
-}
-
-/*Filter form*/
-.filter-form{
-    text-align: center;
-    padding: 10px;
-    visibility: hidden;
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    transform: translateY(-200%);
-    transition: 0.5s;
-}
-
-.filter-form-show{
-    visibility: visible;
-    transform: translateY(15%);
-    transition: 0.5s;
-}
-
-/*Form inside modals*/
-.modal form{
-    width: 25%;
-    height: 55%;
-    color: #FFFFFF;
-    text-align: center;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-}
-
-.modal .email-form{
-    width: 50%;
-    height: 60%;
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
+.filter-container__filter-form--display{
+    transform: translateY(14%);
+    transition: transform 0.5s ease-out;
 }
 
 .loader{
@@ -232,7 +91,7 @@ tr:nth-child(even){
 }
 
 .email-form button{
-    width: 20%;
+    width: 15%;
 }
 
 .server-response{
@@ -250,19 +109,6 @@ tr:nth-child(even){
 
 .server-response button{
     width: 20%;
-}
-
-.modal .create-visitor-form{
-    height: 60%;
-}
-
-.modal .update-visitor-form{
-    height: 60%;
-}
-
-#delete-operation{
-    width: 30%;
-    height: 20%;
 }
 
 #provider-details{
@@ -287,13 +133,6 @@ tr:nth-child(even){
 .flag-icon{
     position: relative;
     left: 6%;
-}
-
-button{
-    cursor: pointer;
-    margin: 5px;
-    width: 30%;
-    height: 30px;
 }
 
 /*##################################################### Key Frames ###################################################*/

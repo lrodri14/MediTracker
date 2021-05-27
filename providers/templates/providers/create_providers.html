@@ -1,6 +1,6 @@
 <!--This template is used to render the form to create instances of the Providers Class-->
 {% load static %}
-<form class="add-element-form" method="POST" action="{% url 'providers:create_provider' %}" autocomplete="off">
+<form method="POST" action="{% url 'providers:create_provider' %}" autocomplete="off" id="create-provider-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Create Provider</h2>
     <p>{{ form.company.label }}</p>

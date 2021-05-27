@@ -1,39 +1,27 @@
 /* This JS File contains all the code to make the Providers App Work, it contains all the variable declarations for code
 use, the definition of Asynchronous Functions and Synchronous functions, as well as all the Event Listeners needed to
-execute these functions. The variable declarations contains two sections "Available Data", which contains all the
-variable declarations needed when data is present and retrieved from the server side, and "Modal", this contains all
-the variable declarations for Modal Functionality. The Functions Section contains two sections as well "Async Funcs"
-which contains all the Async functions, it consists of 11 async function declarations, and the "Sync Funcs" which
-contains the only Sync functions all over the file. The Event Listeners Section is composed of 3, the navigation bar
-events listener sections, the wrapper event listeners section and the modal event listeners section.*/
+execute these functions. The Functions Section contains two sections as well "Async Funcs" which contains all the Async
+functions, it consists of 11 async function declarations, and the "Sync Funcs" which contains the only Sync functions all
+over the file. The Event Listeners Section is composed of 3, the navigation bar events listener sections, the wrapper
+event listeners section and the modal event listeners section.*/
 
 // ##################################################### Variables #####################################################
 
 // Available Data
-if (document.querySelector('.wrapper') !== 'undefined' && document.querySelector('.wrapper') !== 'null'){
-    var wrapper = document.querySelector('.wrapper')
-    var navigation = document.querySelector('#providers-navigation')
-    var tabs = document.querySelectorAll('.tab')
-}
+let container = document.querySelector('.data')
+let navigation = document.querySelector('.providers-navigation')
+let tabs = document.querySelectorAll('.providers-navigation__tab')
+
 
 // Modal
 let modal = document.querySelector('.modal');
-let modalContent = document.querySelector('.modal-content');
+let modalContent = document.querySelector('.modal__content');
 
 
 // #################################################### Functions ######################################################
 
 
 // Async Functions
-
-async function requestPageAW(url){
-    /* This async function will be used to collect the data from the previous or next page, this content will be
-    received as a promise, so we need to return it in JSON format so we can process it, this content will be set to
-    the wrapper dynamically.*/
-    const result = await fetch(url)
-    const data = result.json()
-    return data
-}
 
 async function addProvidersFormAW(url, formType){
     /*Function used to display provider's form dynamically, it accepts two
@@ -176,25 +164,6 @@ async function collectCountryNumberCode(url){
     return data
 }
 
-
-// Sync Functions
-
-function addIconLevitate(addProvidersIcon){
-    /*This function is used to perform the levitation effect in the
-      .fa-plus icon every time there is no data available, it takes
-      one parameter, 'addProvidersIcon' is the icon itself. it will
-      execute a setInterval function every 0.5 seconds, which just
-      changes the style of the 'top' attribute in our element.*/
-    setInterval(function(){
-        if (addProvidersIcon.style.top == '90%'){
-            addProvidersIcon.style.top = '88%'
-        } else {
-            addProvidersIcon.style.top = '90%'
-        }
-    },500)
-}
-
-
 // ##################################################### Event Listeners ###############################################
 
 /////////////////////////////////
@@ -210,70 +179,51 @@ if (navigation){
           these will be used in the async function called depeding on the tab clicked, if the
           visitors tab is clicked, the providerType variable will be useless. Once the function
           is executed, the JSON Format data will be added to the Wrapper inner HTML.'*/
-        if (e.target.classList.contains('tab')){
-            tabs.forEach(tab => tab.classList.remove('tab-active'))
-            e.target.classList.add('tab-active')
+        if (e.target.classList.contains('providers-navigation__tab')){
+            tabs.forEach(tab => tab.classList.remove('providers-navigation__tab--active'))
+            e.target.classList.add('providers-navigation__tab--active')
             let providerType = e.target.getAttribute('data-provider-type')
             let url = providerType ? e.target.getAttribute('data-url') + '?provider_type=' + providerType : e.target.getAttribute('data-url')
             if (providerType){
                 requestProvidersAW(url)
                 .then(data => {
-                    wrapper.innerHTML = data['html']
-                    if (document.querySelector('.add-providers')){
-                        addProvidersIcon = document.querySelector('.add-providers')
-                        addIconLevitate(addProvidersIcon)
-                    }
+                    container.innerHTML = data['html']
                 })
             }else{
                 requestVisitorsAW(url)
                 .then(data => {
-                    wrapper.innerHTML = data['html']
-                    if (document.querySelector('.add-providers')){
-                        addProvidersIcon = document.querySelector('.add-providers')
-                        addIconLevitate(addProvidersIcon)
-                    }
+                    container.innerHTML = data['html']
                 })
             }
         }
+
     })
 
-    /*This event will add the 'tab-hover' class to the target
-      to create a hovering effect.*/
     navigation.addEventListener('mouseover', (e) => {
-        if (e.target.classList.contains('tab')){
-            e.target.classList.add('tab-hover')
+
+        /* This event will add the 'tab-hover' class to the target to create a hovering effect. */
+        if (e.target.classList.contains('providers-navigation__tab')){
+            e.target.classList.add('providers-navigation__tab--hover')
         }
+
     })
 
-    /*This event will remove the 'tab-hover' class from the target
-      to create a hover off effect.*/
     navigation.addEventListener('mouseout', (e) => {
-        if (e.target.classList.contains('tab')){
-            e.target.classList.remove('tab-hover')
+
+        /* This event will remove the 'tab-hover' class from the target to create a hover off effect. */
+        if (e.target.classList.contains('providers-navigation__tab')){
+            e.target.classList.remove('providers-navigation__tab--hover')
         }
+
     })
 }
 
 //////////////////////////
 // Wrapper Event Listeners
-if (wrapper){
+if (container){
 
     // Wrapper Click Events
-    wrapper.addEventListener('click', (e) => {
-
-    /* This event will be fired every time an angle icon is clicked, this event will grab the url for the
-       GET request, then the response will be added to the dataTable, as well as the paginator will be deleted
-       to get the current one.*/
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            const url = e.target.getAttribute('data-url').includes('provider_type') ? e.target.getAttribute('data-url') : e.target.getAttribute('data-url') + '&provider_type=' + e.target.getAttribute('data-provider-type')
-            requestPageAW(url)
-            .then(data => {
-                if (data['html']){
-                    document.querySelector('#paginator') && document.querySelector('#paginator').remove()
-                    document.querySelector('tbody').innerHTML = data['html']
-                }
-            })
-        }
+    container.addEventListener('click', (e) => {
 
         /*This click event will be fired every time the 'fa-plus' icon is clicked,
           it will collect the following data form the target: 'url' form the data-url
@@ -281,20 +231,20 @@ if (wrapper){
           execute an async function depending if the data-provider-type was localized. It will
           open the modal and display the JSON Formatted data in the modal content section,
           it returns a form.*/
-        if (e.target.classList.contains('fa-plus')){
+        if (e.target.classList.contains('data-table__create') || e.target.classList.contains('add-data')){
             let providerType = e.target.getAttribute('data-provider-type')
             let url = providerType === 'LP' ? e.target.getAttribute('data-url') + '?provider_type=' + providerType : e.target.getAttribute('data-url') + '?provider_type=' + 'MP'
             if (providerType){
                 addProvidersFormAW(url)
                 .then(data => {
                     modalContent.innerHTML = data['html']
-                    modal.classList.add('modal-show')
+                    modal.classList.add('modal--display')
                 })
             }else{
                 addVisitorsFormAW(url)
                 .then(data => {
                     modalContent.innerHTML = data['html']
-                    modal.classList.add('modal-show')
+                    modal.classList.add('modal--display')
                 })
             }
         }
@@ -304,12 +254,13 @@ if (wrapper){
           attribute, it will execute an async function for this process which will display
           the details of the element the user clicked. it will open the modal and display the
           JSON Formatted data in the modal content section, it returns a card-like template.*/
-        if (e.target.parentNode.nodeName === 'TR'){
-            let url = e.target.parentNode.getAttribute('data-url')
+        if (e.target.closest('.data-table__item')){
+            let target = e.target.closest('.data-table__item')
+            let url = target.getAttribute('data-url')
             providerDetailsAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
@@ -317,20 +268,20 @@ if (wrapper){
           it won't collect any data, it will just add or remove the 'filter-form-show'
           class from the filter which resides at the right side of the wrapper, it will
           show up a filtering form.*/
-        if (e.target.classList.contains('fa-filter')){
-            document.querySelector('.filter-form').classList.contains('filter-form-show') ? document.querySelector('.filter-form').classList.remove('filter-form-show') : document.querySelector('.filter-form').classList.add('filter-form-show')
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            document.querySelector('.filter-container__filter-form').classList.contains('') ? document.querySelector('.filter-form').classList.remove('filter-container__filter-form--display') : document.querySelector('.filter-container__filter-form').classList.add('filter-container__filter-form--display')
         }
 
         /*This click event will be fired every time a 'fa-edit' icon is clicked,
         it will collect the following data from the target: 'url' from the data-url
         attribute in the target, it will execute an async function, will open up the modal
         and show up the JSON Formatted data in the modal content section, it returns a form*/
-        if (e.target.classList.contains('fa-edit')){
+        if (e.target.classList.contains('data-table__update')){
             let url = e.target.getAttribute('data-url')
             updateProvidersFormAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
@@ -338,69 +289,63 @@ if (wrapper){
         it will collect the following data from the target: 'url' from the data-url
         attribute in the target, it will execute an async function, will open up the modal
         and show up the JSON Formatted data in the modal content section, it returns a form*/
-        if (e.target.classList.contains('fa-trash')){
+        if (e.target.classList.contains('data-table__delete')){
             let url = e.target.getAttribute('data-url')
             deleteProvidersFormAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
-        if (e.target.classList.contains('fa-envelope')){
+        if (e.target.classList.contains('data-table__send-mail')){
             let url = e.target.getAttribute('data-url')
             sendEmailFormAW(url).
             then(data => {
                 modalContent.innerHTML = data['html']
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
             })
         }
 
     })
 
     // Wrapper Mouseover Events
-    wrapper.addEventListener('mouseover', (e) => {
-
-        // This event will be fired, every time the user hovers over a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be added.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.add('fa-angle-hover')
-        }
+    container.addEventListener('mouseover', (e) => {
 
         /*This mouseover event is fired every time a hover occurs in a 'fa-plus' icon
           it will add the 'fa-plus-hover' class to the target*/
-        if (e.target.classList.contains('fa-plus')){
-            e.target.classList.add('fa-plus-hover')
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.add('data-table__create--active')
         }
 
         /*This mouseover event is fired every time a hover occurs in a 'fa-edit' icon
           it will add the 'fa-edit-hover' class to the target*/
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.add('fa-edit-hover')
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.add('data-table__update--active')
         }
 
         /*This mouseover event is fired every time a hover occurs in a 'fa-trash' icon
           it will add the 'fa-trash-hover' class to the target*/
-        if (e.target.classList.contains('fa-trash')){
-            e.target.classList.add('fa-trash-hover')
+        if (e.target.classList.contains('data-table__delete')){
+            e.target.classList.add('data-table__delete--active')
         }
 
         /*This mouseover event is fired every time a hover occurs in a 'fa-envelope' icon
           it will add the 'fa-envelope-hover' class to the target*/
-        if (e.target.classList.contains('fa-envelope')){
+        if (e.target.classList.contains('data-table__send-mail')){
             e.target.classList.add('fa-envelope-hover')
         }
 
         /*This mouseover event is fired every time a hover occurs in a 'fa-filter' icon
           it will add the 'fa-filter-hover' class to the target*/
-        if (e.target.classList.contains('fa-filter')){
-            e.target.classList.add('fa-filter-hover')
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            e.target.classList.add('filter-container__filter-display-button--active')
         }
 
         /*This mouseover event is fired every time a hover occurs in a table row, this event
           must be fired by it's children since it's impossible to hover over a tr element*/
-        if (e.target.nodeName === 'TD' ||  ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-envelope')))){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = '#FFFFFF'
             row.style.color = '#000000'
         }
@@ -408,54 +353,48 @@ if (wrapper){
         /*This mouseover event will be fired every time a hover occurs over an input, this will add the input-hover class
           over the target and will increase it's width to 75%*/
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.add('input-hover')
+            e.target.classList.add('input-active')
         }
 
     })
 
     // Wrapper Mouseout Events
-    wrapper.addEventListener('mouseout', (e) => {
-
-        // This event will be fired, every time the user hover out occurs on a 'fa-angle-right' or 'fa-angle-left', the fa-angle-hover class will be removed.
-        if (e.target.classList.contains('fa-angle-left') || e.target.classList.contains('fa-angle-right')){
-            e.target.classList.remove('fa-angle-hover')
-        }
+    container.addEventListener('mouseout', (e) => {
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-plus' icon,
           it will remove the 'fa-plus-hover' class to the target*/
-        if (e.target.classList.contains('fa-plus')){
-            e.target.classList.remove('fa-plus-hover')
+        if (e.target.classList.contains('data-table__create')){
+            e.target.classList.remove('data-table__create--active')
         }
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-edit' icon,
           it will remove the 'fa-edit-hover' class to the target*/
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.remove('fa-edit-hover')
+        if (e.target.classList.contains('data-table__update')){
+            e.target.classList.remove('data-table__update--active')
         }
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-trash' icon,
           it will remove the 'fa-trash-hover' class to the target*/
-        if (e.target.classList.contains('fa-trash')){
-            e.target.classList.remove('fa-trash-hover')
+        if (e.target.classList.contains('data-table__delete')){
+            e.target.classList.remove('data-table__delete--active')
         }
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-envelope' icon,
           it will remove the 'fa-envelope-hover' class to the target*/
-        if (e.target.classList.contains('fa-envelope')){
+        if (e.target.classList.contains('data-table__send-mail')){
             e.target.classList.remove('fa-envelope-hover')
         }
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-filter' icon,
           it will remove the 'fa-filter-hover' class to the target*/
-        if (e.target.classList.contains('fa-filter')){
-            e.target.classList.remove('fa-filter-hover')
+        if (e.target.classList.contains('filter-container__filter-display-button')){
+            e.target.classList.remove('filter-container__filter-display-button--active')
         }
 
         /*This mouseover event is fired every time a hover occurs in a table row, this event
           must be fired by it's children since it's impossible to hover over a tr element*/
-        if (e.target.nodeName === 'TD' ||  ((e.target.classList.contains('fa-trash') || e.target.classList.contains('fa-edit') || e.target.classList.contains('fa-envelope')))){
-            let row
-            e.target.nodeName === 'TD' ? row = e.target.parentNode : row = e.target.parentNode.parentNode
+        if (e.target.closest('.data-table__item')){
+            let row = e.target.closest('.data-table__item')
             row.style.backgroundColor = ''
             row.style.color = ''
           }
@@ -463,13 +402,13 @@ if (wrapper){
         /*This mouseover event will be fired every time a mouse out occurs over an input, this will remove the input-hover class
           over the target and will decrease it's width to normal.*/
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.remove('input-hover')
+            e.target.classList.remove('input-active')
         }
 
     })
 
     // Wrapper Input Events
-    wrapper.addEventListener('input', (e) => {
+    container.addEventListener('input', (e) => {
 
         /*This event is fired every time the filter form receives an input, for each
         character this event will be fired. It will collect the following data from the
@@ -521,7 +460,7 @@ if (modal){
         /*This click event is fired every time the modal or the modal content
         is clicked, it will remove the 'modal-show' class from the modal*/
         if (e.target === modal || e.target === modalContent){
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
         }
 
         /*This click event is fired every time the button inside the modal
@@ -530,7 +469,7 @@ if (modal){
         if (e.target.textContent === 'No' || e.target.textContent === 'Continue'){
             e.preventDefault()
             e.stopPropagation()
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
         }
 
     })
@@ -540,7 +479,7 @@ if (modal){
         /*This event will be fired every time a hover occurs over a
           button, and will add the 'button-hover' class to the target.*/
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
+            e.target.classList.add('button--active')
         }
 
         /*This mouseover event will be fired every time a hover occurs over an input, this will add the input-hover class
@@ -555,7 +494,7 @@ if (modal){
         /*This event will be fired every time a hover out occurs over a
           button, and will remove the 'button-hover' class to the target.*/
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-hover')
+            e.target.classList.remove('button--active')
         }
 
         /*This mouseover event will be fired every time a mouse out occurs over an input, this will remove the input-hover class
@@ -627,25 +566,25 @@ if (modal){
           to the wrapper InnerHTML, it will also make a check in if the'.add-providers' element is present
           , if it is, it will call the addIconLevitate function.*/
 
-        if (e.target.nodeName === 'FORM' && !e.target.id){
+        if (e.target.nodeName === 'FORM'){
+
             let form = e.target
             let url = form.action
             let method = form.method
             let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
             let formData = new FormData(form)
-            if (e.target.classList.contains('add-element-form') || e.target.classList.contains('update-element-form')){
+
+            if (e.target.id === 'create-provider-form' ||
+                e.target.id === 'update-provider-form' ||
+                e.target.id === 'create-visitor-form' ||
+                e.target.id === 'update-visitor-form'){
                 addUpdateProvidersAW(url, method, csrfmiddlewaretoken, formData)
                 .then(data => {
                     if (data['html']){
                         modalContent.innerHTML = data['html']
                     }else{
-                        modal.classList.remove('modal-show')
-                        document.querySelector('#paginator') && document.querySelector('#paginator').remove()
-                        wrapper.innerHTML = data['updated_html']
-                        if (document.querySelector('.add-providers')){
-                            addProvidersIcon = document.querySelector('.add-providers')
-                            addIconLevitate(addProvidersIcon)
-                        }
+                        modal.classList.remove('modal--display')
+                        container.innerHTML = data['updated_html']
                     }
                 })
             }else{
@@ -655,6 +594,7 @@ if (modal){
                     modalContent.innerHTML = data['html']
                 })
             }
+
         }
     })
 }

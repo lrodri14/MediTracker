@@ -2,17 +2,17 @@
 {% if visitors %}
     <!--For each instance-->
     {% for visitor in visitors %}
-        <tr data-url="{% url 'providers:visitor_details' visitor.pk %}">
-            <td>{{ visitor.name }}</td>
-            <td>{{ visitor.last_name }}</td>
-            <td>{{ visitor.company }}</td>
-            <td>{{ visitor.contact }}</td>
-            <td>{{ visitor.email }}</td>
-            <td><i class="fas fa-edit" data-url="{% url 'providers:update_visitor' visitor.pk %}"></i></td>
-            <td><i class="fas fa-trash" data-url="{% url 'providers:delete_visitor' visitor.pk %}"></i></td>
-            <td><i class="fas fa-envelope"></i></td>
+        <tr class="data-table__item" data-url="{% url 'providers:visitor_details' visitor.pk %}">
+            <td class="data-table__data">{{ visitor.name }}</td>
+            <td class="data-table__data">{{ visitor.last_name }}</td>
+            <td class="data-table__data">{{ visitor.company }}</td>
+            <td class="data-table__data">{{ visitor.contact }}</td>
+            <td class="data-table__data">{{ visitor.email }}</td>
+            <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'providers:update_visitor' visitor.pk %}"></i></td>
+            <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'providers:delete_visitor' visitor.pk %}"></i></td>
+            <td class="data-table__data"><i class="fas fa-envelope data-table__send-mail"></i></td>
         </tr>
     {% endfor %}
 {% else %}
-    <p class="no-providers">No visitors listed</p>
+    <p class="no-data">No visitors listed</p>
 {% endif %}

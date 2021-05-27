@@ -3,8 +3,8 @@
 <!--If data is present this will execute and rendered-->
 {% if providers %}
 <!--First Container, with the content of each instance-->
-    <div class="data-table">
-        <table>
+    <div class="data-table-container">
+        <table class="data-table">
             <thead>
                 <tr id="heading">
                     <th>Company</th>
@@ -15,9 +15,9 @@
                     <th>Delete</th>
                     <!--Depending on the requested type, a unique icon will be rendered, with it's own data-url and data-provider-type attribute.-->
                     {% if requested_type == 'LP' %}
-                    <th><i class="fas fa-plus" data-url="{% url 'providers:create_provider' %}" data-provider-type="LP"></i></th>
+                    <th><i class="fas fa-plus data-table__create" data-url="{% url 'providers:create_provider' %}" data-provider-type="LP"></i></th>
                     {% else %}
-                    <th><i class="fas fa-plus" data-url="{% url 'providers:create_provider' %}" data-provider-type="MP"></i></th>
+                    <th><i class="fas fa-plus data-table__create" data-url="{% url 'providers:create_provider' %}" data-provider-type="MP"></i></th>
                     {% endif %}
                 </tr>
             </thead>
@@ -26,18 +26,18 @@
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="filter-container">
         <!--Form for providers filtering -->
-        <i class="fas fa-filter"></i>
+        <i class="fas fa-filter filter-container__filter-display-button"></i>
         <!--Depending on the requested type, a unique form will be rendered.-->
         {% if requested_type == 'LP' %}
-            <form method="GET" action="{% url 'providers:filter_providers' %}" class="filter-form" data-provider-type="LP" autocomplete="off">
+            <form method="GET" action="{% url 'providers:filter_providers' %}" class="filter-container__filter-form" data-provider-type="LP" autocomplete="off">
                 <h2>Filter Result</h2>
                 <p>{{filter_form.company.label}}</p>
                 <p>{{filter_form.company}}</p>
             </form>
         {% else %}
-            <form method="GET" action="{% url 'providers:filter_providers' %}" class="filter-form" data-provider-type="MP" autocomplete="off">
+            <form method="GET" action="{% url 'providers:filter_providers' %}" class="filter-container__filter-form" data-provider-type="MP" autocomplete="off">
                 <h3>Filter Result</h3>
                 <p>{{ filter_form.company.label }}</p>
                 <p>{{ filter_form.company }}</p>
@@ -46,11 +46,11 @@
     </div>
 <!--If no data is present, this will execute.-->
 {% else %}
-    <p class="no-providers">No providers of this category listed</p>
+    <p id="no-data">No providers of this category listed</p>
     <!--Depending on the requested type, a unique icon will be rendered, with it's own data-url attribute.-->
     {% if requested_type == 'LP' %}
-    <i class="fas fa-plus add-providers" data-url="{% url 'providers:create_provider' %}" data-provider-type="LP"></i>
+    <i class="fas fa-plus add-data" data-url="{% url 'providers:create_provider' %}" data-provider-type="LP"></i>
     {% else %}
-    <i class="fas fa-plus add-providers" data-url="{% url 'providers:create_provider' %}" data-provider-type="MP"></i>
+    <i class="fas fa-plus add-data" data-url="{% url 'providers:create_provider' %}" data-provider-type="MP"></i>
     {% endif %}
 {% endif %}
