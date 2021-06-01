@@ -1,6 +1,6 @@
 {% load static %}
 {% if vaccine %}
-    <form method="POST" action="{% url 'settings:delete_vaccine' vaccine.pk %}" id="delete">
+    <form method="POST" action="{% url 'settings:delete_vaccine' vaccine.pk %}" id="delete-vaccine-form" class="modal__form deletion-form">
         {% csrf_token %}
         <h2>{{ vaccine.name }}</h2>
         <h3>Are you sure you want to delete this vaccine?</h3>

@@ -1,6 +1,6 @@
 {% load static %}
 {% if medical_test %}
-    <form method="POST" action="{% url 'settings:delete_medical_test' medical_test.pk %}" class="medical_test_delete" id="delete">
+    <form method="POST" action="{% url 'settings:delete_medical_test' medical_test.pk %}" id="medical_test_delete-form" class="modal__form deletion-form">
         {% csrf_token %}
         <h2>{{ medical_test.name }}</h2>
         <h3>Are you sure you want to delete this medical test?</h3>

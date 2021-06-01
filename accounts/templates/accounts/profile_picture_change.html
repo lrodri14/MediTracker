@@ -1,18 +1,18 @@
 {% load static %}
 <!-- Change Profile Picture Form -->
-<form method="POST" action="{% url 'accounts:profile_picture_change' %}" enctype="multipart/form-data"  class="edit-profile-picture">
+<form method="POST" action="{% url 'accounts:profile_picture_change' %}" enctype="multipart/form-data"  class="edit-profile-picture-form">
     {% csrf_token %}
     <!--Hidden Inputs-->
-        <p id="profile-pic-input">{{ form.profile_pic }}</p>
+        <p class="edit-profile-picture-form__input">{{ form.profile_pic }}</p>
         <p>{{ form.x }}</p>
         <p>{{ form.y }}</p>
         <p>{{ form.width }}</p>
         <p>{{ form.height }}</p>
     <!-- Image Selected -->
     <h2>Selected Picture</h2>
-    <div class="selected-picture">
-        <img src="" alt="" class="profile-pic-selected">
+    <div class="edit-profile-picture-form__picture-container">
+        <img src="" alt="" class="edit-profile-picture-form__selected-picture">
     </div>
     <p><label for="id_profile_pic">Select File</label></p>
-    <button type="submit" class="edit-profile-picture-submit">Save</button>
+    <button type="submit">Save</button>
 </form>

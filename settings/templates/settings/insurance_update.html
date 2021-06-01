@@ -1,5 +1,5 @@
 {% block body_block %}
-<form method="POST" autocomplete="off" action="{% url 'settings:update_insurance' carrier.pk %}" class="update">
+<form method="POST" autocomplete="off" action="{% url 'settings:update_insurance' carrier.pk %}" id="update-insurance-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Update Insurance Carrier</h2>
     <p>{{ insurance.company.label }}</p>

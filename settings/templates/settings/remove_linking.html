@@ -1,5 +1,5 @@
 {% load static %}
-<form method="POST" action="{% url 'settings:remove_linking' user.pk %}" id="delete">
+<form method="POST" action="{% url 'settings:remove_linking' user.pk %}" id="remove-linking-form" class="modal__form deletion-form">
     {% csrf_token %}
     <h2>{{ user.first_name }} {{ user.last_name }}</h2>
     <h3>Are you sure you want to unlink this user?</h3>

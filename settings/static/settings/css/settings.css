@@ -3,11 +3,7 @@
 
 /*###################################################### Nav Bar #####################################################*/
 
-h2{
-    margin-left: 1%;
-}
-
-#settings-navigator{
+.settings-navigator{
     position: absolute;
     top: 0%
     left: 0%;
@@ -19,7 +15,7 @@ h2{
     animation: show-up 0.5s linear forwards;
 }
 
-.tab{
+.settings-navigator__tab{
     cursor: pointer;
     padding: 15px;
     text-align: center;
@@ -27,48 +23,41 @@ h2{
     transition: 0.5s;
 }
 
-.tab-hover{
+.settings-navigator__tab--hover{
     background-color: #FFFFFF;
     color: #000000;
     transition: 0.5s;
 }
 
-.tab-active{
+.settings-navigator__tab--active{
     background-color: #FFFFFF;
     color: #000000;
     transition: 0.5s;
 }
 
-/*###################################################### Wrapper #####################################################*/
+/*############################################### Specific Settings Tabs #############################################*/
 
-.wrapper{
-    display: grid;
-    grid-template-columns: 80% 18%;
-    grid-gap: 1%;
+.tab--hover{
+    background-color: '#FFFFFF';
+    color: '#000000';
+    transition: background-color 0.5s;
+}
+
+.tab--active{
+    background-color: '#FFFFFF';
+    color: '#000000';
+    transition: background-color 0.5s;
+}
+
+/*####################################################### Data ######################################################*/
+
+.data{
     margin-top: 6%;
 }
 
-.filter-form{
-    text-align: center;
-    padding: 10px;
-    transform: translateY(-500%);
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    transition: 0.5s;
-}
-
-.show-filter-form{
-    transform: translateY(18%);
-    transition: 0.5s;
-}
-
-button{
-    cursor: pointer;
-    width: 120px;
-    height: 30px;
+.filter-container__filter-form--display{
+    transform: translateY(15%);
+    transition: transform 0.5s ease-out;
 }
 
 /*####################################################### General Settings ###########################################*/
@@ -77,7 +66,7 @@ button{
     display: none;
 }
 
-#general-options{
+.general-settings{
     list-style: none;
     display: inline-block;
     width: 10%;
@@ -91,14 +80,14 @@ button{
     animation: show-up 0.5s linear forwards;
 }
 
-.general-option-tab{
+.general-settings__tab{
     cursor: pointer;
     height: 25px;
     padding: 10px;
     transition: background-color 0.5s;
 }
 
-#general-settings-content{
+.general-settings__content{
     width: 85%;
     height: 73%;
     position: absolute;
@@ -106,32 +95,29 @@ button{
     left: 13%;
 }
 
-.wallpaper{
-    cursor: pointer;
-    width: 235px;
-    height: 235px;
-    border-radius: 25px;
-    transition: 0.5s;
-    animation: show-up 0.5s linear forwards;
-}
-
-.wallpaper-hover{
-    width: 250px;
-    height: 250px;
-    transition: 0.5s;
-}
-
-#first-wallpaper-row, #second-wallpaper-row{
+.wallpaper-row{
     position: absolute;
 }
 
-#second-wallpaper-row{
-    top: 40%;
+.wallpaper-row:nth-child(2){
+    top: 45%;
 }
 
+.wallpaper-row__wallpaper{
+    cursor: pointer;
+    width: 220px;
+    height: 220px;
+    border-radius: 25px;
+    border: 2px solid rgba(0,0,0,0);
+    animation: show-up 0.5s linear forwards;
+}
+
+.wallpaper-row__wallpaper--active{
+    border-color: #FFFFFF;
+}
 /*####################################################### Profile Settings ###########################################*/
 
-#profile-options{
+.profile-settings{
     list-style: none;
     display: inline-block;
     width: 10%;
@@ -145,19 +131,25 @@ button{
     animation: show-up 0.5s linear forwards;
 }
 
-.profile-option-tab{
+.profile-settings__tab{
     cursor: pointer;
     height: 25px;
     padding: 10px;
     transition: background-color 0.5s;
 }
 
-#profile-settings-content{
+.profile-settings__content{
     width: 85%;
     height: 73%;
     position: absolute;
     top: 21%;
     left: 13%;
+}
+
+.profile-settings__content form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+    text-align: left;
 }
 
 #id_availability{
@@ -166,14 +158,24 @@ button{
 
 /*####################################################### Account Settings ###########################################*/
 
-#account-settings p, #account-settings button{
+.account-settings p, .account-settings button{
     margin-left: 1%;
     animation: show-up 0.5s linear forwards;
 }
 
-#account-settings select{
+.account-settings select{
     width: 15%;
     animation: show-up 0.5s linear forwards;
+}
+
+.account-settings button{
+    width: 10%;
+}
+
+#account-settings-form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+    text-align: left;
 }
 
 /*####################################################### Linking Settings ###########################################*/
@@ -188,7 +190,7 @@ button{
     margin-left: 1%;
 }
 
-.link{
+.links-container__link{
     width: 100%;
     height: 50px;
     margin-left: 1%;
@@ -200,19 +202,19 @@ button{
     animation: show-up 0.5s linear forwards;
 }
 
-.link-hover{
+.links-container__link--active{
     cursor: pointer;
     background-color: white;
     color: #000000;
 }
 
-.link p{
+.links-container__link p{
     width: calc(100% / 4);
     text-align: center;
     display: inline-block;
 }
 
-.fa-unlink-hover{
+.data-table__unlink--active{
     cursor: pointer;
     color: #A31621;
     transition: 0.5s;
@@ -220,20 +222,28 @@ button{
 
 /*####################################################### Mailing #####################################################*/
 
-.mailing-info-form{
+#mailing-info-form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+    text-align: left;
     animation: show-up 0.5s linear forwards;
 }
 
-.mailing-info-form input{
+#mailing-info-form input{
     width: 25%;
 }
 
-.mailing-info-form p, input, .mailing-info-form button{
+#mailing-info-form p, input, #mailing-info-form button{
     margin-left: 1%;
 }
 
-.mailing-info-form input[type=checkbox]{
+#mailing-info-form input[type=checkbox]{
     width: 3%;
+}
+
+#mailing-info-form button{
+    width: 10%;
+    margin-left: 10%;
 }
 
 /*################################################## Vaccination #####################################################*/
@@ -249,59 +259,10 @@ button{
     padding: 2px;
 }
 
-/*####################################################### Tables #####################################################*/
-
-.data-table{
-    max-height: 686px;
-}
-
-table{
-    width: 100%;
-    border-collapse: collapse;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background-clip: padding-box;
-    animation: show-up 0.5s linear forwards;
-}
-
-#heading{
-    cursor: default;
-    background-color: rgba(255,255,255,0.3);
-}
-
-tr{
-    cursor: pointer;
-    line-height: 20px;
-    margin: 10px;
-    transition: 0.5s;
-        animation: show-up 0.5s linear forwards;
-}
-
-tr th{
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-tr td{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-}
-
-tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-}
-
-tr:nth-child(even){
-    background-color: rgba(255,255,255,0.2);
-}
-
 /*####################################################### Modal ######################################################*/
 
-.modal-content{
-    margin-left: 25%;
-    margin-top: 12%;
+.modal__form button{
+    width: 25%;
 }
 
 .error-response{
@@ -317,39 +278,22 @@ tr:nth-child(even){
     background-color: rgba(255,255,255,0.1);
 }
 
-.modal-content form{
-    width: 25%;
-    height: 40%;
-    text-align: center;
-    border-radius: 25px;
-    background-color: rgba(255,255,255,0.1);
-    padding: 20px;
+.modal__content .password-form{
     position: absolute;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-}
-
-.modal-content .password-form{
-    height: 55%;
+    border-radius: 25px;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 15px;
+    width: 25%;
+    height: 50%;
 }
 
 .error{
     color: #FFFFFF;
-}
-
-#delete{
-    width: 25%;
-    height: 20%;
-    text-align: center;
-    padding: 20px;
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    margin-right: -50%;
-    background-color: rgba(255,255,255,0.1);
-    transform: translate(-50%, -50%);
 }
 
 #details{
@@ -367,36 +311,4 @@ tr:nth-child(even){
 
 #details h2{
     text-align: center;
-}
-
-#add-allergy{
-    height: 35%;
-}
-
-#update-allergy{
-    height: 35%;
-}
-
-form button{
-    border-radius: 10px;
-}
-
-/*###################################################### No Data #####################################################*/
-
-.no-data{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-.add-data{
-    font-size: 25px;
-    position: absolute;
-    top: 90%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    transition: 0.5s;
 }

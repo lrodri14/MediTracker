@@ -1,6 +1,6 @@
 {% load static %}
 {% block body_block %}
-<form method="POST" autocomplete="off" action="{% url 'settings:add_allergy' %}" class="modal__form creation-update-form">
+<form method="POST" autocomplete="off" action="{% url 'settings:add_allergy' %}" id="add-allergy-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Add Allergy</h2>
     <p>{{ allergies_form.allergy_type.label }}</p>

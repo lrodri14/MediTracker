@@ -5,12 +5,9 @@
 /*////////////////////////////////////////////////////// Variables ///////////////////////////////////////////////////*/
 
 var body = document.querySelector('body')
-var content = document.querySelector('.content')
-var editProfilePicture = document.querySelector('.edit-profile-picture-modal')
-var editBackgroundPicture = document.querySelector('.background-edit-modal')
-var profile = document.querySelector('.profile-picture')
+var content = document.querySelector('.container')
 var modal = document.querySelector('.modal')
-var modalContent = document.querySelector('.modal-content')
+var modalContent = document.querySelector('.modal__content')
 var username = document.querySelector('#username').textContent
 
 /*////////////////////////////////////////////////////// Functions ///////////////////////////////////////////////////*/
@@ -63,57 +60,57 @@ if (body){
     body.addEventListener('mouseover', (e) => {
 
         /* This event will be fired whenever the 'fa-edit' class resides in the target's classList, the fa-edit-hover class will be added */
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.add('fa-edit-hover')
+        if (e.target.classList.contains('card__edit-button')){
+            e.target.classList.add('card__edit-button--active')
         }
 
         /* This event will be fired whenever the 'fa-user-plus' class resides in the target's classList, the fa-user-plus-hover class will be added */
 
-        if (e.target.classList.contains('fa-user-plus')){
-            e.target.classList.add('fa-user-plus-hover')
+        if (e.target.classList.contains('card__send-request')){
+            e.target.classList.add('card__send-request--active')
         }
 
         /* This event will be fired whenever the 'fa-user-slash' class resides in the target's classList, the fa-user-slash-hover class will be added */
 
-        if (e.target.classList.contains('fa-user-slash')){
-            e.target.classList.add('fa-user-slash-hover')
+        if (e.target.classList.contains('card__cancel-request')){
+            e.target.classList.add('card__cancel-request--active')
         }
 
         /* This event will be fired whenever the 'fa-trash' class resides in the target's classList, the fa-trash-hover class will be added */
 
-        if (e.target.classList.contains('fa-trash')){
-            e.target.classList.add('fa-trash-hover')
+        if (e.target.classList.contains('card__delete-contact')){
+            e.target.classList.add('card__delete-contact--active')
         }
 
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
-        if (e.target.classList.contains('profile-picture-edit-button')){
-            e.target.classList.add('fa-camera-hover')
+        if (e.target.classList.contains('card__picture-edit-button')){
+            e.target.classList.add('card__picture-edit-button--active')
         }
 
         /* This event will be fired whenever the 'fa-arrow-alt-circle-down' class resides in the target's classList, the fa-arrow-alt-circle-down-hover class will be removed */
 
-        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
-            e.target.classList.add('fa-arrow-alt-circle-down-hover')
+        if (e.target.classList.contains('display-user-details-button')){
+            e.target.classList.add('display-user-details-button--active')
         }
 
 
         /* This event will be fired whenever the target's nodeName is 'BUTTON', the button-hover class will be added */
 
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.add('button-hover')
+            e.target.classList.add('button--active')
         }
 
         /* This event will be fired whenever target is the label of either the #id_profile_pic element or the #id_background_pic, the label-hover class will be added */
 
-        if (e.target === document.querySelector('label[for=id_profile_pic]') || e.target === document.querySelector('label[for=id_background_pic]')){
+        if (e.target === document.querySelector('label[for=id_profile_pic]')){
             e.target.classList.add('label-hover')
         }
 
         /*This mouseover event will be fired every time a hover occurs over an input, this will add the input-hover class
           over the target and will increase it's width to 75%.*/
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.add('input-hover')
+            e.target.classList.add('input-active')
         }
     })
 
@@ -122,70 +119,70 @@ if (body){
 
         /* This event will be fired whenever the 'fa-edit' class resides in the target's classList, the fa-edit-hover class will be removed */
 
-        if (e.target.classList.contains('fa-edit')){
-            e.target.classList.remove('fa-edit-hover')
+        if (e.target.classList.contains('card__edit-button')){
+            e.target.classList.remove('card__edit-button--active')
         }
 
         /* This event will be fired whenever the 'fa-user-plus' class resides in the target's classList, the fa-user-plus-hover class will be removed */
 
-        if (e.target.classList.contains('fa-user-plus')){
-            e.target.classList.remove('fa-user-plus-hover')
+        if (e.target.classList.contains('card__send-request')){
+            e.target.classList.remove('card__send-request--active')
         }
 
         /* This event will be fired whenever the 'fa-user-slash' class resides in the target's classList, the fa-user-slash-hover class will be removed */
 
-        if (e.target.classList.contains('fa-user-slash')){
-            e.target.classList.remove('fa-user-slash-hover')
+        if (e.target.classList.contains('card__cancel-request')){
+            e.target.classList.remove('card__cancel-request--active')
         }
 
         /* This event will be fired whenever the 'fa-trash' class resides in the target's classList, the fa-trash-hover class will be removed */
 
-        if (e.target.classList.contains('fa-trash')){
-            e.target.classList.remove('fa-trash-hover')
+        if (e.target.classList.contains('card__delete-contact')){
+            e.target.classList.remove('card__delete-contact--active')
         }
 
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
-        if (e.target.classList.contains('profile-picture-edit-button')){
-            e.target.classList.remove('fa-camera-hover')
+        if (e.target.classList.contains('card__picture-edit-button')){
+            e.target.classList.remove('card__picture-edit-button--active')
         }
 
         /* This event will be fired whenever the 'fa-arrow-alt-circle-down' class resides in the target's classList, the fa-arrow-alt-circle-down-hover class will be removed */
 
-        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
-            e.target.classList.remove('fa-arrow-alt-circle-down-hover')
+        if (e.target.classList.contains('display-user-details-button')){
+            e.target.classList.remove('display-user-details-button--active')
         }
 
         /* This event will be fired whenever target is the label of either the #id_profile_pic element or the #id_background_pic, the label-hover class will be removed */
 
         if (e.target.nodeName === 'BUTTON'){
-            e.target.classList.remove('button-hover')
+            e.target.classList.remove('button--active')
         }
 
-        if (e.target === document.querySelector('label[for=id_profile_pic]') || e.target === document.querySelector('label[for=id_background_pic]')){
+        if (e.target === document.querySelector('label[for=id_profile_pic]')){
             e.target.classList.remove('label-hover')
         }
 
        /*This mouseover event will be fired every time a mouse out occurs over an input, this will remove the input-hover class
           over the target and will decrease it's width to normal.*/
         if (e.target.nodeName === 'INPUT'){
-            e.target.classList.remove('input-hover')
+            e.target.classList.remove('input-active')
         }
 
     })
 
     body.addEventListener('click', (e) => {
 
-        if (e.target.classList.contains('fa-arrow-alt-circle-down')){
+        if (e.target.classList.contains('display-user-details-button')){
             window.scrollY === 0 ? window.scrollTo({'top': body.scrollHeight, 'behavior': 'smooth'}) : window.scrollTo({'top': 0, 'behavior': 'smooth'})
             e.target.classList.contains('arrow-rotate') ? e.target.classList.remove('arrow-rotate') : e.target.classList.add('arrow-rotate')
         }
 
-        if (e.target.classList.contains('profile-picture-edit-button')){
+        if (e.target.classList.contains('card__picture-edit-button')){
             let url = e.target.getAttribute('data-url')
             editFormAW(url).
             then(data => {
-                modal.classList.add('modal-show')
+                modal.classList.add('modal--display')
                 modalContent.innerHTML = data['html']
             })
         }
@@ -195,7 +192,7 @@ if (body){
            this event will display the modal adding the modal-show class in its classList, it will collect the url from
            the data-url attribute and the type from the data-type attribute, to display the form it will collect the data
            using the editFormAW async function.*/
-        if (e.target.classList.contains('fa-edit')){
+        if (e.target.classList.contains('card__edit-button')){
             window.scrollTo({'left': body.scrollWidth, 'behavior': 'smooth'})
         }
 
@@ -203,7 +200,7 @@ if (body){
            class in it's classList, this event will collect the url and the procedure from the data-url and data-procedure
            target attributes, the event ises the sendCancelContactRequest async func to make the request, when we receive
            our server response, depending on the response content a process will be executed.*/
-        if (e.target.classList.contains('fa-user-plus') || e.target.classList.contains('fa-user-slash')){
+        if (e.target.classList.contains('card__send-request') || e.target.classList.contains('card__cancel-request')){
             let url = e.target.getAttribute('data-url') + '?procedure=' + e.target.getAttribute('data-procedure')
             sendCancelContactRequest(url)
             .then(data => {
@@ -234,7 +231,7 @@ if (body){
             })
         }
 
-        if (e.target.classList.contains('fa-trash')){
+        if (e.target.classList.contains('card__delete-contact')){
             /* This event will be fired every time the target's classList contains the fa-trash class in it's classList,
                the event collect's the data-url from the data-url attribute and makes the request using the removeContactAW
                async func, once we receive a success response, the icon will be changed and the data-url attribute set.*/
@@ -254,7 +251,7 @@ if (body){
 
         if (e.target.classList.contains('modal')){
             /* This event will be fired every time the target is the modal, the modal-show class will be removed. */
-            modal.classList.remove('modal-show')
+            modal.classList.remove('modal--display')
             modalContent.innerHTML = ''
         }
 
@@ -271,7 +268,7 @@ if (body){
            dynamically. This is the data that will be sent to the server.*/
         if (e.target.id === 'id_profile_pic'){
             let imageInput = e.target
-            let imageSelected = document.querySelector('.profile-pic-selected')
+            let imageSelected = document.querySelector('.edit-profile-picture-form__selected-picture')
             let file = imageInput.files[0]
             let x = document.querySelector('#id_x')
             let y = document.querySelector('#id_y')
@@ -340,12 +337,8 @@ if (modal){
             .then(data => {
                 if (data['success']){
                     modalContent.innerHTML = ''
-                    modal.classList.remove('modal-show')
+                    modal.classList.remove('modal--display')
                     content.innerHTML = data['success']
-                    img = document.querySelector('img')
-                    editProfilePicture = document.querySelector('.edit-profile-picture-modal')
-                    editBackgroundPicture = document.querySelector('.background-edit-modal')
-                    profile = document.querySelector('.profile-picture')
                 }else{
                     modalContent.innerHTML = data['html']
                 }

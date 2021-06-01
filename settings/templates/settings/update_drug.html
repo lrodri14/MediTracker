@@ -1,6 +1,6 @@
 {% load static %}
 {% block body_block %}
-<form method="POST" autocomplete="off" action="{% url 'settings:update_drug' drug.pk %}" class="update">
+<form method="POST" autocomplete="off" action="{% url 'settings:update_drug' drug.pk %}" id="update-drug-form" class="modal__form creation-update-form">
     {% csrf_token%}
     <h2>Update Drug</h2>
     <p>{{ form.name.label }}</p>

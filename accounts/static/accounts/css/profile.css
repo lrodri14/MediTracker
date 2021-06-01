@@ -5,28 +5,10 @@ body{
     width: 200vw;
 }
 
-/*////////////////////////////////////////////////////////// Icons ///////////////////////////////////////////////////*/
-
-.fa-long-arrow-alt-left, .fa-bars, .fa-users{
-    position: absolute;
-}
-
-.fa-long-arrow-alt-left{
-    top: -1%;
-}
-
-.fa-bars{
-    left: 3%;
-}
-
-.fa-users{
-    left: 96.5%;
-}
-
 /*///////////////////////////////////////////////////// Glass Effect /////////////////////////////////////////////////*/
 
 
-#profile-card, #user-details, #profile-edit-form{
+.card, .user-details, .user-details-form-container__form{
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -36,7 +18,7 @@ body{
 
 /*/////////////////////////////////////////////////////// Profile Card ///////////////////////////////////////////////*/
 
-#profile-card{
+.card{
     width: 70%;
     height: 70%;
     position: absolute;
@@ -46,13 +28,19 @@ body{
     transform: translate(-50%, -50%);
 }
 
-.fa-edit{
+.card__edit-button{
     position: absolute;
     top: 5%;
     left: 96%;
 }
 
-.fa-user-plus, .fa-user-slash, .fa-trash{
+.card__edit-button--active{
+    color: #CBA415;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.card__send-request, .card__cancel-request, .card__delete-contact{
     cursor: pointer;
     position: absolute;
     top: 5%;
@@ -60,19 +48,81 @@ body{
     transition: 0.5s;
 }
 
-.fa-user-plus-hover{
+.card__send-request--active{
     color: #25BB41;
     transition: 0.5s;
 }
 
-.fa-user-slash-hover{
+.card__cancel-request--active{
     color: #A31621;
     transition: 0.5s;
 }
 
-.fa-trash-hover{
+.card__delete-contact--active{
     color: #A31621;
     transition: 0.5s;
+}
+
+/*/////////////////////////////////////////////////////// Profile Pic ///////////////////////////////////////////////*/
+
+.card__picture-container{
+    width: 40%;
+    height: 90%;
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    margin-right: -50%;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.card__picture{
+    border-radius: 25px;
+    width: 100%;
+    height: auto;
+}
+
+.card__picture-edit-button{
+    font-size: 25px;
+    color: #FFFFFF;
+    cursor: pointer;
+    position: absolute;
+    top: 4%;
+    left: 88%;
+    z-index: 2;
+    transition: 0.5s;
+}
+
+.card__picture-edit-button--active{
+    color: #25BB41;
+    transition: 0.5s;
+}
+
+.card__no-picture-message{
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    z-index: 1;
+}
+
+.card__no-picture-icon{
+    cursor: default;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    font-size: 32px;
+}
+
+/*/////////////////////////////////////////////////////// Profile Status ///////////////////////////////////////////////*/
+
+.card__status{
+    width: 11%;
+    text-align: right;
+    position: absolute;
+    top: -5%;
+    left: 88.5%;
 }
 
 .fa-circle{
@@ -89,72 +139,9 @@ body{
     color: #9e2323;
 }
 
-#status{
-    width: 11%;
-    text-align: right;
-    position: absolute;
-    top: -5%;
-    left: 88.5%;
-}
+/*/////////////////////////////////////////////////////// Profile Information ///////////////////////////////////////////*/
 
-/*/////////////////////////////////////////////////////// Profile Picture ////////////////////////////////////////////*/
-
-
-#profile-picture-container{
-    width: 40%;
-    height: 90%;
-    position: absolute;
-    top: 30%;
-    left: 5%;
-    margin-right: -50%;
-    border-radius: 25px;
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
-
-.profile-picture-edit-button{
-    font-size: 25px;
-    position: absolute;
-    top: 4%;
-    left: 88%;
-    z-index: 2;
-}
-
-.fa-camera{
-    color: #FFFFFF;
-    cursor: pointer;
-    transition: 0.5s;
-}
-
-.fa-camera-hover{
-    color: #359e23;
-    transition: 0.5s;
-}
-
-#profile-picture{
-    border-radius: 25px;
-    width: 100%;
-    height: auto;
-}
-
-#no-profile-picture-message{
-    position: absolute;
-    top: 30%;
-    left: 25%;
-    z-index: 1;
-}
-
-.no-profile-picture-icon{
-    cursor: default;
-    position: absolute;
-    top: 45%;
-    left: 45%;
-    font-size: 32px;
-}
-
-
-#user-information{
+.card__information{
     position: absolute;
     top: 0%;
     left: 27%;
@@ -166,7 +153,9 @@ h3{
     margin-top: 30%;
 }
 
-#activity{
+/*/////////////////////////////////////////////////////// Profile Activity ///////////////////////////////////////////*/
+
+.card__activity{
     position: relative;
     top: 85%;
     left: 4%;
@@ -174,8 +163,7 @@ h3{
 
 /*/////////////////////////////////////////////////////// About Section //////////////////////////////////////////////*/
 
-
-#about-user{
+.card__biography{
     width: 65%;
     height: 30%;
     max-height: 30%;
@@ -191,11 +179,9 @@ h3{
     z-index: 1;
 }
 
-#contacts-count{
-    margin-top: 5%;
-}
+/*/////////////////////////////////////////////// Display Information Button /////////////////////////////////////////*/
 
-.fa-arrow-alt-circle-down{
+.display-user-details-button{
     cursor: pointer;
     font-size: 30px;
     position: absolute;
@@ -206,7 +192,7 @@ h3{
     transition: color 0.5s, transform 0.5s;
 }
 
-.fa-arrow-alt-circle-down-hover{
+.display-user-details-button--active{
     color: #25BB41;
     transition: 0.5s;
 }
@@ -218,7 +204,7 @@ h3{
 
 /*/////////////////////////////////////////////// Profile User Details ///////////////////////////////////////////////*/
 
-#user-details{
+.user-details{
     position: absolute;
     top: 105%;
     left: 15%;
@@ -228,7 +214,7 @@ h3{
     padding: 20px;
 }
 
-h4{
+.user-details h4{
     margin-left: 2%;
 }
 
@@ -239,79 +225,53 @@ hr{
 
 /*////////////////////////////////////////////////// Profile Edit Form ///////////////////////////////////////////////*/
 
-
-#profile-edit-form{
+.user-details-form-container{
     position: absolute;
     top: 15%;
     left: 110%;
     width: 80%;
     height: 70%;
-    border-radius: 25px;
+}
+
+.user-details-form-container__form{
+    width: 100%;
+    height: 100%;
     padding: 20px;
 }
 
-/*///////////////////////////////////////////////////// Forms ////////////////////////////////////////////////////////*/
-
-.form-wrapper{
+.user-details-form-container__form-wrapper{
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 30% 65%;
+    grid-gap: 5%;
+    text-align: left;
 }
 
-.label-hover{
-    cursor: pointer;
-    background-color: #496897;
-    color: #496897;
-    transition: all 0.5s;
+.user-details-form-container__biography{
+    text-align: center;
 }
 
-button{
-    width: 30%;
-    height: 30px;
-    transition: all 0.5s;
+.user-details-form-container__personal-information div:nth-child(2){
+    margin-top: 10%;
 }
 
-/*//////////////////////////////////////////////// Profile Update Form ///////////////////////////////////////////////*/
-
-
-.edit-profile{
-    width: 100%;
-    height: 100%;
-}
-
-.personal-info-edit{
+.user-details-form-container__personal-information-edit{
     display: grid;
     grid-template-columns: 50% 50%;
 }
 
-.edit-profile h4{
-    text-align: center;
+select{
+   height: 22px;
 }
 
-.edit-profile textarea{
+textarea{
+    text-align: justify;
     border: none;
     border-bottom: 1px solid #FFFFFF;
     resize: none;
     width: 95%;
 }
 
-.profile-general-information{
-    text-align: center;
-}
-
-.profile-general-information textarea{
-    text-align: justify;
-    width: 90%;
-}
-
-.profile-information{
-    padding-left: 10px;
-}
-
-.profile-information select{
-   height: 22px;
-}
-
-#id_tzone, #id_location{
+#id_location{
     width: 25%;
 }
 
@@ -319,32 +279,34 @@ button{
     overflow: hidden;
 }
 
+button{
+    width: 30%;
+    height: 30px;
+    transition: all 0.5s;
+}
 /*////////////////////////////////////////////// Profile Picture Form ////////////////////////////////////////////////*/
 
-.edit-profile-picture{
+.edit-profile-picture-form{
     width: 50%;
-    height: 20%;
+    margin-left: 25%;
     padding: 20px;
     text-align: center;
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    border-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
 }
 
-#profile-pic-input{
+.edit-profile-picture-form__input{
     display: none;
 }
 
-.selected-picture{
+.edit-profile-picture-form__picture-container{
     max-width: 300px;
+    max-height: 300px;
     overflow: hidden;
     margin: auto;
 }
 
-.profile-pic-selected{
+.edit-profile-picture-form__selected_picture{
     width: 100%;
     height: auto;
 }
@@ -362,8 +324,4 @@ label[for=id_profile_pic]{
     background-color: #FFFFFF;
     color: #000000;
     transition: 0.5s;
-}
-
-.edit-profile-picture button{
-    width: 20%;
 }

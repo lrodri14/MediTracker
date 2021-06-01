@@ -6,20 +6,22 @@
 {% block body_block %}
 <link rel="stylesheet" href="{% static 'settings/css/settings.css' %}">
 
-    <h2>Settings</h2>
+    <h2 class="title">Settings</h2>
 
-    <div id="settings-navigator">
-        <div class="tab" data-url="{% url 'settings:general' %}">General</div><div class="tab" data-url="{% url 'settings:account' %}">Account</div><div class="tab" data-url="{% url 'settings:linking' %}">Linking</div>{% if user.roll == 'DOCTOR' %}<div class="tab" data-url="{% url 'settings:profile' %}">Profile</div><div class="tab" data-url="">Notifications</div><div class="tab" data-url="{% url 'settings:mailing' %}">Mailing</div><div class="tab" data-url="{% url 'settings:medical_test_list' %}">Medical Testing</div><div class="tab" data-url="{% url 'settings:insurance_list' %}">Insurance</div><div class="tab" data-url="{% url 'settings:allergy_list' %}">Allergies</div><div class="tab" data-url="{% url 'settings:drugs_list' %}">Drugs</div>{% if user.doctor.speciality == 'PED' %}<div class="tab" data-url="{% url 'settings:vaccines_list' %}">Vaccines</div> {% endif %}{% endif %}
+    <!-- Navigation -->
+    <div class="settings-navigator">
+        <div class="settings-navigator__tab" data-url="{% url 'settings:general' %}">General</div><div class="settings-navigator__tab" data-url="{% url 'settings:account' %}">Account</div><div class="settings-navigator__tab" data-url="{% url 'settings:linking' %}">Linking</div>{% if user.roll == 'DOCTOR' %}<div class="settings-navigator__tab" data-url="{% url 'settings:profile' %}">Profile</div><div class="settings-navigator__tab" data-url="">Notifications</div><div class="settings-navigator__tab" data-url="{% url 'settings:mailing' %}">Mailing</div><div class="settings-navigator__tab" data-url="{% url 'settings:medical_test_list' %}">Medical Testing</div><div class="settings-navigator__tab" data-url="{% url 'settings:insurance_list' %}">Insurance</div><div class="settings-navigator__tab" data-url="{% url 'settings:allergy_list' %}">Allergies</div><div class="settings-navigator__tab" data-url="{% url 'settings:drugs_list' %}">Drugs</div>{% if user.doctor.speciality == 'PED' %}<div class="settings-navigator__tab" data-url="{% url 'settings:vaccines_list' %}">Vaccines</div> {% endif %}{% endif %}
     </div>
 
-    <div class="wrapper">
-
+    <!-- Data -->
+    <div class="data">
     </div>
 
+    <!-- Modal -->
     <div class="modal">
-        <div class="modal-content">
-
+        <div class="modal__content">
         </div>
     </div>
+
 <script src="{% static 'settings/js/settings.js' %}"></script>
 {% endblock %}

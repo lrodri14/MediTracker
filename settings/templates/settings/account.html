@@ -1,10 +1,10 @@
 {%load static%}
-<div id="account-settings">
+<div class="account-settings">
     {% if user.roll == 'DOCTOR' %}
         <p id="linking-id">Linking ID: {{ user.doctor.linking_id }}</p>
     {% endif %}
     <p>Update Password <button type="button" data-url="{% url 'accounts:change_password' %}">Update</button></p>
-    <form action="{% url 'settings:update_session_expiry_time' %}" method="POST">
+    <form action="{% url 'settings:update_session_expiry_time' %}" method="POST" id="account-settings-form">
         {% csrf_token %}
         <p>Timezone: {{ user_settings_form.tzone }}</p>
         <p>Session Expiry Time: {{ user_settings_form.session_expire_time }}</p>

@@ -1,15 +1,15 @@
 {% load static %}
 {% block body_block %}
     {% if insurances %}
-            <div class="data-table">
-                <table>
+            <div class="data-table-container">
+                <table class="data-table">
                     <thead>
                         <tr id="heading">
                             <th>Company</th>
                             <th>Country</th>
                             <th>Edit</th>
                             <th>Delete</th>
-                            <th><i class="fas fa-plus" data-url="{% url 'settings:add_insurance' %}"></i></th>
+                            <th><i class="fas fa-plus data-table__create" data-url="{% url 'settings:add_insurance' %}"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -17,16 +17,16 @@
                     </tbody>
                 </table>
             </div>
-            <div>
-                <i class="fas fa-filter"></i>
-                <form method="GET" action="{% url 'settings:filter_insurance' %}" class="filter-form" autocomplete="off">
+            <div class="filter-container">
+                <i class="fas fa-filter filter-container__filter-display-button"></i>
+                <form method="GET" action="{% url 'settings:filter_insurance' %}" autocomplete="off" class="filter-container__filter-form">
                     <h3>Filter Insurance</h3>
                     <p>{{ form.company.label }}</p>
                     <p>{{ form.company }}</p>
                 </form>
             </div>
     {% else %}
-        <p class="no-data">No insurances listed</p>
+        <p id="no-data">No insurances listed</p>
         <i class="fas fa-plus add-data" data-url="{% url 'settings:add_insurance' %}"></i>
     {% endif %}
 {% endblock %}

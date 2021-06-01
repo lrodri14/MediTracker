@@ -2,12 +2,12 @@
 
 {% if drugs %}
      {% for d in drugs %}
-        <tr data-url="{% url 'settings:drug_details' d.pk %}">
-            <td>{{ d.name }}</td>
-            <td>{{ d.get_category_display }}</td>
-            <td><i class="fas fa-edit" data-url="{% url 'settings:update_drug' d.pk %}"></i></td>
-            <td><i class="fas fa-trash" data-url="{% url 'settings:delete_drug' d.pk %}"></i></td>
-            <td></td>
+        <tr class="data-table__item" data-url="{% url 'settings:drug_details' d.pk %}">
+            <td class="data-table__data">{{ d.name }}</td>
+            <td class="data-table__data">{{ d.get_category_display }}</td>
+            <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'settings:update_drug' d.pk %}"></i></td>
+            <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'settings:delete_drug' d.pk %}"></i></td>
+            <td class="data-table__data"></td>
         </tr>
     {% endfor %}
 {% endif %}

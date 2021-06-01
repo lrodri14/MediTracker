@@ -1,14 +1,14 @@
 {% load static %}
 {% if medical_tests %}
-        <div class="data-table">
-            <table>
+        <div class="data-table-container">
+            <table class="data-table">
                 <thead>
                     <tr id="heading">
                         <th>Test Type</th>
                         <th>Test Name</th>
                         <th>Edit</th>
                         <th>Delete</th>
-                        <th><i class="fas fa-plus" data-url="{% url 'settings:add_medical_test' %}"></i></th>
+                        <th><i class="fas fa-plus data-table__create" data-url="{% url 'settings:add_medical_test' %}"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -16,9 +16,9 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <i class="fas fa-filter"></i>
-            <form method="GET" action="{% url 'settings:filter_medical_testing' %}" class="filter-form" autocomplete="off">
+        <div class="filter-container">
+            <i class="fas fa-filter filter-container__filter-display-button"></i>
+            <form method="GET" action="{% url 'settings:filter_medical_testing' %}" autocomplete="off" class="filter-container__filter-form">
                 <h3>Filter Medical Tests</h3>
                 <p>{{ form.name.label }}</p>
                 <p>{{ form.name }}</p>
@@ -26,6 +26,6 @@
         </div>
 
 {%else%}
-    <p class="no-data">No tests listed</p>
+    <p id="no-data">No tests listed</p>
     <i class="fas fa-plus add-data" data-url="{% url 'settings:add_medical_test' %}"></i>
 {%endif%}

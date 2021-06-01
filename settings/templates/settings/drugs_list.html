@@ -1,15 +1,15 @@
 {% load static %}
 {% block body_block %}
 {% if drugs %}
-        <div class="data-table">
-            <table>
+        <div class="data-table-container">
+            <table class="data-table">
                 <thead>
                     <tr id="heading">
                         <th>Drug</th>
                         <th>Category</th>
                         <th>Edit</th>
                         <th>Delete</th>
-                        <th><i class="fas fa-plus" data-url="{% url 'settings:add_drug' %}"></i></th>
+                        <th><i class="fas fa-plus data-table__create" data-url="{% url 'settings:add_drug' %}"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -17,16 +17,16 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <i class="fas fa-filter"></i>
-            <form method="GET" action="{% url 'settings:filter_drugs' %}" class="filter-form" autocomplete="off">
+        <div class="filter-container">
+            <i class="fas fa-filter filter-container__filter-display-button"></i>
+            <form method="GET" action="{% url 'settings:filter_drugs' %}" class="filter-container__filter-form" autocomplete="off">
                 <h3>Drug Filter</h3>
                 <p>{{ form.name.label }}</p>
                 <p>{{ form.name }}</p>
             </form>
         </div>
 {% else %}
-    <p class="no-data">No drugs listed</p>
+    <p id="no-data">No drugs listed</p>
     <i class="fas fa-plus add-data" data-url="{% url 'settings:add_drug' %}"></i>
 {% endif %}
 {% endblock %}

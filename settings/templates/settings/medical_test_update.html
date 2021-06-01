@@ -1,5 +1,5 @@
 {% load static %}
-<form method="POST" autocomplete="off" action="{% url 'settings:update_medical_test' medical_test.pk %}" class="update">
+<form method="POST" autocomplete="off" action="{% url 'settings:update_medical_test' medical_test.pk %}" id="update-medical-test-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Update Medical Test</h2>
     <p>{{ medical_test_form.test_type.label }}</p>

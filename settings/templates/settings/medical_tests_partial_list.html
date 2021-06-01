@@ -1,12 +1,12 @@
 {% load static %}
 {% if medical_tests %}
     {% for mt in medical_tests %}
-        <tr data-url="{% url 'settings:medical_test_details' mt.pk %}">
-            <td>{{ mt.get_test_type_display }}</td>
-            <td>{{ mt.name }}</td>
-            <td><i class="fas fa-edit" data-url="{% url 'settings:update_medical_test' mt.pk %}"></i></td>
-            <td><i class="fas fa-trash" data-url="{% url 'settings:delete_medical_test' mt.pk %}"></i></td>
-            <td></td>
+        <tr class="data-table__item" data-url="{% url 'settings:medical_test_details' mt.pk %}">
+            <td class="data-table__data">{{ mt.get_test_type_display }}</td>
+            <td class="data-table__data">{{ mt.name }}</td>
+            <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'settings:update_medical_test' mt.pk %}"></i></td>
+            <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'settings:delete_medical_test' mt.pk %}"></i></td>
+            <td class="data-table__data"></td>
         </tr>
     {% endfor %}
 {% endif %}

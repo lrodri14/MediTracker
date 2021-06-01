@@ -64,6 +64,7 @@
 .main-menu__elements--fade-out{
     opacity: 0;
     visibility: hidden;
+    transition: opacity 0.5s;
 }
 
 .main-menu__tile{
@@ -74,7 +75,6 @@
     border-radius: 10px;
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
     transition: background-color 0.5s;
     animation: show-up 0.5s linear forwards;

@@ -4,11 +4,11 @@
 {% if links %}
     <!-- Add extra linking button in development to be used in future updates.  -->
     <!--    <i class="fas fa-plus add-extra-linking" data-url="{% url 'settings:add_linking' %}"></i>-->
-    <div>
+    <div class="links-container">
         {% for link in links %}
-            <div class="link">
+            <div class="links-container__link">
                 {% if user.roll == 'DOCTOR' %}
-                    <p>{{ link.first_name }} {{ link.last_name }}</p><p>{{ link.username }}</p><p>{{ link.email }}</p><p><i class="fas fa-unlink" data-url="{% url 'settings:remove_linking' link.pk%}"></i></p>
+                    <p>{{ link.first_name }} {{ link.last_name }}</p><p>{{ link.username }}</p><p>{{ link.email }}</p><p><i class="fas fa-unlink data-table__unlink" data-url="{% url 'settings:remove_linking' link.pk%}"></i></p>
                 {% else %}
                     <p>{{ link.first_name }} {{ link.last_name }}</p><p>{{ link.username }}</p><p>{{ link.get_speciality_display }}</p><p><i class="fas fa-unlink" data-url="{% url 'settings:remove_linking' link.pk%}"></i></p>
                 {% endif %}
@@ -16,7 +16,7 @@
         {% endfor %}
     </div>
 {% else %}
-    <p class="no-data">You are not linked to anybody</p>
+    <p id="no-data">You are not linked to anybody</p>
     {% if user.roll == 'ASSISTANT' %}
         <i class="fas fa-plus add-data" data-url="{% url 'settings:add_linking' %}"></i>
     {% endif %}

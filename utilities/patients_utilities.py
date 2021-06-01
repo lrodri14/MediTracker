@@ -18,4 +18,4 @@ def check_charges(consults):
         if c.charge:
             charges = True
             break
-    return charges
+    return

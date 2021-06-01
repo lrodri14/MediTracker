@@ -1,6 +1,6 @@
 {% load static %}
 {% if insurance %}
-    <form method="POST" action="{% url 'settings:delete_insurance' insurance.pk %}" class="insurance_delete" id="delete">
+    <form method="POST" action="{% url 'settings:delete_insurance' insurance.pk %}" id="delete-insurance-form" class="modal__form deletion-form">
         {% csrf_token %}
         <h2>{{ insurance.company }}</h2>
         <h3>Are you sure you want to delete this carrier?</h3>

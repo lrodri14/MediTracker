@@ -1,6 +1,6 @@
 {% load static %}
 {% if allergy %}
-    <form method="POST" action="{% url 'settings:delete_allergy' allergy.pk %}" id="delete">
+    <form method="POST" action="{% url 'settings:delete_allergy' allergy.pk %}" id="delete-allergies-form" class="modal__form deletion-form">
         {% csrf_token %}
         <h2>{{ allergy.allergy_type }}</h2>
         <h3>Are you sure you want to delete this allergy?</h3>
