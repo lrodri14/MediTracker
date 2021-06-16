@@ -38,14 +38,14 @@
 /*############################################### Specific Settings Tabs #############################################*/
 
 .tab--hover{
-    background-color: '#FFFFFF';
-    color: '#000000';
+    background-color: #FFFFFF;
+    color: #000000;
     transition: background-color 0.5s;
 }
 
 .tab--active{
-    background-color: '#FFFFFF';
-    color: '#000000';
+    background-color: #FFFFFF;
+    color: #000000;
     transition: background-color 0.5s;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .wallpaper-row:nth-child(2){
-    top: 45%;
+    top: 40%;
 }
 
 .wallpaper-row__wallpaper{

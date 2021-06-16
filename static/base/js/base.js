@@ -159,7 +159,7 @@ window.addEventListener('mousemove', (e) => {
        will display the globalNavigator, if the it does not fulfills these conditions, the navigator will not be shown or it
        will be hidden.*/
     if (globalNavigator){
-        if ((e.clientY >= 50) && (e.clientX <= 3)){
+        if ((e.clientY >= 50) && (e.clientX <= 0)){
         globalNavigator.classList.add('global-navigator--display')
         }else if (e.clientX > globalNavigator.offsetWidth){
             globalNavigator.classList.remove('global-navigator--display')
@@ -169,7 +169,7 @@ window.addEventListener('mousemove', (e) => {
     /* This event will be fired every time the cursor is 10px less than the screen width this event will display the socialSection,
        if the it does not fulfills these conditions, the socialSection will not be shown or it will be hidden.*/
     if (socialSection){
-        if (e.clientX >= (window.screen.width - 3) && !socialSection.classList.contains('social-section--display')){
+        if (e.clientX >= (window.screen.width - 1) && !socialSection.classList.contains('social-section--display')){
             socialSection.classList.add('social-section--display')
             if (socialSectionData.innerHTML == ""){
                 let url = socialSectionTabs[0].getAttribute('data-url')
