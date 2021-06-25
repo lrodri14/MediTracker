@@ -32,7 +32,7 @@ class PatientForm(forms.ModelForm):
 
     class Meta:
         model = Patient
-        exclude = ('created_by',)
+        exclude = ('date_created', 'created_by',)
 
 
 class PatientFilterForm(forms.Form):

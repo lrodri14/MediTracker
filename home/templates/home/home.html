@@ -11,6 +11,7 @@
 <div class="main-menu">
 
     {% if user.roll == 'DOCTOR' %}
+
         <!-- Title -->
         <h1 class="main-menu__title">Menu</h1>
 
@@ -19,51 +20,63 @@
 
         <!-- Top Wrapper -->
         <div class="main-menu__upper-row">
+
             <div class="main-menu__tile" onclick="window.location='{% url 'patients:patients' %}'">
                 <i class="fas fa-user-injured main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Patients</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'appointments:appointments' %}'">
                 <i class="far fa-calendar-check main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Appointments</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'records:records' %}'">
                 <i class="far fa-clipboard main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Records</h3>
             </div>
-            <div class="main-menu__tile" onclick="window.location=''">
-                <i class="fas fa-file-invoice main-menu__tile-icon"></i>
-                <h3 class="main-menu__tile-title">Reports</h3>
+
+            <div class="main-menu__tile" onclick="window.location='{% url 'stats:stats' %}'">
+                <i class="fas fas fa-chart-bar main-menu__tile-icon"></i>
+                <h3 class="main-menu__tile-title">Statistics</h3>
             </div>
+
         </div>
 
         <!-- Bottom Wrapper -->
         <div class="main-menu__lower-row">
+
             <div class="main-menu__tile" onclick="window.location='{% url 'providers:providers' %}'">
                 <i class="fas fa-handshake main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Providers</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'settings:settings' %}'">
                 <i class="fas fa-cog main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Settings</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'accounts:profile' %}'">
                 <i class="fas fa-user main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Profile</h3>
             </div>
+
             <div id="logout" class="main-menu__tile">
                 <i class="fas fa-sign-out-alt main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Log Out</h3>
             </div>
+
         </div>
 
         <!-- Query Results -->
         <div class="data-table__query-results">
 
         </div>
+
     {% endif %}
 
-    {% if user.roll == 'ASSISTANT %}
+    {% if user.roll == 'ASSISTANT' %}
+
         <!-- Title -->
         <h1 class="main-menu__single-row-title">Menu</h1>
 
@@ -73,30 +86,37 @@
                 <i class="fas fa-user-injured main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Patients</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'appointments:appointments' %}'">
                 <i class="far fa-calendar-check main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Appointments</h3>
             </div>
+
             <div class="main-menu__tile" onclick="window.location='{% url 'settings:settings' %}'">
                 <i class="fas fa-cog main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Settings</h3>
             </div>
+
             <div class="main-menu__tile" id="logout">
                 <i class="fas fa-sign-out-alt main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Log Out</h3>
             </div>
+
         </div>
+
     {% endif %}
 
 </div>
 
 <!-- Log Out Modal -->
 <div class="modal">
+
     <div class="modal__modal-content">
         <h3>Are you sure you want to log out?</h3><div class="modal__logout-loader"></div>
         <button type="button" onclick="window.location='{% url 'accounts:logout' %}'">Yes</button>
         <button type="button">No</button>
     </div>
+
 </div>
 
 <script src="{% static 'home/js/home.js' %}"></script>

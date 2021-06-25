@@ -21,8 +21,9 @@ class Patient(models.Model):
         there are four tuple choices: GENDER_CHOICES for selection of the patient's gender, CIVIL_STATUS_CHOICES for
         selection of the patient's civil status, PROCEDENCE_CHOICES for selection of the patient's procedence and,
         RESIDENCE_CHOICES for selection of the patient's residence, this class has an age() method which returns the
-        age of the patient based on the self.birthday field, it also rewrites the save() method, titling the self.first-
-        name and last-name fields, lastly it contains its own dunder __str__ method, which returns the patient's full name.
+        age of the patient based on the self.birthday field, the get_name function returns the complete name of the patient
+        it also rewrites the save() method, titling the self.first- name and last-name fields, lastly it contains its own
+        dunder __str__ method, which returns the patient's full name.
     """
 
     GENDER_CHOICES = (
@@ -49,11 +50,15 @@ class Patient(models.Model):
     civil_status = models.CharField(max_length=12, choices=CIVIL_STATUS_CHOICES)
     origin = models.CharField(max_length=50, choices=ORIGIN_CHOICES)
     residence = models.CharField(max_length=50, choices=LOCATION_CHOICES)
+    date_created = models.DateField('Date Created', blank=True, null=True, help_text='Date Created')
     created_by = models.ForeignKey(user, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Created By')
 
     class Meta:
         verbose_name = 'Patient'
         verbose_name_plural = 'Patients'
+
+    def get_name(self):
+        return self.first_names + self.last_names
 
     def age(self):
         today = timezone.localtime(timezone.now())

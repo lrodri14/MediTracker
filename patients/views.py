@@ -126,6 +126,7 @@ def add_patient(request):
                 patient.phone_number = country_number_codes[country_number_code]
             patient.save()
             patient.created_by = user_creating
+            patient.date_created = timezone.localtime().date()
             patient.save()
 
             for allergy_instance in allergies_instances:

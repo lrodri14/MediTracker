@@ -543,7 +543,7 @@ button:focus{
 /*///////////////////////////////////////////////// ScrollBar ////////////////////////////////////////////////////////*/
 
 ::-webkit-scrollbar {
-    width: 14px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -551,6 +551,7 @@ button:focus{
 }
 
 ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
     background: rgba(255,255,255,0.5);
 }
 

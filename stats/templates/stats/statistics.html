@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Statistics {% endblock %}
+{% block return %} <a href="{% url 'home:home' %}"><i class="fas fa-long-arrow-alt-left"></i></a> {% endblock %}
+{% block body_block %}
+<link rel="stylesheet" href="{% static 'stats/css/stats.css' %}">
+<h2 class="title">Statistics</h2>
+
+<div class="container">
+
+    <!-- Navigation -->
+    <div class="container__navigation">
+        <h3>Navigation</h3>
+        <div class="container__navigation__tab patients-stats" data-url="{% url 'stats:patients_statistics' %}" data-layout-url="{% url 'stats:process_layout' 'patients'%}">
+            <i class="fas fa-user-injured"></i>
+        </div>
+        <div class="container__navigation__tab consults-stats" data-url="{% url 'stats:consults_statistics' %}">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="container__navigation__tab incomes-stats" data-url="{% url 'stats:income_statistics' %}">
+            <i class="fas fa-dollar-sign"></i>
+        </div>
+    </div>
+
+    <!-- Visualization -->
+    <div class="container__visualization">
+        <h3 class="visualization-section-header">Visualization</h3>
+        <div class="container__visualization__data">
+
+        </div>
+        <div class="container__visualization__full-view">
+            <svg class="full-view container__visualization__l-widget">
+                <text class="header large-widget-header"></text>
+                <g class="body">
+                    <g class="x-axis"></g>
+                    <g class="y-axis"></g>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Filtering -->
+    <div class="container__visualization-filter">
+        <h3>Filtering</h3>
+        <div class="container__visualization-filter__form">
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal">
+    <div class="modal__modal-content">
+
+    </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="{% static 'stats/js/stats.js' %}"></script>
+{% endblock %}
