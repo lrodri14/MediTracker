@@ -7,6 +7,7 @@ let container = document.querySelector('.container')
 let visualizationSectionHeader = document.querySelector('.visualization-section-header')
 let visualizationContainer = document.querySelector('.container__visualization__data')
 let fullViewVisualizer = document.querySelector('.container__visualization__full-view')
+let filterFormContainer = document.querySelector('.container__visualization-filter__form')
 
 // Selected with D3 for future operations
 let fullViewBody = d3.select('.full-view')
@@ -104,7 +105,7 @@ function processPatientData(url){
 }
 
 
-function visualizePatientCreationCount(data, container, dimensions, requestedYear){
+function visualizePatientCreationCount(data, container, dimensions, requestedYear = new Date().getFullYear()){
 
     // Collect Data
     data = Array.from(data.data.get(requestedYear)).map((d) => {return {'month': d[0], 'amount': d[1]}})
@@ -185,7 +186,7 @@ function visualizePatientCreationCount(data, container, dimensions, requestedYea
         let bg = tooltip.append('rect')
                         .attr('height', '30px')
                         .attr('rx', '5px')
-                        .attr('fill', 'rgba(255,255,255,0)')
+                        .attr('fill', 'rgba(0,0,0,0)')
 
         let message = tooltip.append('text')
                              .attr('fill', '#FFFFFF')
@@ -196,14 +197,14 @@ function visualizePatientCreationCount(data, container, dimensions, requestedYea
             this.style.fill = '#1f77b4'
             this.style.transition = '0.5s'
             message.text(this.id + ' - ' + this.getAttribute('data-amount'))
-            bg.attr('fill', 'rgba(255,255,255,0.2)').attr('width', this.getAttribute('data-amount') < 10 ? '60px' : '70px')
+            bg.attr('fill', 'rgba(0,0,0,0.5)').attr('width', this.getAttribute('data-amount') < 10 ? '60px' : '70px')
         })
 
         containerBody.selectAll('circle').on('mouseout', function(d){
             this.style.fill = ''
             this.style.transition = '0.5s'
             message.text('')
-            bg.attr('fill', 'rgba(255,255,255,0)')
+            bg.attr('fill', 'rgba(0,0,0,0)')
         })
 
         containerBody.on('mousemove', function(d){
@@ -216,10 +217,14 @@ function visualizePatientCreationCount(data, container, dimensions, requestedYea
 }
 
 
-function visualizePatientAgeData(data, container, dimensions){
+function visualizePatientAgeData(data, container, dimensions, ageFrom = null, ageTo = null){
 
     // Collect Data
     data = data.data
+    if (ageFrom !== null && ageTo !== null){
+        data = data.slice(ageFrom, (ageTo + 1))
+        console.log(data, ageFrom, ageTo)
+    }
     let max = d3.max(data, (d) => {return d[1]})
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
@@ -267,72 +272,70 @@ function visualizePatientAgeData(data, container, dimensions){
                  .attr('y', (d) => {return yScale(d[1])})
                  .attr('height', (d) => {return bodyHeight - yScale(d[1])})
 
-
     if (container === '.full-view'){
 
         let containerBody = visContainer.select('.body')
 
         let tooltip = containerBody.append('g')
                                    .attr('class', 'tooltip')
+                                   .attr('transform', 'translate(0, 0)')
 
         let bg = tooltip.append('rect')
+                        .attr('class', 'bg')
                         .attr('rx', '5px')
-                        .attr('height', '25px')
-                        .attr('fill', 'rgba(255,255,255,0)')
+                        .attr('height', '50px')
+                        .attr('width', '120px')
+                        .attr('fill', 'rgba(0,0,0,0)')
+                        .style('pointer-events', 'none')
 
-        let message = tooltip.append('text')
+        let rangeIndicatorMessage = tooltip.append('text')
                              .attr('font-weight', 'bolder')
                              .attr('fill', '#FFFFFF')
-                             .attr('transform', 'translate(3, 17)')
+                             .attr('transform', 'translate(8, 17)')
+
+         let amountMessage = tooltip.append('text')
+                                    .attr('font-weight', 'bolder')
+                                    .attr('fill','#FFFFFF')
+                                    .attr('transform', 'translate(8, 40)')
 
         containerBody.selectAll('rect').on('mouseover', function(d){
 
-            let amount = this.getAttribute('data-amount')
-            let tooltipLength
-            if (amount < 10){
-               tooltipLength = '10px'
-            }else if (amount < 100){
-               tooltipLength = '27px'
-            }else{
-               tooltipLength = '37px'
-            }
-
-            bg.style('fill', d3.select(this).style('fill')).attr('width', tooltipLength)
-            message.text(this.getAttribute('data-amount'))
+            rangeIndicatorMessage.text('Range: ' + this.getAttribute('id'))
+            amountMessage.text('Total: ' + this.getAttribute('data-amount'))
+            bg.style('fill' , 'rgba(0,0,0,0.5)')
             this.style.fill = '#FFFFFF'
+
         })
 
         containerBody.selectAll('rect').on('mouseout', function(d){
-           bg.style('fill', 'rgba(255,255,255,0)')
-           message.text('')
-           this.style.fill = ''
-
+           d3.selectAll('rect:not(.bg):not(.tooltip-arrow)').nodes().forEach((d) => {d.style.fill = ''
+                                                                                     d.style.transition = '0.5s'})
+           bg.style('fill', 'rgba(0,0,0,0)')
+           rangeIndicatorMessage.text('')
+           amountMessage.text('')
         })
 
         containerBody.selectAll('rect').on('mousemove', function(d){
-
-            let x = d3.pointer(d)[0] - 10
-            let y = d3.pointer(d)[1] - 35
-            tooltip.attr('transform', 'translate(' + x + ',' + y + ')')
-
+            let y = d3.pointer(d)[1] - 28
+            tooltip.attr('transform', 'translate(' + (xScale(this.id) + 55) + ',' + y + ')')
         })
 
     }
 
 }
 
-function visualizePatientGenData(data, container, dimensions){
+function visualizePatientGenData(data, container, dimensions, gender='all'){
 
     // Preparing Data
-    data = data.data
+    data = gender === 'all' ? data.data : data.data.filter((d) => {return d.gender === gender})
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
     let translateX = dimensions.translation.x
     let translateY = dimensions.translation.y
     let total = d3.sum(data, (d) => {return d.amount})
-    let masculineTotal = data[0].gender === 'M' ? data[0].amount : data[1].amount
-    let femenineTotal = data[0].gender === 'F' ? data[0].amount : data[1].amount
-    let percentages = {'masculine': Math.round((masculineTotal / total) * 100), 'femenine': Math.round((femenineTotal / total) * 100)}
+    let masculineTotal = gender === 'all' || gender === 'M' ? data[0].gender === 'M' ? data[0].amount : data[1].amount : 0
+    let femenineTotal = gender === 'all' || gender === 'F' ? data[0].gender === 'F' ? data[0].amount : data[1].amount : 0
+    let percentages = {'masculine': masculineTotal ? Math.round((masculineTotal / total) * 100) : 0, 'femenine': femenineTotal ? Math.round((femenineTotal / total) * 100) : 0}
     let totalCentering
 
     if (total  < 10){
@@ -412,22 +415,31 @@ function visualizePatientGenData(data, container, dimensions){
 }
 
 function displayPatientsData(){
-    visualizePatientCreationCount(patientsData.creationCount, components.containers.addition, components.dimensions.medium, new Date().getFullYear())
+    visualizePatientCreationCount(patientsData.creationCount, components.containers.addition, components.dimensions.medium)
     visualizePatientAgeData(patientsData.age, components.containers.age, components.dimensions.small)
     visualizePatientGenData(patientsData.gender, components.containers.gender, components.dimensions.small)
 }
 
-function cleanUpFullViewVisualizer(){
+function cleanUpFullViewVisualizer(clean_filter=false){
     fullViewBody.html('')
     fullViewBody.append('text').attr('class', 'header large-widget-header').attr('font-weight', 'bolder')
     fullViewBody.append('g').attr('class', 'body')
     fullViewBody.select('.body').append('g').attr('class', 'x-axis')
     fullViewBody.select('.body').append('g').attr('class', 'y-axis')
+    if (clean_filter){
+        filterFormContainer.innerHTML = ''
+    }
 }
 
 // ########################################## Async Functions ##########################################################
 
 async function requestLayout(url){
+    let response = await fetch(url)
+    let data = await response.json()
+    return data
+}
+
+async function requestFilterForm(url){
     let response = await fetch(url)
     let data = await response.json()
     return data
@@ -468,12 +480,13 @@ if (container){
 
     // Click Events
     container.addEventListener('click', (e) => {
+
         // This event will request the desired information to the server and display the visualization in the graph container
         if (e.target.closest('.container__navigation__tab')){
             document.querySelectorAll('.container__navigation__tab').forEach((el) => {el.classList.remove('container__navigation__tab--active')})
             e.target.closest('.container__navigation__tab').classList.add('container__navigation__tab--active')
             fullViewVisualizer.classList.remove('container__visualization__full-view--display')
-            cleanUpFullViewVisualizer()
+            cleanUpFullViewVisualizer(clean_filter=true)
             visualizationContainer.classList.remove('container__visualization__data--hide')
             let layoutUrl = e.target.closest('.container__navigation__tab').getAttribute('data-layout-url')
             requestLayout(layoutUrl)
@@ -488,18 +501,51 @@ if (container){
         }
 
         if (e.target.closest('.patient-addition') || e.target.closest('.age-distribution') || e.target.closest('.gender-distribution')){
+
             visualizationContainer.classList.add('container__visualization__data--hide')
             fullViewVisualizer.classList.add('container__visualization__full-view--display')
             container = components.containers.fullView
             dimensions = components.dimensions.large
+
             if (e.target.closest('.patient-addition')){
-                visualizePatientCreationCount(patientsData.creationCount, container, dimensions, new Date().getFullYear() - 1)
+                visualizePatientCreationCount(patientsData.creationCount, container, dimensions)
             }else if (e.target.closest('.age-distribution')){
                 visualizePatientAgeData(patientsData.age, container, dimensions)
             }else{
                 visualizePatientGenData(patientsData.gender, container, dimensions)
             }
+
+            let filter_request_url = e.target.getAttribute('data-url')
+            requestFilterForm(filter_request_url)
+            .then((data) => {
+                filterFormContainer.innerHTML = data['html']
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
         }
 
     })
+
+    container.addEventListener('change', (e) => {
+        container = components.containers.fullView
+        dimensions = components.dimensions.large
+        if (e.target.closest('.creation-date-filter')){
+            let year = parseInt(e.target.value)
+            cleanUpFullViewVisualizer()
+            visualizePatientCreationCount(patientsData.creationCount, container, dimensions, year)
+        }else if (e.target.closest('.gender-dist-filter')){
+            let gender = e.target.value
+            cleanUpFullViewVisualizer()
+            visualizePatientGenData(patientsData.gender, container, dimensions, gender)
+        }else if (e.target.closest('.age-dist-filter')){
+            cleanUpFullViewVisualizer()
+            let ageFromSelector = document.querySelector('#id_age_from')
+            let ageToSelector = document.querySelector('#id_age_to')
+            let ageRange = [parseInt(ageFromSelector.value), parseInt(ageToSelector.value)]
+            visualizePatientAgeData(patientsData.age, container, dimensions, ageFrom = ageRange[0], ageTo=ageRange[1])
+        }
+    })
+
 }

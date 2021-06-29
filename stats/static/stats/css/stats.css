@@ -1,6 +1,6 @@
 .container{
     display: grid;
-    grid-template-columns: 19.5% 60% 19.5%;
+    grid-template-columns: 19% 60% 19%;
     grid-gap: 1%;
     padding: 5px;
 }
@@ -104,6 +104,15 @@ text{
 
 .large-widget-header{
     transform: translate(43%, 8%);
+}
+
+.tooltip-arrow{
+    transform: translateY(15px) rotate(45deg) ;
+}
+
+.filter-container__filter-form{
+    transform: translateY(0%);
+    animation: show-up 2s linear;
 }
 
 /*.container__graph{

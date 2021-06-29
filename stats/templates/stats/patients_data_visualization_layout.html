@@ -1,4 +1,4 @@
-<svg class="patient-addition container__visualization__m-widget">
+<svg class="patient-addition container__visualization__m-widget" data-url="{% url 'stats:request_filter_form' 'creation_date' %}">
     <text class="header medium-widget-header" font-weight="bolder"></text>
     <g class="body">
         <g class="x-axis"></g>
@@ -8,7 +8,7 @@
 
 <div class="double-visualization-container">
 
-    <svg class="age-distribution container__visualization__s-widget">
+    <svg class="age-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'age' %}">
         <text class="header small-widget-header" font-weight="bolder"></text>
         <g class="body">
             <g class="x-axis"></g>
@@ -16,10 +16,9 @@
         </g>
     </svg>
 
-    <svg class="gender-distribution container__visualization__s-widget">
+    <svg class="gender-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'gender' %}">
         <text class="header small-widget-header" font-weight="bolder"></text>
-        <g class="body">
-        </g>
+        <g class="body"></g>
     </svg>
 
 </div>

@@ -37,3 +37,4 @@ if __name__ == '__main__':
     print('Populating database')
     populate_patients(1000)
     print('Population finished')
+
