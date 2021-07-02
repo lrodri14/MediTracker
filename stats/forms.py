@@ -40,7 +40,7 @@ class AgeDistributionFilterForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, *kwargs)
-        self.fields['age_to'].initial = 11
+        self.fields['age_to'].initial = 10
 
 
 class GenderDistributionFilterForm(forms.Form):

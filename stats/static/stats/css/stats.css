@@ -10,7 +10,7 @@
 }
 
 .container__visualization__data{
-    max-height: 730px;
+    max-height: 740px;
     overflow-y: auto;
 }
 
@@ -62,7 +62,7 @@
     backdrop-filter: blur(5px);
     cursor: pointer;
     width: 100%;
-    margin-bottom: 1%;
+    margin-bottom: 10px;
     animation: show-up 1s linear;
 }
 
@@ -92,18 +92,6 @@ text{
 
 .header{
     fill: #FFFFFF;
-}
-
-.small-widget-header{
-    transform: translate(33%, 10%);
-}
-
-.medium-widget-header{
-    transform: translate(43%, 10%);
-}
-
-.large-widget-header{
-    transform: translate(43%, 8%);
 }
 
 .tooltip-arrow{

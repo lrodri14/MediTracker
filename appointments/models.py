@@ -268,6 +268,7 @@ class BaseConsult(models.Model):
         unique_together = ['created_by', 'datetime']
         verbose_name = 'Consult'
         verbose_name_plural = 'Consults'
+        ordering = ('datetime',)
 
 
 class GeneralConsult(BaseConsult):

@@ -6,6 +6,7 @@
 # Imports
 
 from patients.models import Patient
+from appointments.models import BaseConsult
 from django.shortcuts import render
 from django.core.serializers import serialize
 from stats.forms import *
@@ -37,7 +38,14 @@ def patients_statistics(request):
 
 
 def consults_statistics(request):
-    pass
+    """
+        DOCSTRING:
+        This consults_statistics function view will serve the consults data in JSON Format, it makes use of the django
+        serializer for this task with the specified fields.
+    """
+    consults = BaseConsult.objects.filter(created_by=request.user)
+    data = serialize('json', consults, fields=('datetime', 'charge', 'created_by', 'medical_status', 'status'))
+    return HttpResponse(data, content_type='application/json')
 
 
 def income_statistics(request):
@@ -45,10 +53,12 @@ def income_statistics(request):
 
 
 def process_layout(request, layout_type):
-    data = None
+    template = None
     if layout_type == 'patients':
         template = 'stats/patients_data_visualization_layout.html'
-        data = {'html': render_to_string(template, {}, request)}
+    elif layout_type == 'consults':
+        template = 'stats/consults_data_visualization_layout.html'
+    data = {'html': render_to_string(template, {}, request)}
     return JsonResponse(data)
 
 

@@ -7,8 +7,10 @@ django.setup()
 import random
 from faker import Faker
 from patients.models import Patient
+from appointments.models import BaseConsult
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+import pytz
 
 faker = Faker()
 genders = ['M', 'F']
@@ -32,9 +34,28 @@ def populate_patients(iters=5):
             )
 
 
+def populate_consults(iters=5):
+    patients = Patient.objects.filter(created_by=user)
+    for i in range(iters):
+        BaseConsult.objects.create(
+            patient=random.choice(list(patients)),
+            datetime=faker.date_time_between(tzinfo=pytz.timezone('America/Tegucigalpa'), start_date='-180d', end_date=timezone.localtime()),
+            motive=faker.paragraph(),
+            suffering=faker.paragraph(),
+            charge=faker.random_int(min=200, max=500),
+            status=random.choice(['OPEN', 'CONFIRMED', 'CANCELLED', 'CLOSED']),
+            medical_status=random.choice([True, False]),
+            created_by=user
+        )
+
+
 if __name__ == '__main__':
     Patient.objects.all().delete()
+    BaseConsult.objects.all().delete()
     print('Populating database')
-    populate_patients(1000)
+    populate_patients(300)
+    populate_consults(300)
     print('Population finished')
+
+
 
