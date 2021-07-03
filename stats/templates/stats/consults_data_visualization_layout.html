@@ -1,6 +1,6 @@
 <div class="double-visualization-container">
 
-    <svg class="status-distribution container__visualization__s-widget">
+    <svg class="status-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'status' %}">
         <text class="header" font-weight="bolder"></text>
         <g class="body">
             <g class="x-axis"></g>
@@ -8,7 +8,7 @@
         </g>
     </svg>
 
-    <svg class="medical-status-distribution container__visualization__s-widget">
+    <svg class="medical-status-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'medical_status' %}">
         <text class="header" font-weight="bolder"></text>
         <g class="body">
             <g class="x-axis"></g>
@@ -18,7 +18,7 @@
 
 </div>
 
-<svg class="consult-growth container__visualization__m-widget">
+<svg class="consult-growth container__visualization__m-widget" data-url="{% url 'stats:request_filter_form' 'consult-count' %}">
     <text class="header" font-weight="bolder"></text>
     <g class="body">
         <g class="x-axis"></g>
@@ -26,7 +26,7 @@
     </g>
 </svg>
 
-<svg class="consult-time-frequency container__visualization__m-widget">
+<svg class="consult-time-frequency container__visualization__m-widget" data-url="{% url 'stats:request_filter_form' 'hour-frequency' %}">
     <text class="header" font-weight="bolder"></text>
     <g class="body">
         <g class="x-axis"></g>

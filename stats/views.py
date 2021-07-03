@@ -64,7 +64,7 @@ def process_layout(request, layout_type):
 
 def patient_data_filter_form(request, filter_type):
     template = None
-    context = None
+    form = None
 
     if filter_type == 'creation_date':
         form = PatientCreationFilterForm(user=request.user.username)
@@ -72,9 +72,21 @@ def patient_data_filter_form(request, filter_type):
     elif filter_type == 'gender':
         form = GenderDistributionFilterForm
         template = 'stats/gender_distribution_filter_form.html'
-    else:
+    elif filter_type == 'age':
         form = AgeDistributionFilterForm
         template = 'stats/age_distribution_filter_form.html'
+    elif filter_type == 'status':
+        form = StatusDistributionFilterForm
+        template = 'stats/status_distribution_filter_form.html'
+    elif filter_type == 'medical_status':
+        form = MedicalStatusDistributionFilterForm
+        template = 'stats/medical_status_distribution_filter_form.html'
+    elif filter_type == 'consult-count':
+        form = ConsultCountFilterForm(user=request.user)
+        template = 'stats/consult_count_filter_form.html'
+    elif filter_type == 'hour-frequency':
+        form = ConsultHourFrequencyFilterForm
+        template = 'stats/consult_hour_frequency_filter_form.html'
 
     context = {'form': form}
     data = {'html': render_to_string(template, context, request)}

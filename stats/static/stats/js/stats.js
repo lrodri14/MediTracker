@@ -472,10 +472,13 @@ function processConsultsData(url){
     })
 }
 
-function visualizeStatusCount(data, container, dimensions, status = 'all'){
+function visualizeStatusCount(data, container, dimensions, status='all'){
 
     // Collect Data
     data = data.data
+    if (status !== 'all'){
+        data = data.filter((d) => {return d.status === status})
+    }
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
     let translateX = dimensions.translation.x
@@ -629,6 +632,10 @@ function visualizeMedicalStatusCount(data, container, dimensions, medicalStatus=
 
     // Collect Data
     data = data.data
+    if (medicalStatus !== 'all'){
+        medicalStatus = medicalStatus === 'true' ? true : false
+        data = data.filter((d) => {return d.medicalStatus === medicalStatus})
+    }
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
     let translateX = dimensions.translation.x
@@ -723,10 +730,13 @@ function visualizeMedicalStatusCount(data, container, dimensions, medicalStatus=
     }
 }
 
-function visualizeConsultsDateCount(data, container, dimensions){
+function visualizeConsultsDateCount(data, container, dimensions, dateFrom=null, dateTo=null){
 
     // Collect Data
     data = data.data
+    if (dateFrom !== null && dateTo !== null){
+        data = data.filter((d) => {return d.date >= dateFrom && d.date <= dateTo})
+    }
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
     let translateX = dimensions.translation.x
@@ -790,10 +800,13 @@ function visualizeConsultsDateCount(data, container, dimensions){
 
 }
 
-function visualizeConsultsAttendanceHourFrequency(data, container, dimensions){
+function visualizeConsultsAttendanceHourFrequency(data, container, dimensions, hourFrom=null, hourTo=null){
 
     // Collect Data
     data = data.data
+    if (hourFrom !== null && hourTo !== null){
+        data = data.filter((d) => {return d.hour >= hourFrom && d.hour <= hourTo})
+    }
     let bodyHeight = dimensions.bodyHeight
     let bodyWidth = dimensions.bodyWidth
     let translateX = dimensions.translation.x
@@ -1053,6 +1066,30 @@ if (container){
             let ageToSelector = document.querySelector('#id_age_to')
             let ageRange = [parseInt(ageFromSelector.value), parseInt(ageToSelector.value)]
             visualizePatientAgeData(patientsData.ageRanges, container, dimensions, ageFrom = ageRange[0], ageTo=ageRange[1])
+        }else if (e.target.closest('.status-dist-filter')){
+            cleanUpFullViewVisualizer()
+            let status = e.target.value
+            visualizeStatusCount(consultsData.statusCount, container, dimensions, status)
+        }else if (e.target.closest('.medical-status-dist-filter')){
+            cleanUpFullViewVisualizer()
+            let medicalStatus = e.target.value
+            visualizeMedicalStatusCount(consultsData.medicalStatusCount, container, dimensions, medicalStatus)
+        }else if (e.target.closest('.consult-count-filter')){
+            let dateFromMonth = document.querySelector('#id_date_from_month').value
+            let dateFromDay = document.querySelector('#id_date_from_day').value
+            let dateFromYear = document.querySelector('#id_date_from_year').value
+            let dateToMonth = document.querySelector('#id_date_to_month').value
+            let dateToDay = document.querySelector('#id_date_to_day').value
+            let dateToYear = document.querySelector('#id_date_to_year').value
+            let dateFromDate = new Date(dateFromMonth + '/' + dateFromDay + '/' + dateFromYear)
+            let dateToDate = new Date(dateToMonth + '/' + dateToDay + '/' + dateToYear)
+            cleanUpFullViewVisualizer()
+            visualizeConsultsDateCount(consultsData.consultsDateCount, container, dimensions, dateFromDate, dateToDate)
+        }else if (e.target.closest('.consult-hour-frequency-filter')){
+            let hourFrom = document.querySelector('#id_hour_from').value
+            let hourTo = document.querySelector('#id_hour_to').value
+            cleanUpFullViewVisualizer()
+            visualizeConsultsAttendanceHourFrequency(consultsData.consultsAttendanceHourFrequency, container, dimensions, hourFrom, hourTo)
         }
     })
 
