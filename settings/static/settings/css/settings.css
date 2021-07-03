@@ -70,6 +70,10 @@
     display: none;
 }
 
+#id_wallpaper{
+    display: none;
+}
+
 .general-settings{
     list-style: none;
     display: inline-block;
@@ -118,6 +122,16 @@
 
 .wallpaper-row__wallpaper--active{
     border-color: #FFFFFF;
+}
+
+.general-settings__content form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+    text-align: left;
+}
+
+#id_sfx{
+    width: 15%;
 }
 /*####################################################### Profile Settings ###########################################*/
 

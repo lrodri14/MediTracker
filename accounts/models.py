@@ -213,6 +213,7 @@ class UserGeneralSettings(models.Model):
         and finally we created the class's own __str__ dunder method.
     """
     wallpaper = models.CharField('Wallpaper', max_length=100, blank=True, null=True, help_text='Choose Wallpaper')
+    sfx = models.BooleanField('SFX', blank=True, null=True, help_text='Sound Effects Switch', default=True)
     user = models.OneToOneField(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='User Settings', verbose_name='User Settings', related_name='general_settings')
 
     def __str__(self):

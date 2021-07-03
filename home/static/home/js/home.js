@@ -1,20 +1,20 @@
 /* This home.js file contains all the variable declarations, all the async functions and event listeners used for the
    home page to work properly. */
 
+document.querySelector('.main-menu').click()
+
 //////////////////////////////////////////////////////// Variables /////////////////////////////////////////////////////
 
-var searchBar = document.querySelector('.main-menu__search-bar')
-var topMenuElements = document.querySelector('.main-menu__upper-row')
-var bottomMenuElements = document.querySelector('.main-menu__lower-row')
-var menuTitle = document.querySelector('.main-menu__title')
-var queryResults = document.querySelector('.data-table__query-results')
-var tiles = document.querySelectorAll('.main-menu__tile')
-var icons = document.querySelectorAll('main-menu__tile-icon')
-var logoutTile = document.querySelector('#logout')
-var sound = document.querySelector('audio')
-var modal = document.querySelector('.modal')
-
-document.querySelector('body').click()
+let searchBar = document.querySelector('.main-menu__search-bar')
+let topMenuElements = document.querySelector('.main-menu__upper-row')
+let bottomMenuElements = document.querySelector('.main-menu__lower-row')
+let menuTitle = document.querySelector('.main-menu__title')
+let queryResults = document.querySelector('.data-table__query-results')
+let tiles = document.querySelectorAll('.main-menu__tile')
+let icons = document.querySelectorAll('main-menu__tile-icon')
+let logoutTile = document.querySelector('#logout')
+let modal = document.querySelector('.modal')
+let sound = document.querySelector('audio')
 
 //////////////////////////////////////////////////////// Functions /////////////////////////////////////////////////////
 
@@ -100,7 +100,9 @@ for (let i = 0; i<tiles.length; i++){
     /* This event will be fired every time the target is a tile, several styles will be altered */
     tiles[i].addEventListener('mouseover', function(){
         tiles[i].classList.add('main-menu__tile--active')
-//        sound.play()
+        if (sound.getAttribute('data-status') === 'True'){
+            sound.play()
+        }
     })
 
     // Mouseout events

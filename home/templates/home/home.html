@@ -5,7 +5,8 @@
 {% block body_block %}
 {% block return %}{% endblock %}{% block home %}{% endblock %}{% block navigation %}{% endblock %}
 <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
-<audio src="{% static 'home/js/sound-effect.mp3' %}"></audio>
+
+<audio src="{% static 'home/js/sound-effect.mp3' %}" data-status="{{ user.general_settings.sfx }}"></audio>
 
 <!-- Container -->
 <div class="main-menu">

@@ -3,13 +3,13 @@
     instances.
 """
 
+import pytz
+from PIL import Image, ExifTags
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as CreationForm
 from django.contrib.auth.forms import UserChangeForm as ChangeForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from .models import CustomUser, Doctor, Assistant, UsersProfile, UserAccountSettings, UserGeneralSettings, MailingCredential
-from PIL import Image, ExifTags
-import pytz
 
 
 class UserCreationForm(CreationForm):
@@ -189,6 +189,7 @@ class UserGeneralSettingsForm(forms.ModelForm):
         and set the model attribute aiming to the UserGeneralSettings class, we excluded specific fields through the
         exclude field.
     """
+
     class Meta:
         model = UserGeneralSettings
         exclude = ('user',)
