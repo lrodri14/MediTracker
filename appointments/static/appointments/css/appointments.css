@@ -9,8 +9,9 @@ button{
 
 /*#################################################### Table #########################################################*/
 
-.data-table-container{
+.data-container{
     margin-top: 1%;
+    max-height: 727px;
 }
 
 .data-table__item{

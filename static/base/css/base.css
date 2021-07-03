@@ -269,8 +269,8 @@ select:focus{
     grid-gap: 1%;
 }
 
-.data-table-container{
-    max-height: 787px;
+.data-container{
+    max-height: 769px;
     overflow-y: auto;
     animation: show-up 0.5s linear;
 }

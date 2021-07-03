@@ -8,7 +8,7 @@
 <h2 class="title">Records</h2>
 {% if records %}
     <div class="data">
-        <div class="data-table-container">
+        <div class="data-container">
             <table class="data-table">
                 <thead>
                     <tr id="heading">
@@ -23,7 +23,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="filer-container">
+        <div class="filter-container">
             <i class="fas fa-filter filter-container__filter-display-button"></i>
             <form method="GET" action="{% url 'records:filter_records' %}" class="filter-container__filter-form">
                 <h2>Filter Results</h2>
@@ -39,5 +39,5 @@
 {% else %}
     <p id="no-data">There are no records filled</p>
 {% endif %}
-<script src="{% static 'records/js/records_list.js' %}"></script>
+    <script src="{% static 'records/js/records_list.js' %}"></script>
 {% endblock %}

@@ -55,6 +55,10 @@
     margin-top: 6%;
 }
 
+.data-container{
+    max-height: 693px;
+}
+
 .filter-container__filter-form--display{
     transform: translateY(15%);
     transition: transform 0.5s ease-out;
