@@ -15,7 +15,11 @@ let navigation = document.querySelector('.consult__navigation')
 // Diagnose
 let diagnose = document.querySelector('.consult__diagnose')
 let drugsList = document.querySelector('#id_drugs')
-let testing = document.querySelector('#id_testing')
+let drugsIndications = []
+let indications = document.querySelector('#id_indications')
+let testingList = document.querySelector('#id_testing')
+let testingIndications = []
+let instructions = document.querySelector('#id_instructions')
 
 // Pop-ups
 let patientInfoPopUp = document.querySelector('.patient-information-popup')
@@ -36,7 +40,7 @@ let modal = document.querySelector('.modal')
 let modalContent = document.querySelector('.modal__content')
 let prescriptionModal = document.querySelector('.prescription-modal')
 let prescriptionModalContent = document.querySelector('.prescription-modal__content')
-let modalBackUp = document.querySelector('.modal__reminder')
+let modalBackUp = modalContent.innerHTML
 
 // Navigator
 navigation.innerHTML = '<li></li>'.repeat(document.querySelectorAll('.consult__diagnose-data').length)
@@ -134,8 +138,6 @@ function diagnoseScroll(elScrollLeft, elScrollWidth, distance, element, eTarget,
        is the set of navigator dots in the navigator section. Now with all this data, the function will decide where to
        scroll based on the arrow that was clicked, making use of the scrollTo function.*/
 
-    let activeElement = Math.round((elScrollLeft / distance))
-
     if (eTarget.classList.contains('fa-angle-left') && elScrollLeft !== 0){
         element.scrollTo({
             left: elScrollLeft - distance,
@@ -191,6 +193,11 @@ if (form){
             e.target.classList.add('consult__add-item--active')
         }
 
+        // This event will be fired every time the target is a submit button.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+
     })
 
     // Form mouseout events
@@ -220,24 +227,10 @@ if (form){
             e.target.classList.remove('consult__add-item--active')
         }
 
-    })
-
-    // Form scroll events
-    form.addEventListener('scroll', (e) => {
-
-        // This event will be fired when the target contains the consult__diagnose class, it will activate the corresponding navigator element.
-        /* This scroll event is fired when a scroll occurs in the diagnose element, this event will be the one in charge
-            of activating the correct navigator dot in the navigation bar.*/
-        if (e.target.classList.contains('consult__diagnose')){
-            let navigationDots = navigation.childNodes
-            let distance = diagnose.scrollWidth/navigationDots.length
-            let activeElement = Math.round(diagnose.scrollLeft/distance)
-            for (let i = 0; i<navigationDots.length; i++){
-                navigationDots[i].classList.remove('navigator--active')
-            }
-            navigationDots[activeElement].classList.add('navigator--active')
+        // This event will be fired every time the target is a submit button.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
         }
-
     })
 
     // Form click events
@@ -313,29 +306,28 @@ if (form){
                 modal.classList.add('modal--display')
             }
         }
-
     })
 
     // Form change events
     form.addEventListener('change', (e) => {
-
         /* This event will be target any time the category filter dropdown detects a change, it will asynchronously
            display the drugs that belong to the category the user chose. This event will perform many actions such as
            grab the url to make the 'GET' request, afterwards, collecting the category to filter the drugs, after this
            data is collected, the checkboxes will be updated with the information retrieved from the server and finally
            checking the options that were checked in case there were.*/
-       if (e.target.id === '#id_test_type'){
+       if (e.target.id === 'id_test_type'){
             const data = e.target.options[e.target.selectedIndex].value
-            const url = e.target.parentNode.getAttribute('data-url') + '?category=' + data
-            retrieveDrugsFilterAsync(url)
+            const url = e.target.parentNode.getAttribute('data-url') + '?test_type=' + data
+            retrieveMedicalTestsFilterAsync(url)
             .then(data => {
-                document.querySelector('#id_drugs').innerHTML = data['updated_drugs']
+                testingList.innerHTML = data['updated_tests']
+
                 // Better way to take control of the already checked checkboxes
-                let checkboxes = document.querySelectorAll('#id_drugs input[type=checkbox]')
-                for (let i = 0; i<checkedDrugs.length; i++){
-                    let checkedDrug = checkedDrugs[i]
+                let checkboxes = testingList.querySelectorAll('input[type=checkbox]')
+                for (let i = 0; i<checkedTests.length; i++){
+                    let checkedTest = checkedTests[i]
                     for (let j = 0; j<checkboxes.length; j++){
-                        if (checkedDrug.value === checkboxes[j].value){
+                        if (checkedTest === checkboxes[j].value){
                             checkboxes[j].checked = true
                         }
                     }
@@ -348,18 +340,18 @@ if (form){
            grab the url to make the 'GET' request, afterwards, collecting the category to filter the drugs, after this
            data is collected, the checkboxes will be updated with the information retrieved from the server and finally
            checking the options that were checked in case there were.*/
-        if (e.target.id === '#id_category'){
+        if (e.target.id === 'id_category'){
             const data = e.target.options[e.target.selectedIndex].value
-            const url = e.target.parentNode.getAttribute('data-url') + '?test_type=' + data
-            retrieveMedicalTestsFilterAsync(url)
+            const url = e.target.parentNode.getAttribute('data-url') + '?category=' + data
+            retrieveDrugsFilterAsync(url)
             .then(data => {
-                document.querySelector('#id_testing').innerHTML = data['updated_tests']
+                drugsList.innerHTML = data['updated_drugs']
                 // Better way to take control of the already checked checkboxes
-                let checkboxes = document.querySelectorAll('#id_testing input[type=checkbox]')
-                for (let i = 0; i<checkedTests.length; i++){
-                    let checkedTest = checkedTests[i]
+                let checkboxes = drugsList.querySelectorAll('input[type=checkbox]')
+                for (let i = 0; i<checkedDrugs.length; i++){
+                    let checkedDrug = checkedDrugs[i]
                     for (let j = 0; j<checkboxes.length; j++){
-                        if (checkedTest.value === checkboxes[j].value){
+                        if (checkedDrug === checkboxes[j].value){
                             checkboxes[j].checked = true
                         }
                     }
@@ -368,39 +360,22 @@ if (form){
         }
 
         // This event will be fired every time the changes occur on the drugs list, it will check the previously checked boxes.
-        if (e.target.id === '#id_drugs'){
+        if (e.target.closest('#id_drugs')){
 
-            // Check for a better way to improve this code.
-            // Better way to take control of the already checked checkboxes
-            // Whenever we do a filtering of the drugs options, we will keep a backup of the drugsPrescribed and the checkedDrugs.
-            let drugsPrescribed = []
-
-            /* This event listener will be the one in charge of updating the medicine input text whenever a new drug is checked
-               to prescribe to a patient, */
+            let value = e.target.value
+            let text = e.target.closest('label').innerText + ' - \n'
+            checkedDrugs.includes(value) ? checkedDrugs.splice(checkedDrugs.indexOf(value), 1) : checkedDrugs.push(value)
+            drugsIndications.includes(text) ? drugsIndications.splice(drugsIndications.indexOf(text), 1) : drugsIndications.push(text)
             indications.value = ''
-            // Actual drug that was selected or checked
-            let drugPrescribed = e.target.parentNode.innerText
-            /* Check if the drug prescribed already exists in the list of prescribed drugs we have filled before.
-               If it didn't exist, it will add it.*/
-            if (drugsPrescribed.indexOf(drugPrescribed + ' -') === -1){
-                drugsPrescribed.push(drugPrescribed + ' -')
-                checkedDrugs.push(e.target)
-            }else{
-                /* If it exists, then it will be removed since the change event that the drugsList caught, was the unchecking of a box*/
-                drugsPrescribed.splice(drugsPrescribed.indexOf(drugPrescribed + ' -'), 1)
-                checkedDrugs.splice(checkedDrugs.indexOf(e.target), 1)
-            }
-            // Add the drugs in the prescribedDrugs list to the indications textArea for further indications.
-            for (let i = 0; i<drugsPrescribed.length; i++){
-                if (indications.value.split('\n').indexOf(drugsPrescribed[i]) === -1){
-                    indications.value += drugsPrescribed[i] + '\n'
-                }
-            }
+
+            // Writing to the indications text box
+            drugsIndications.forEach((d) => {indications.value += d})
         }
 
         // This event will be fired every time the target is the testing element, it will add or remove elements from the checkedTests Array
-        if (e.target.id === '#id_testing'){
-            checkedTests.includes(e.target) ? checkedTests.splice(checkedTests.indexOf(e.target), 1) : checkedTests.push(e.target)
+        if (e.target.closest('#id_testing')){
+            let value = e.target.value
+            checkedTests.includes(value) ? checkedTests.splice(checkedTests.indexOf(value), 1) : checkedTests.push(value)
         }
 
     })
@@ -438,21 +413,33 @@ if (form){
                     prescriptionModalContent.setAttribute('data-pdf', data['prescription_path'])
                     pdfPath = prescriptionModalContent.getAttribute('data-pdf')
                     PDFObject.embed(pdfPath, prescriptionModalContent)
-                    prescriptionModal.classList.add('prescription-modal-show')
+                    prescriptionModal.classList.add('prescription-modal--display')
                 }
-            })
-            .catch(error => {
-                form.submit()
             })
         } else{
             /*If there are, the confirmation modal will be displayed.*/
-            if (modal.innerHTML !== modalBackUp){
-                modal.innerHTML = modalBackUp
+            if (modalContent.innerHTML !== modalBackUp){
+                modalContent.innerHTML = modalBackUp
             }
-            modal.classList.add('modal-show')
+            modal.classList.add('modal--display')
         }
     })
 }
+
+// Diagnose
+diagnose.addEventListener('scroll', (e) => {
+
+    /* This scroll event is fired when a scroll occurs in the diagnose element, this event will be the one in charge
+    of activating the correct navigator dot in the navigation bar.*/
+
+    let navigationDots = navigation.childNodes
+    let distance = diagnose.scrollWidth/navigationDots.length
+    let activeElement = Math.round(diagnose.scrollLeft/distance)
+    for (let i = 0; i<navigationDots.length; i++){
+        navigationDots[i].classList.remove('navigator--active')
+    }
+    navigationDots[activeElement].classList.add('navigator--active')
+})
 
 /*############################################ Exams Displaying and Results Modal ####################################*/
 
@@ -743,10 +730,6 @@ if (modal){
 
     modal.addEventListener('click', (e) => {
 
-//        e.preventDefault()
-//        e.stopPropagation()
-
-
         // This event will be fired every time the target contains the 'fa-plus' class, it will display the corresponding form.
         if (e.target.classList.contains('modal__add-item')){
             let url = e.target.getAttribute('data-url')
@@ -759,7 +742,7 @@ if (modal){
 
         // This event will be fired every time the target is the modal itself, or a button with 'No' as it's text content, this will remove the 'modal-show' class from the modal.
         if (e.target === modal || e.target === modalContent || (e.target.nodeName === 'BUTTON' && e.target.textContent === 'No')){
-            modalContent.innerHTML = modalBackUp
+            modalContent.innerHTML = ''
             modal.classList.remove('modal--display')
         }
 
@@ -786,7 +769,7 @@ if (modal){
                     modal.classList.remove('modal--display')
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 form.submit()
             })
         }
@@ -799,7 +782,6 @@ if (modal){
 
        e.stopPropagation()
        e.preventDefault()
-
        let url = e.target.action
        let method = e.target.method
        let formData = new FormData(e.target)
@@ -808,7 +790,7 @@ if (modal){
         /* This event will be fired every time a submit occurs and the target contains the 'add-medical-test-form' class, this will
            create MedicalTest instances, and return an updated list as a response. */
 
-       if (e.target.id = 'add-medical-test-form'){
+       if (e.target.id === 'add-medical-test-form'){
             addElementAsync(url, method, formData, csrfmiddlewaretoken)
             .then(data => {
                 if (data['html']){
@@ -832,8 +814,7 @@ if (modal){
         /* This event will be fired every time a submit occurs and the target contains the 'add-drug-form' class, this will
            create Drug instances, and return an updated list as a response. */
 
-       if (e.target.id = 'add-drug-form'){
-
+       if (e.target.id === 'add-drug-form'){
             addElementAsync(url, method, formData, csrfmiddlewaretoken)
             .then(data => {
                 if (data['html']){
@@ -883,10 +864,27 @@ if (modal){
 
 // PrescriptionModal event listeners
 
-prescriptionModal.addEventListener('click', (e) => {
+if (prescriptionModal){
 
-    // This event will be fired every time the target's textContent is 'Save Consult', this event will change the window's location to the main consults page.
-    if (e.target.textContent === 'Save Consult'){
-        window.location.href = e.target.getAttribute('data-url')
-    }
-})
+    prescriptionModal.addEventListener('click', (e) => {
+        // This event will be fired every time the target's textContent is 'Save Consult', this event will change the window's location to the main consults page.
+        if (e.target.textContent === 'Save Consult'){
+            window.location.href = e.target.getAttribute('data-url')
+        }
+    })
+
+    prescriptionModal.addEventListener('mouseover', (e) => {
+        // This event will be fired every time the target is a button, and it will add the button hover class to it.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+    })
+
+    prescriptionModal.addEventListener('mouseout', (e) => {
+        // This event will be fired every time the target is a button, and it will add the button hover class to it.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
+        }
+    })
+
+}

@@ -392,12 +392,10 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     left: 0%;
     width: 100%;
     height: 100%;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: 0.3s;
 }
 
 .exams__data{
@@ -410,6 +408,7 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     padding: 10px;
     border-radius: 25px;
     background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
     transition: 1s;
 }
 
@@ -501,7 +500,7 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
 .exams--display{
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.3s;
+    transition: 0.3s;
     z-index: 1;
 }
 
@@ -547,7 +546,6 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
 }
 
 .exams-preview__image--display{
-    border: 1px solid red;
     visibility: visible;
     opacity: 1;
     transition: 0.5s;
@@ -574,8 +572,8 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     margin-top: 5%;
 }
 
-.data-table-container{
-    max-height: 782px;
+.data-container{
+    max-height: 769px;
     overflow-y: auto;
 }
 
@@ -609,13 +607,13 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     background-color: rgba(255,255,255,0.1);
     border-radius: 25px;
     width: 50%;
-    height: 20%
+    height: 25%
     color: #FFFFFF;
 }
 
 .modal__reminder button{
-    width: 20%;
-    margin: 2%;
+    width: 15%;
+    margin-bottom: 2%;
 }
 
 /*#################################################### Prescription Modal ############################################*/
@@ -627,6 +625,7 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     top: 0;
     left: 0;
     background-color: rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s;

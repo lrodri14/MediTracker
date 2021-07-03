@@ -4,7 +4,7 @@
 /*#################################################### Variables #####################################################*/
 
 let container = document.querySelector('.data')
-let dataTable = document.querySelector('.data-table-container')
+let dataTable = document.querySelector('.data-container')
 let modal = document.querySelector('.modal')
 let modalContent = document.querySelector('.modal__content')
 let form = document.querySelector('.filter-container__filter-form')
@@ -302,10 +302,10 @@ if (container){
 if (modal){
 
     // Modal Click Events
-
-    // This event will be fired every time the target is the modal, it will remove the modal--display class from the element.
-    if (e.target.classList.contains('modal')){
-        e.target.classList.remove('modal--display')
-    }
-
+    modal.addEventListener('click', (e) => {
+        // This event will be fired every time the target is the modal, it will remove the modal--display class from the element.
+        if (e.target.classList.contains('modal')){
+            e.target.classList.remove('modal--display')
+        }
+    })
 }
