@@ -24,7 +24,7 @@ let addData = document.querySelector('.add-data')
 let warningMessages = {
     'no-id-registered' : "Individual over 18, ID information unknown",
     'expired-insurance' : "Medical Insurance's valid time concluded",
-    'out-of-date-info' : "Patient's ID unknown and Medical Insurance information out of date",
+    'out-of-date-info' : "Patient's information outdated",
     'in-order': "Individual's information up to date"
 }
 
@@ -240,7 +240,6 @@ if (dataContainer){
             warningPopup.style.top = ''
             filterForm.classList.contains('filter-container__filter-form--display') ? filterForm.classList.remove('filter-container__filter-form--display') : filterForm.classList.add('filter-container__filter-form--display')
         }
-
     })
 
     dataContainer.addEventListener('input', (e) => {
@@ -299,16 +298,19 @@ if (modal){
     // Modal Submit Events
     modal.addEventListener('submit', (e) => {
 
-        const form = document.querySelector('#delete-patient-form')
-        const csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
         /*This event will be fired every time the target is a form, it will collect some data from the target, as the
           action attribute value and the csrfmiddlwaretoken, it will make a request using the submitFormAW and depending
           if the form used was filter, it will insert that data inside the backedUpContent variable inside the container,
           else the new data retrieved will be added to the container.*/
+        e.stopPropagation()
+        e.preventDefault()
+        const form = document.querySelector('#patient-delete-form')
+        const csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+
         if (e.target === form){
-            e.preventDefault()
             submitFormAW(form, csrfmiddlewaretoken)
             .then(data => {
+                console.log(data)
                 if (data.hasOwnProperty('patients')){
                     modalContent.innerHTML = data['html']
                     dataContainer.innerHTML = data['patients']

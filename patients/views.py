@@ -44,10 +44,11 @@ def patients(request):
     else:
         doctor = False
         aimed_user = request.user.assistant.doctors.all()[0]
+    today = timezone.localtime().date()
     patients_list = Patient.objects.filter(created_by=aimed_user).order_by('id_number')
     patient_filter = PatientFilterForm
     template = 'patients/patients.html'
-    context = {'patients': patients_list, 'form': patient_filter, 'doctor': doctor}
+    context = {'patients': patients_list, 'form': patient_filter, 'doctor': doctor, 'today': today}
     return render(request, template, context)
 
 
@@ -70,9 +71,10 @@ def filter_patients(request):
     else:
         doctor = False
         aimed_user = request.user.assistant.doctors.all()[0]
+    today = timezone.localtime().date()
     patients_list = Patient.objects.filter(Q(first_names__icontains=query) | Q(last_names__icontains=query),created_by=aimed_user).order_by('id_number')
     template = 'patients/patients_partial_list.html'
-    context = {'patients': patients_list, 'doctor': doctor}
+    context = {'patients': patients_list, 'doctor': doctor, 'today': today}
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 
@@ -226,20 +228,21 @@ def delete_patient(request, pk):
         JsonResponse, it accepts two parameters, 'request' and 'pk' which expects an patients instance pk.
 
     """
+    today = timezone.localtime().date()
     patient = Patient.objects.get(pk=pk)
     doctor_group = Group.objects.get(name='Doctor')
     doctor = doctor_group in request.user.groups.all()
     consults = BaseConsult.objects.filter(created_by=request.user, patient=patient, medical_status=True)
     template = 'patients/delete_patient.html'
-    context = {'patient': patient}
+    context = {'patient': patient, 'today': today}
     data = {'html': render_to_string(template, context, request=request)}
     if request.method == 'POST':
         if len(consults) > 0:
-            context = {'error': 'Patient linked to {} records, deletion prohibited'.format(len(consults))}
+            context = {'error': 'Patient linked to {} record(s), deletion prohibited'.format(len(consults))}
             data = {'html': render_to_string(template, context, request)}
         else:
             patient.delete()
-            context = {'patient_deleted': ' Patient has been deleted successfully'}
+            context = {'patient_deleted': 'Patient deleted successfully, your records have been updated'}
             patients_list = Patient.objects.filter(created_by=request.user).order_by('id_number')
             data = {'html': render_to_string(template, context, request),
                     'patients': render_to_string('patients/patients_list.html', {'patients': patients_list, 'doctor': doctor}, request)}

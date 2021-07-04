@@ -14,7 +14,7 @@
     <!-- If the patient is linked to other consults or the patient was deleted successfully, then this will be rendered-->
     <div class="modal__operation-response">
         {% if error %}
-            <p><small>{{ error }}</small></p>
+            <p>{{ error }}</p>
         {% else %}
             <p>{{ patient_deleted }}</p>
         {% endif %}
