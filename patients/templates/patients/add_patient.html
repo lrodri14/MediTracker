@@ -105,6 +105,7 @@
                         <!-- Allergies ModelFormset Info, used to display as many forms as needed -->
                         {% for allergy_form in allergies_form %}
                             <tr class="form-container">
+                                {{ allergy_form.id }}
                                 <td>{{ allergy_form.allergy_type }} <i class="fas fa-plus form__create-allergy" data-url="{% url 'settings:add_allergy' %}"></i></td>
                                 <td>{{ allergy_form.about }}</td>
                                 <td><i class="fas fa-trash form__delete-allergy-form"></i></td>
@@ -130,6 +131,7 @@
                         <!-- Antecedents ModelFormset Info, used to display as many forms as needed -->
                         {% for antecedent_form in antecedents_form %}
                             <tr class="form-container">
+                                {{ antecedent_form.id }}
                                 <td>{{ antecedent_form.antecedent }}</td>
                                 <td>{{ antecedent_form.info }}</td>
                                 <td><i class="fas fa-trash form__delete-antecedent-form"></i></td>

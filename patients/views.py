@@ -267,6 +267,8 @@ def update_patient(request, pk):
 
     template = 'patients/update_patient.html'
     patient = Patient.objects.get(pk=pk)
+    country_number_code = request.user.profile.location
+    country_code = 'flag-icon-' + request.user.profile.location.lower()
     patient_insurance = InsuranceInformation.objects.get(patient=patient)
     patient_form = PatientForm(request.POST or None, instance=patient)
     allergies_form = AllergyInformationUpdateFormset(instance=patient)
@@ -277,19 +279,36 @@ def update_patient(request, pk):
         allergies_form = AllergyInformationUpdateFormset(request.POST, instance=patient)
         insurance_form = InsuranceInformationForm(request.POST, instance=patient_insurance)
         antecedents_form = AntecedentUpdateFormset(request.POST, instance=patient)
+
         if patient_form.is_valid() and allergies_form.is_valid() and insurance_form.is_valid() and antecedents_form.is_valid():
             patient = patient_form.save(commit=False)
+            allergies_instances = allergies_form.save(commit=False)
+            antecedents_instances = antecedents_form.save(commit=False)
+            insurance = insurance_form.save(commit=False)
+
             if patient.phone_number is None:
-                patient.phone_number = country_number_codes[request.user.profile.location]
+                patient.phone_number = country_number_codes[country_number_code]
             patient.save()
-            allergies_form.save()
-            insurance_form.save()
-            antecedents_form.save()
+            patient.created_by = request.user
+            patient.date_created = timezone.localtime().date()
+            patient.save()
+
+            for allergy_instance in allergies_instances:
+                allergy_instance.patient = patient
+                allergy_instance.save()
+
+            for antecedent_instance in antecedents_instances:
+                antecedent_instance.patient = patient
+                antecedent_instance.save()
+
+            insurance.patient = patient
+            insurance.save()
+
             return redirect('patients:patients_details', pk=patient.pk)
-    return render(request, template, context={'patient_form': patient_form, 'allergies_form': allergies_form,
-                                                                            'insurance_form': insurance_form,
-                                                                            'antecedents_form': antecedents_form,
-                                                                            'country_code': 'flag-icon-' + collect_country_code(patient.phone_number, request.user)})
+    print(allergies_form.errors)
+    print(antecedents_form.errors)
+    context_data = {'patient_form': patient_form, 'allergies_form': allergies_form, 'insurance_form': insurance_form, 'antecedents_form': antecedents_form, 'country_code': country_code}
+    return render(request, template, context_data)
 
 
 def send_email(request, pk):

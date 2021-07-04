@@ -1,4 +1,1 @@
-<option value="">---------</option>
-{% for allergy in allergies %}
-    <option value="{{ allergy.pk }}">{{ allergy.allergy_type }}</option>
-{% endfor %}
+<option value="{{ allergy.pk }}">{{ allergy.allergy_type }}</option>

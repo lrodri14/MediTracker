@@ -46,6 +46,10 @@ h1{
     overflow: auto;
 }
 
+table{
+    width: 100%;
+}
+
 td{
     width: 20%;
 }
@@ -92,9 +96,7 @@ button{
     left: 0;
     opacity: 0;
     visibility: hidden;
-    background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     background-clip: padding-box;
     transition: opacity 0.3s;
 }
@@ -115,7 +117,8 @@ button{
     width: 45%;
     border-radius: 25px;
     padding: 25px;
-    background-color: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    background-color: rgba(255,255,255,0.1);
 }
 
 .save-confirmation-modal button{

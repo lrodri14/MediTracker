@@ -615,7 +615,7 @@ def add_allergy(request):
                 allergy.created_by = request.user
                 allergy.save()
                 allergies_list = Allergies.objects.filter(created_by=request.user).order_by('allergy_type')
-                context = {'allergies': allergies_list, 'form': AllergyFilterForm}
+                context = {'allergies': allergies_list, 'allergy': allergy,'form': AllergyFilterForm}
                 data = {'updated_html': render_to_string('settings/allergies_list.html', context, request), 'updated_selections': render_to_string('settings/allergies_partial_select.html', context=context, request=request)}
             except IntegrityError:
                 context['error'] = 'Allergy is already listed in your options'

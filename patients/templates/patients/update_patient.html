@@ -1,7 +1,7 @@
 <!-- Template used to display the form for the update patient-->
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Add Patient{% endblock %}
+{% block title %}Update Patient{% endblock %}
 {% block return %}{% endblock %}{% block home %}{% endblock %}
 {% block body_block %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" />
@@ -29,7 +29,7 @@
 
             <a href="{% url 'patients:patients' %}"><i class="fas fa-long-arrow-alt-left"></i></a>
 
-            <h1>Add Patient</h1>
+            <h1>Update Patient</h1>
 
             <div class="patient-form__general-information-container">
 
@@ -105,6 +105,7 @@
                         <!-- Allergies ModelFormset Info, used to display as many forms as needed -->
                         {% for allergy_form in allergies_form %}
                             <tr class="form-container">
+                                {{ allergy_form.id }}
                                 <td>{{ allergy_form.allergy_type }} <i class="fas fa-plus form__create-allergy" data-url="{% url 'settings:add_allergy' %}"></i></td>
                                 <td>{{ allergy_form.about }}</td>
                                 <td><i class="fas fa-trash form__delete-allergy-form"></i></td>
@@ -130,6 +131,7 @@
                         <!-- Antecedents ModelFormset Info, used to display as many forms as needed -->
                         {% for antecedent_form in antecedents_form %}
                             <tr class="form-container">
+                                {{ antecedent_form.id }}
                                 <td>{{ antecedent_form.antecedent }}</td>
                                 <td>{{ antecedent_form.info }}</td>
                                 <td><i class="fas fa-trash form__delete-antecedent-form"></i></td>

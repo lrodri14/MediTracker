@@ -8,12 +8,14 @@
 let allergySelection
 
 // managementFormVariables
-let allergiesTotalForms = document.querySelector('.allergies_management_form > #id_form-TOTAL_FORMS')
-let antecedentsTotalForms = document.querySelector('.antecedents_management_form > #id_form-TOTAL_FORMS')
+let allergiesTotalForms = document.querySelector('#id_allergy_information-TOTAL_FORMS')
+let antecedentsTotalForms = document.querySelector('#id_antecedent_information-TOTAL_FORMS')
+let allergyFormsCount = 1
+let antecedentFormsCount = 1
 
 // clonedNodes Variables
-let allergiesFormBlueprint = document.querySelector('.patient-form__allergies-form-container .form-container').cloneNode(true)
-let antecedentsFormBlueprint = document.querySelector('.patient-form__antecedents-form-container .form-container').cloneNode(true)
+let allergiesFormBlueprint = document.querySelector('.patient-form__allergies-form-container .form-container')
+let antecedentsFormBlueprint = document.querySelector('.patient-form__antecedents-form-container .form-container')
 
 let form = document.querySelector('.patient-form')
 let inputs = document.querySelectorAll('input')
@@ -30,7 +32,6 @@ let saveConfirmationModal = document.querySelector('.save-confirmation-modal')
 let flagIcon = document.querySelector('.flag-icon')
 let selectCountryCode = document.querySelector('#id_country_code')
 let phoneNumberField = document.querySelector('#id_phone_number')
-
 
 // ############################################# Functions #############################################################
 
@@ -144,7 +145,6 @@ if (form){
             })
         }
 
-
         /*This event will be fired every time a target will the add-insurance class is clicked, this event will perform
           the following: will extract the 'url' from the data-url attribute, to make the GET request,the data received
           will be displayed inside the modal, it will display a form for insurance addition.*/
@@ -169,23 +169,23 @@ if (form){
           6. Append the cloned node to the allergies_form list.*/
         if (e.target.classList.contains('form__create-allergy-form')){
             let formAmount = document.querySelectorAll('.patient-form__allergies-form-container .form-container')
-            let allergyTotalForms = document.querySelector('.allergies_management_form #id_allergy_information-TOTAL_FORMS')
-            let clonedNode = document.querySelector('.patient-form__allergies-form-container .form-container:last-child').cloneNode(true)
+            let clonedNode = allergiesFormBlueprint.cloneNode(true)
             for (let i = 0; i<clonedNode.childNodes.length; i++){
                 if (clonedNode.childNodes[i].firstChild){
                     if (clonedNode.childNodes[i].childNodes[0].nodeName === 'SELECT'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-allergy_type'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-allergy_type'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_information-' + formAmount.length + '-allergy_type'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_information-' + formAmount.length + '-allergy_type'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'TEXTAREA'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-about'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-about'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_information-' + formAmount.length + '-about'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_information-' + formAmount.length + '-about'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'checkbox'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_info-' + formAmount.length + '-DELETE'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_info-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].name = 'allergy_information-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_allergy_information-' + formAmount.length + '-DELETE'
                     }
                 }
             }
-            allergyTotalForms.value = formAmount.length + 1
+            allergiesTotalForms.value = formAmount.length + 1
+            allergyFormsCount += 1
             allergiesFormsContainer.appendChild(clonedNode)
         }
 
@@ -195,15 +195,18 @@ if (form){
            deletion of that specific form in the backend, and will add the class form--hide to the form container,
            so that it would disappear from the form's list.*/
         if (e.target.classList.contains('form__delete-allergy-form')){
-            let formContainer = e.target.parentNode.parentNode
-            for (let i = 0; i<formContainer.childNodes.length; i++){
-                if (formContainer.childNodes[i].firstChild){
-                    if (formContainer.childNodes[i].firstChild.type === 'checkbox'){
-                        formContainer.childNodes[i].firstChild.checked = true
+            if (allergyFormsCount > 1){
+                let formContainer = e.target.parentNode.parentNode
+                for (let i = 0; i<formContainer.childNodes.length; i++){
+                    if (formContainer.childNodes[i].firstChild){
+                        if (formContainer.childNodes[i].firstChild.type === 'checkbox'){
+                            formContainer.childNodes[i].firstChild.checked = true
+                        }
                     }
                 }
+                formContainer.classList.add('form--hide')
+                allergyFormsCount -= 1
             }
-            formContainer.classList.add('form--hide')
         }
 
 
@@ -218,23 +221,23 @@ if (form){
           6. Append the cloned node to the antecedents_form list.*/
         if (e.target.classList.contains('form__create-antecedent-form')){
             let formAmount = document.querySelectorAll('.patient-form__antecedents-form-container .form-container')
-            let antecedentsTotalForms = document.querySelector('.antecedents_management_form #id_antecedent_information-TOTAL_FORMS')
             let clonedNode = antecedentsFormBlueprint.cloneNode(true)
             for (let i = 0; i<clonedNode.childNodes.length; i++){
                 if (clonedNode.childNodes[i].firstChild){
                     if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'text'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-antecedent'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-antecedent'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_information-' + formAmount.length + '-antecedent'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_information-' + formAmount.length + '-antecedent'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'TEXTAREA'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-info'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-info'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_information-' + formAmount.length + '-info'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_information-' + formAmount.length + '-info'
                     }else if (clonedNode.childNodes[i].childNodes[0].nodeName === 'INPUT' && clonedNode.childNodes[i].childNodes[0].type === 'checkbox'){
-                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_info-' + formAmount.length + '-DELETE'
-                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_info-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].name = 'antecedent_information-' + formAmount.length + '-DELETE'
+                        clonedNode.childNodes[i].childNodes[0].id = 'id_antecedent_information-' + formAmount.length + '-DELETE'
                     }
                 }
             }
             antecedentsTotalForms.value = formAmount.length + 1
+            antecedentFormsCount += 1
             antecedentsFormsContainer.appendChild(clonedNode)
         }
 
@@ -244,17 +247,19 @@ if (form){
            deletion of that specific form in the backend, and will add the class form--hide to the form container,
            so that it would disappear from the form's list.*/
         if (e.target.classList.contains('form__delete-antecedent-form')){
-            let formContainer = e.target.parentNode.parentNode
-            for (let i = 0; i<formContainer.childNodes.length; i++){
-                if (formContainer.childNodes[i].firstChild){
-                    if (formContainer.childNodes[i].firstChild.type === 'checkbox'){
-                        formContainer.childNodes[i].firstChild.checked = true
+            if (antecedentFormsCount > 1){
+                let formContainer = e.target.parentNode.parentNode
+                    for (let i = 0; i<formContainer.childNodes.length; i++){
+                        if (formContainer.childNodes[i].firstChild){
+                            if (formContainer.childNodes[i].firstChild.type === 'checkbox'){
+                                formContainer.childNodes[i].firstChild.checked = true
+                            }
+                        }
                     }
-                }
+                    formContainer.classList.add('form--hide')
+                    antecedentFormsCount -= 1
             }
-            formContainer.classList.add('form--hide')
         }
-
     })
 
     // Change Events
@@ -297,7 +302,6 @@ if (form){
             }
         }
         unfilledInputs === 0 ? form.submit() : saveConfirmationModal.classList.add('save-confirmation-modal--display')
-
     })
 
 }
