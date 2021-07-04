@@ -368,7 +368,8 @@ if (modal){
                     modalContent.innerHTML = data['html']
                 }else{
                     allergySelection.innerHTML = data['updated_selections']
-                    modal.classList.remove('modal-show')
+                    allergiesFormBlueprint = document.querySelector('.patient-form__allergies-form-container .form-container:last-child')
+                    modal.classList.remove('modal--display')
                 }
             })
         }
@@ -380,7 +381,7 @@ if (modal){
                     modalContent.innerHTML = data['html']
                 }else{
                     insuranceSelection.innerHTML = data['updated_selections']
-                    modal.classList.remove('modal-show')
+                    modal.classList.remove('modal--display')
                 }
             })
         }
