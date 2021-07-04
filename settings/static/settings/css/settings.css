@@ -208,6 +208,12 @@
     margin-left: 1%;
 }
 
+.links-container{
+    max-height: 698px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .links-container__link{
     width: 100%;
     height: 50px;
