@@ -408,7 +408,7 @@ class MedicalTestResult(models.Model):
         verbose_name_plural = 'Medical Test Results'
 
     def __str__(self):
-        return self.type + ' ' + str(self.date)
+        return str(self.type) + ' ' + str(self.date)
 
     def save(self, *args, **kwargs):
         self.date = timezone.localtime()

@@ -6,7 +6,7 @@ django.setup()
 
 import random
 from faker import Faker
-from patients.models import Patient, InsuranceInformation
+from patients.models import Patient
 from appointments.models import BaseConsult
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -50,12 +50,12 @@ def populate_consults(iters=5):
 
 
 if __name__ == '__main__':
-    Patient.objects.all().delete()
+    # Patient.objects.all().delete()
     BaseConsult.objects.all().delete()
-    # print('Populating database')
-    populate_patients(1)
+    print('Populating database')
+    # populate_patients(300)
     # populate_consults(300)
-    # print('Population finished')
+    print('Population finished')
 
 
 

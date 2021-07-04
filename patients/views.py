@@ -166,7 +166,7 @@ def patient_details(request, pk):
     insurance = InsuranceInformation.objects.get(patient=patient)
     consults_list = BaseConsult.objects.filter(patient=patient, created_by=request.user).order_by('-datetime')
     charges_list = BaseConsult.objects.filter(patient=patient, created_by=request.user, charge__gte=0).order_by('-datetime')
-    exams_list = MedicalTestResult.objects.filter(consult__patient=patient).order_by('-date')
+    exams_list = set(MedicalTestResult.objects.filter(consult__patient=patient).order_by('-date'))
     vaccines = VaccineApplication.objects.filter(patient=patient)
     surgeries = Surgery.objects.filter(patient=patient)
     template = 'patients/patient_details.html'

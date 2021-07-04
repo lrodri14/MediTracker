@@ -46,7 +46,7 @@
 
 <!-- Form -->
 
-<form method="POST" action="{% url 'appointments:update_consult' consult.pk %}" enctype="multipart/form-data" class="consult">
+<form method="POST" action="{% url 'appointments:update_consult' consult.pk %}" enctype="multipart/form-data" class="consult-form">
 
     {% csrf_token %}
     {{ medical_test_result_formset.management_form }}
@@ -183,41 +183,42 @@
         </div>
     </div>
 
+    <!-- Exam Results Modal -->
+
+    <div class="exams">
+        <div class="exams__data">
+            <h2>Medical Test Results <i class="far fa-eye exams__preview-button"></i></h2>
+            <div class="exams__container">
+                <table class="exams__table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>File</th>
+                            <th>Filename</th>
+                            <th><i class="fas fa-plus exams__add-result-form"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in medical_test_result_formset %}
+                            <tr class="exams__form-container">
+                                {{ form.id }}
+                                <td>{{ form.type }}</td>
+                                <td>{{ form.image }}<label class="exams__add-exam-result" for="id_exam-{{ forloop.counter0 }}-image">Add Image</label></td>
+                                <td class="exams__filename"></td>
+                                <td><i class="fas fa-trash exams__delete-result-form"></i></td>
+                                <td class="delete-exam-result-form">{{ form.DELETE }}</td>
+                            </tr>
+                        {%  endfor%}
+                    </tbody>
+                </table>
+            </div>
+            <button type="button">Save</button>
+        </div>
+    </div>
+
     <ul class="consult__navigation"></ul>
 
 </form>
-
-<!-- Exam Results Modal -->
-
-<div class="exams">
-    <div class="exams__data">
-        <h2>Medical Test Results <i class="far fa-eye exams__preview-button"></i></h2>
-        <div class="exams__container">
-            <table class="exams__table">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>File</th>
-                        <th>Filename</th>
-                        <th><i class="fas fa-plus exams__add-result-form"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in medical_test_result_formset %}
-                        <tr class="exams__form-container">
-                            <td>{{ form.type }}</td>
-                            <td>{{ form.image }}<label class="exams__add-exam-result" for="id_exam-{{ forloop.counter0 }}-image">Add Image</label></td>
-                            <td class="exams__filename"></td>
-                            <td><i class="fas fa-trash exams__delete-result-form"></i></td>
-                            <td class="delete-exam-result-form">{{ form.DELETE }}</td>
-                        </tr>
-                    {%  endfor%}
-                </tbody>
-            </table>
-        </div>
-        <button type="button">Save</button>
-    </div>
-</div>
 
 <!-- Examination image preview  -->
 <div class="exams-preview">

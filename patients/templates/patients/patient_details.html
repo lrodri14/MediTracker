@@ -70,7 +70,7 @@
     <div class="data appointments">
         <!--If no consults are present this code will be rendered-->
         {% if consults %}
-            <div class="data-table-container">
+            <div class="data-container">
                 <table class="data-table">
                     <thead>
                         <tr id="heading">
@@ -108,7 +108,7 @@
 
     <div class="data exams">
         {% if exams %}
-            <div class="data-table-container">
+            <div class="data-container">
                 <table class="data-table">
                     <thead>
                         <tr id="heading">
@@ -148,7 +148,7 @@
     <div class="data charges">
         <!--If charges are present this code will be rendered-->
         {% if charges %}
-            <div class="data-table-container">
+            <div class="data-container">
                 <table class="data-table">
                     <thead>
                         <tr id="heading">
@@ -187,7 +187,7 @@
     {% if user.doctor.speciality == 'PED' %}
         <div class="data vaccines">
             {% if vaccines %}
-                <div class="data-table-container">
+                <div class="data-container">
                     <table class="data-table">
                         <thead>
                             <tr id="heading">

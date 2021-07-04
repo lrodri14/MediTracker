@@ -308,7 +308,7 @@ if (container){
            attribute of the target*/
         if (e.target.classList.contains('exam-filename')){
             examPreview.classList.add('exam-preview--display')
-            image.src = e.target.getAttribute('data-img-src')
+            examImage.src = e.target.getAttribute('data-img-src')
             document.querySelector('.exams-form').classList.remove('filter-container__filter-form--display')
         }
 
@@ -361,7 +361,7 @@ if (container){
            image will be removed.*/
         if (e.target.classList.contains('exam-filename')){
             examPreview.classList.remove('image-preview--display')
-            image.src = ''
+            examImage.src = ''
         }
 
         /*This event will be fired every time a mouseout occurs off a button and the button-hover class will be removed*/

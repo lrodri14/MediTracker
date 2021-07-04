@@ -35,7 +35,7 @@
     margin-top: 3%;
 }
 
-.details-container__backgroound{
+.details-container__background{
     max-height: 600px;
     overflow-y: auto;
 }
@@ -78,8 +78,8 @@
     margin-top: 2.5%;
 }
 
-.data-table-container{
-    max-height: 712px;
+.data-container{
+    max-height: 693px;
 }
 
 /*##################################################### Navigation ###################################################*/

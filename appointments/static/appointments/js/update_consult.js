@@ -5,7 +5,7 @@ composed of 5 async functions, and 1 sync function.*/
 /*#################################################### Variables #####################################################*/
 
 // General
-let form = document.querySelector('.consult')
+let form = document.querySelector('.consult-form')
 let lock = document.querySelector('.consult__lock')
 let padLock = document.querySelector('.consult__lock-icon')
 let lockInput = document.querySelector('#id_lock')
@@ -770,7 +770,7 @@ if (modal){
                 }
             })
             .catch((error) => {
-                form.submit()
+                window.location.href = e.target.getAttribute('data-url')
             })
         }
    })

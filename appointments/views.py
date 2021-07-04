@@ -173,7 +173,7 @@ def update_consult(request, pk):
     consult = BaseConsult.objects.get(pk=pk)
     updating_form = speciality_mapping[request.user.doctor.speciality]['updating_form']
     consult_form = updating_form(request.POST or None, user=request.user, instance=consult)
-    medical_test_result_formset = MedicalTestResultFormset(instance=consult)
+    medical_test_result_formset = MedicalTestResultFormset()
     drug_form = DrugForm
     drug_category_filter_form = DrugCategoryFilterForm
     medical_test_form = MedicalTestForm
@@ -182,17 +182,21 @@ def update_consult(request, pk):
     context = {'consult': consult, 'consult_form': consult_form, 'medical_test_result_formset': medical_test_result_formset,
                'drug_form': drug_form, 'drug_category_filter_form': drug_category_filter_form, 'medical_test_form': medical_test_form,
                'medical_test_filter_form': medical_test_filter_form}
+
     if request.method == 'POST':
         consult_form = updating_form(request.POST or None, user=request.user, instance=consult)
-        medical_exams_form = MedicalTestResultFormset(request.POST, request.FILES, instance=consult)
-        if consult_form.is_valid() and medical_exams_form.is_valid():
+        medical_test_result_formset = MedicalTestResultFormset(request.POST, request.FILES)
+        if consult_form.is_valid() and medical_test_result_formset.is_valid():
             consult = consult_form.save(commit=False)
-            medical_exams_form.save()
+            medical_test_instances = medical_test_result_formset.save(commit=False)
 
-            # Saving Consult
             consult.medical_status = True
             consult.save()
             consult_form.save_m2m()
+
+            for medical_test_instance in medical_test_instances:
+                medical_test_instance.consult = consult
+                medical_test_instance.save()
 
             # Consult Evaluation
             if evaluate_consult(consult):
@@ -201,7 +205,7 @@ def update_consult(request, pk):
 
             return redirect('appointments:appointments')
 
-        elif not medical_exams_form.is_valid():
+        elif not medical_test_result_formset.is_valid():
             context['error'] = '* Exams not filled correctly. "Type" & "Image" fields must be provided.'
 
     return render(request, template, context)

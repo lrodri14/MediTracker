@@ -2,6 +2,12 @@
 in  10 sections: Body, Wrapper ,General, Lock Btn, Diagnose,Popups, Drugs Modal, Exam Modal, Records Modal,
 Prescription Modal*/
 
+/*#################################################### Main Form ########################################################*/
+.consult-form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+}
+
 /*#################################################### Popups ########################################################*/
 
 .popup{
@@ -189,12 +195,6 @@ Prescription Modal*/
 .error{
     color: #FFFFFF;
 }
-
-/*
-h4:not(.contact-identification):not(.chat-identification):not(#destination-user):not[for=id_charge]{
-    text-decoration: underline;
-}
-*/
 
 #charge-label{
     text-decoration: none;
@@ -392,10 +392,11 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     left: 0%;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(20px);
     visibility: hidden;
     opacity: 0;
+    backdrop-filter: blur(20px);
     transition: 0.3s;
+    z-index: 2;
 }
 
 .exams__data{
@@ -408,7 +409,7 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
     padding: 10px;
     border-radius: 25px;
     background-color: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     transition: 1s;
 }
 
@@ -562,12 +563,6 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
 
 /*####################################################### Records ####################################################*/
 
-#status-1{
-    background-color: #00E083;
-    color: #000000;
-    height: 100%;
-}
-
 .data{
     margin-top: 5%;
 }
@@ -584,6 +579,10 @@ h4:not(.contact-identification):not(.chat-identification):not(#destination-user)
 }
 
 /*############################################################ Modal #################################################*/
+
+.modal{
+    z-index: 2;
+}
 
 #add-new-vaccine{
     position: absolute;
