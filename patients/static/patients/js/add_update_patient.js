@@ -271,7 +271,7 @@ if (form){
            display a new value inside the #id_contact element. We will change the flag dynamically grabbing the value from
            the target to create a whole new class and add it to the flagIcon element.
        */
-        if (e.target.classList.contains('#id_country_code')){
+        if (e.target.id === 'id_country_code'){
             let url = window.location.origin + '/patients/collect_country_number_code?country_code=' + e.target.value
             flagIcon.classList.remove(flagIcon.classList[1])
             flagIcon.classList.add('flag-icon-' + e.target.value.toLowerCase())
