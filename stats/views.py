@@ -54,11 +54,15 @@ def income_statistics(request):
 
 def process_layout(request, layout_type):
     template = None
+    data_available = None
     if layout_type == 'patients':
+        data_available = len(Patient.objects.filter(created_by=request.user)) > 1
         template = 'stats/patients_data_visualization_layout.html'
     elif layout_type == 'consults':
+        data_available = len(BaseConsult.objects.filter(created_by=request.user)) > 1
         template = 'stats/consults_data_visualization_layout.html'
-    data = {'html': render_to_string(template, {}, request)}
+    context = {'data_available': data_available}
+    data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 
 

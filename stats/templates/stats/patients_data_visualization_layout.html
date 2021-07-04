@@ -1,14 +1,5 @@
-<svg class="patient-addition container__visualization__m-widget" data-url="{% url 'stats:request_filter_form' 'creation_date' %}">
-    <text class="header" font-weight="bolder"></text>
-    <g class="body">
-        <g class="x-axis"></g>
-        <g class="y-axis"></g>
-    </g>
-</svg>
-
-<div class="double-visualization-container">
-
-    <svg class="age-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'age' %}">
+{% if data_available %}
+    <svg class="patient-addition container__visualization__m-widget" data-url="{% url 'stats:request_filter_form' 'creation_date' %}">
         <text class="header" font-weight="bolder"></text>
         <g class="body">
             <g class="x-axis"></g>
@@ -16,9 +7,22 @@
         </g>
     </svg>
 
-    <svg class="gender-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'gender' %}">
-        <text class="header" font-weight="bolder"></text>
-        <g class="body"></g>
-    </svg>
+    <div class="double-visualization-container">
 
-</div>
+        <svg class="age-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'age' %}">
+            <text class="header" font-weight="bolder"></text>
+            <g class="body">
+                <g class="x-axis"></g>
+                <g class="y-axis"></g>
+            </g>
+        </svg>
+
+        <svg class="gender-distribution container__visualization__s-widget" data-url="{% url 'stats:request_filter_form' 'gender' %}">
+            <text class="header" font-weight="bolder"></text>
+            <g class="body"></g>
+        </svg>
+
+    </div>
+{% else %}
+    <p id="no-data">Not enough data to display statistics</p>
+{% endif %}

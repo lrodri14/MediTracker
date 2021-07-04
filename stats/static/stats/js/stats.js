@@ -96,7 +96,6 @@ function processPatientData(url){
 
     d3.json(url)
     .then((data) => {
-
          // Load and transform data
         let today = new Date()
         data = data.map((d) => {return {'pk': d.pk,'gender': d.fields.gender,'age': today.getYear() - new Date(d.fields.birthday).getYear(),'dateCreated': new Date(d.fields.date_created)}})

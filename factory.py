@@ -49,13 +49,11 @@ def populate_consults(iters=5):
         )
 
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Take special care when using this fake data generator script, make sure to delete the instances created by the testing user.
+# filter(created_by=test_user)
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 if __name__ == '__main__':
-    # Patient.objects.all().delete()
-    BaseConsult.objects.all().delete()
-    print('Populating database')
-    # populate_patients(300)
-    # populate_consults(300)
-    print('Population finished')
-
-
+    pass
 
