@@ -117,6 +117,28 @@ async function filterResultsAW(url){
     return data
 }
 
+async function manageSubscriptionSettingsAW(url){
+    /* This updateSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
+    const result = await fetch(url)
+    const data = result.json()
+    return data
+}
+
+async function changeSubscriptionType(url, method, csrfmiddlewaretoken, action){
+    /* This updateSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken':csrfmiddlewaretoken}, body:action})
+    const data = result.json()
+    return data
+}
+
 async function updatePasswordAW(url, method, csrfmiddlewaretoken, formData){
     /* This updatePasswordAW function is used update the users password, this function will display the corresponding
        form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
@@ -266,6 +288,18 @@ if (container){
             e.target.classList.add('button--active')
         }
 
+        /* This event will be fired every time the target's classlist contains the downgrade class it will add
+           the 'downgrade--active' class to the target.*/
+        if (e.target.classList.contains('downgrade-button')){
+            e.target.classList.add('downgrade-button--active')
+        }
+
+        /* This event will be fired every time the target's classlist contains the upgrade class it will add
+           the 'upgrade--active' class to the target.*/
+        if (e.target.classList.contains('upgrade-button')){
+            e.target.classList.add('upgrade-button--active')
+        }
+
         /* This event will be fired every time the target contains the 'wallpaper' class in its classList, it will add
            the 'wallpaper-trash-hover' to the target.*/
         if (e.target.classList.contains('wallpaper-row__wallpaper')){
@@ -337,6 +371,18 @@ if (container){
            the 'button-hover' class to the target.*/
         if (e.target.nodeName === 'BUTTON'){
             e.target.classList.remove('button--active')
+        }
+
+        /* This event will be fired every time the target's classlist contains the downgrade class it will remove
+           the 'downgrade--active' class to the target.*/
+        if (e.target.classList.contains('downgrade-button')){
+            e.target.classList.remove('downgrade-button--active')
+        }
+
+        /* This event will be fired every time the target's classlist contains the upgrade class it will remove
+           the 'upgrade--active' class to the target.*/
+        if (e.target.classList.contains('upgrade-button')){
+            e.target.classList.remove('upgrade-button--active')
         }
 
         /* This event will be fired every time the target contains the 'wallpaper' class in its classList, it will remove
@@ -479,6 +525,15 @@ if (container){
             let url = e.target.getAttribute('data-url')
             showForm(url)
             .then(data => {
+                modalContent.innerHTML = data['html']
+                modal.classList.add('modal--display')
+            })
+        }
+
+        if (e.target.classList.contains('upgrade-button') || e.target.classList.contains('downgrade-button')){
+            let url = e.target.getAttribute('data-url')
+            manageSubscriptionSettingsAW(url)
+            .then((data) => {
                 modalContent.innerHTML = data['html']
                 modal.classList.add('modal--display')
             })
@@ -644,7 +699,38 @@ if (modal){
          // All these events will be fired if the target's nodeName is a FORM
 
          if (e.target.nodeName === 'FORM'){
-            /* This event will be fired every time the form contains the 'add' or 'update' class in it's classList, this
+
+            /* This event will be fired every time the form contains the 'upgrade-form' class in it's classList, it makes sure to
+               upgrade the user's account from basic to premium */
+            if (e.target.classList.contains('upgrade-form')){
+                   const action = new FormData
+                   action.append('action', 'upgrade')
+                   changeSubscriptionType(url, method, csrfmiddlewaretoken, action)
+                   .then((data) => {
+                        modalContent.innerHTML = data['response']
+                        container.innerHTML = data['html']
+                        setTimeout(() => {
+                            modal.classList.remove('modal--display')
+                        }, 15000)
+                   })
+            }
+
+            /* This event will be fired every time the form contains the 'upgrade-form' class in it's classList, it makes sure to
+               downgrade the user's account from basic to premium */
+            if (e.target.classList.contains('downgrade-form')){
+                   const action = new FormData
+                   action.append('action', 'downgrade')
+                   changeSubscriptionType(url, method, csrfmiddlewaretoken, action)
+                   .then((data) => {
+                        modalContent.innerHTML = data['response']
+                        container.innerHTML = data['html']
+                        setTimeout(() => {
+                            modal.classList.remove('modal--display')
+                        }, 15000)
+                   })
+            }
+
+            /* This event will be fired every time the form contains the 'creation-update-form' class in it's classList, this
                form will collect make use of the information collected above to make the request, after we receive a response,
                we check if the response contains an error, if it does, the error is rendered in the form, if not, the wrapper
                html is updated and the backedUpContent variable reassigned and the modal is closed.*/

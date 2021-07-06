@@ -2,6 +2,7 @@
 <div class="account-settings">
     {% if user.roll == 'DOCTOR' %}
         <p id="linking-id">Linking ID: {{ user.doctor.linking_id }}</p>
+        <p>Subscription: {{ subscription }} <button class="{{ action }}-button" data-url="{% url 'accounts:manage_subscription' action %}">{{ action_message }}</button></p>
     {% endif %}
     <p>Update Password <button type="button" data-url="{% url 'accounts:change_password' %}">Update</button></p>
     <form action="{% url 'settings:update_session_expiry_time' %}" method="POST" id="account-settings-form">

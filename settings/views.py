@@ -137,9 +137,24 @@ def account(request):
         into a string and send it using the JsonResponse class. It expects one single argument: 'request', it expects a
         request object.
     """
+    context = {}
     template = 'settings/account.html'
+
+    if request.user.roll == 'DOCTOR':
+        subscription = request.user.doctor.get_subscription_display()
+        if subscription == 'Basic':
+            action = 'upgrade'
+            action_message = 'GO Premium'
+        else:
+            action = 'downgrade'
+            action_message = 'Cancel Premium'
+        context['subscription'] = subscription
+        context['action'] = action
+        context['action_message'] = action_message
+
     form = UserAccountSettingsForm(instance=request.user.account_settings)
-    data = {'html': render_to_string(template, request=request, context={'user_settings_form': form})}
+    context['user_settings_form'] = form
+    data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 
 

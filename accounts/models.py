@@ -65,22 +65,15 @@ class Doctor(CustomUser):
         We added a new method called generate_linking_id() which will generate and assign the id mentiones before.
     """
 
-    SPECIALITY_CHOICES = (
-        ('A&I', 'Allergy & Immunology'),
-        ('DT', 'Dentist'),
-        ('IM', 'Internal Medicine'),
-        ('GM', 'General Medicine'),
-        ('NEU', 'Neurology'),
-        ('O&G', 'Obstetrics & Gynecology'),
-        ('OPH', 'Ophthalmology'),
-        ('PED', 'Pediatrics'),
-        ('PSY', 'Psychiatry'),
-        ('SRG', 'Surgery'),
-        ('URO', 'Urology'),
-    )
+    SPECIALITY_CHOICES = (('A&I', 'Allergy & Immunology'), ('DT', 'Dentist'), ('IM', 'Internal Medicine'), ('GM', 'General Medicine'),
+                          ('NEU', 'Neurology'), ('O&G', 'Obstetrics & Gynecology'), ('OPH', 'Ophthalmology'), ('PED', 'Pediatrics'),
+                          ('PSY', 'Psychiatry'), ('SRG', 'Surgery'), ('URO', 'Urology'))
+
+    SUBSCRIPTION_CHOICES = (('BASIC', 'Basic'), ('PREMIUM', 'Premium'))
 
     speciality = models.CharField(verbose_name='Speciality', max_length=100, blank=True, help_text="Doctor's Speciality", choices=SPECIALITY_CHOICES)
     linking_id = models.CharField(verbose_name='Linking ID', max_length=14, blank=True, null=True, help_text='Used by Assistants to link to Doctors', unique=True)
+    subscription = models.CharField(verbose_name='Subscription', max_length=10, blank=True, null=True, help_text='Account Subscription Type', default=SUBSCRIPTION_CHOICES[0][0], choices=SUBSCRIPTION_CHOICES)
 
     def generate_linking_id(self):
         """

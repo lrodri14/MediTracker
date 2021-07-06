@@ -16,7 +16,8 @@ from twilio.jwt.access_token.grants import ChatGrant
 from .models import UsersProfile, ContactRequest, Chat
 from utilities.accounts_utilities import check_requests
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
-from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, ChatForm
+from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, ChatForm, \
+    UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
     PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, PasswordResetConfirmView
 User = get_user_model()
@@ -198,6 +199,39 @@ def signup(request):
 
     context = {'user_creation_form': user_creation_form, 'profile_creation_form': profile_creation_form}
     data['html'] = render_to_string('accounts/signup.html', context, request)
+    return JsonResponse(data)
+
+
+def manage_subscription(request, action=None):
+    if request.method == 'POST':
+        user = request.user.doctor
+        action = request.POST.get('action')
+
+        if action == 'upgrade':
+            # Check for payment settings
+            user.subscription = 'PREMIUM'
+            user.save()
+        else:
+            user.subscription = 'BASIC'
+            user.save()
+
+        subscription = request.user.doctor.get_subscription_display()
+        if subscription == 'Basic':
+            action = 'upgrade'
+            action_message = 'GO premium'
+        else:
+            action = 'downgrade'
+            action_message = 'Cancel Premium'
+
+        form = UserAccountSettingsForm(instance=request.user.account_settings)
+        context = {'subscription': subscription, 'action': action, 'action_message': action_message, 'user_settings_form': form}
+        data = {'html': render_to_string('settings/account.html', context, request),
+                'response': render_to_string('accounts/subscription_change_response.html', {'subscription':subscription}, request)}
+        return JsonResponse(data)
+
+    template = 'accounts/manage_subscription.html'
+    context = {'action': action}
+    data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 
 

@@ -1,0 +1,26 @@
+<form action="{% url 'accounts:manage_subscription' %}" method="POST" class="modal__form manage-subscription-form {{ action }}-form">
+    {% csrf_token %}
+    {% if action == 'upgrade' %}
+        <h1>Premium</h1>
+        <h2>$24.99</h2>
+        <small>*Monthly Charge</small>
+        <h3>Perks within this subscription:</h3>
+        <p>No advertising</p>
+        <p>Patient's reminder sending</p>
+        <p>Unlimited amount of patients</p>
+        <p>Unlimited amount of consults</p>
+        <p>Unlimited linking to assistants</p>
+        <button type="submit">Upgrade</button>
+    {% else %}
+        <h1>Basic</h1>
+        <h2>Free</h2>
+        <p>Limited amount of patients</p>
+        <p>Limited amount of consults</p>
+        <p>Limited linking to assistants</p>
+        <h4>IMPORTANT NOTES</h4>
+        <p class="downgrade-warning"><small>If you downgrade your subscription to basic, you will only be able to access the data created during
+               your basic account holding period, however, your data will still be stored if you decide to upgrade again
+               at any point in time</small></p>
+        <button type="submit">Confirm</button>
+    {% endif %}
+</form>

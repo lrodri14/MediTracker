@@ -4,7 +4,7 @@
 
 from django.urls import path
 from .views import Login, Logout, ChangePassword, ChangePasswordDone, PasswordReset, PasswordResetDone, \
-    PasswordResetConfirm, PasswordResetComplete, signup, profile_change,profile_picture_change, \
+    PasswordResetConfirm, PasswordResetComplete, signup, manage_subscription, profile_change, profile_picture_change, \
     profile, user_lookup, contacts, remove_contact, chats, display_chat, contact_requests, \
     send_cancel_contact_request, contact_request_response
 
@@ -19,6 +19,8 @@ urlpatterns = [
     path('password_reset_confirm/<uidb64>/<token>/', PasswordResetConfirm.as_view(), name='password_reset_confirm'),
     path('password_reset_complete', PasswordResetComplete.as_view(), name='password_reset_complete'),
     path('signup', signup, name='signup'),
+    path('manage_subscription/', manage_subscription, name='manage_subscription'),
+    path('manage_subscription/<slug:action>', manage_subscription, name='manage_subscription'),
     path('profile', profile, name='profile'),
     path('profile/<int:pk>', profile, name='profile'),
     path('profile_picture_change', profile_picture_change, name='profile_picture_change'),

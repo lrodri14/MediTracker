@@ -176,6 +176,56 @@
 
 /*####################################################### Account Settings ###########################################*/
 
+.downgrade-button{
+    transition: 0.5s;
+}
+
+.upgrade-button{
+    transition: 0.5s;
+}
+
+.downgrade-button--active{
+    background-color: #d93725;
+    border-color: #d93725;
+    color: #FFFFFF;
+    transition: 0.5s;
+}
+
+.upgrade-button--active{
+    background-color: #25d96a;
+    border-color: #25d96a;
+    color: #FFFFFF;
+    transition: 0.5s;
+}
+
+.downgrade-form{
+    background-color: #d93725;
+}
+
+.downgrade-warning{
+    text-align: justify;
+}
+
+.upgrade-form{
+    background-color: #32a852;
+}
+
+.manage-subscription-form{
+    height: 50%;
+    width: 20%;
+}
+
+.Premium-response, .Basic-response{
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgba(255,255,255,0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
 .account-settings p, .account-settings button{
     margin-left: 1%;
     animation: show-up 0.5s linear forwards;
