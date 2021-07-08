@@ -87,7 +87,7 @@ def create_appointment(request):
     else:
         aimed_user = request.user.assistant.doctors.all()[0]
 
-    creation_form = speciality_mapping[request.user.doctor.speciality]['creation_form']
+    creation_form = speciality_mapping[aimed_user.doctor.speciality]['creation_form']
     consults_form = creation_form(user=aimed_user)
     template = 'appointments/create_appointment.html'
     context = {}

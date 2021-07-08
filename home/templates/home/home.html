@@ -82,16 +82,17 @@
         <h1 class="main-menu__single-row-title">Menu</h1>
 
         <div class="main-menu__single-row">
+            {% if user.assistant.doctors.all %}
+                <div class="main-menu__tile" onclick="window.location='{% url 'patients:patients' %}'">
+                    <i class="fas fa-user-injured main-menu__tile-icon"></i>
+                    <h3 class="main-menu__tile-title">Patients</h3>
+                </div>
 
-            <div class="main-menu__tile" onclick="window.location='{% url 'patients:patients' %}'">
-                <i class="fas fa-user-injured main-menu__tile-icon"></i>
-                <h3 class="main-menu__tile-title">Patients</h3>
-            </div>
-
-            <div class="main-menu__tile" onclick="window.location='{% url 'appointments:appointments' %}'">
-                <i class="far fa-calendar-check main-menu__tile-icon"></i>
-                <h3 class="main-menu__tile-title">Appointments</h3>
-            </div>
+                <div class="main-menu__tile" onclick="window.location='{% url 'appointments:appointments' %}'">
+                    <i class="far fa-calendar-check main-menu__tile-icon"></i>
+                    <h3 class="main-menu__tile-title">Appointments</h3>
+                </div>
+            {% endif %}
 
             <div class="main-menu__tile" onclick="window.location='{% url 'settings:settings' %}'">
                 <i class="fas fa-cog main-menu__tile-icon"></i>
