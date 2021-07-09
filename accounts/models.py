@@ -307,3 +307,15 @@ class Chat(models.Model):
     class Meta:
         verbose_name = 'Chat'
         verbose_name_plural = 'Chats'
+
+
+class Message(models.Model):
+    """
+        DOCSTRING:
+        Message class is used to create text messages which will be related to the corresponding chat.
+    """
+    datetime = models.DateTimeField('datetime', blank=True, null=True, help_text='Message time creation')
+    text = models.TextField('Text', blank=True, null=True, help_text='Message Text')
+    image = models.ImageField('Image', blank=True, null=True, help_text='Message Image')
+    chat = models.ForeignKey(to=Chat, on_delete=models.CASCADE, blank=True, null=True, help_text='Chat', verbose_name='Sender')
+    created_by = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='Sender', verbose_name='Sender')

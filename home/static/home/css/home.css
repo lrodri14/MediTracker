@@ -4,11 +4,19 @@
 
 .main-menu{
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     width: 80%;
+}
+
+.main-menu__advice{
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }
 
 .main-menu__title{

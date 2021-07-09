@@ -38,7 +38,7 @@
             </div>
 
             <div class="main-menu__tile" onclick="window.location='{% url 'stats:stats' %}'">
-                <i class="fas fas fa-chart-bar main-menu__tile-icon"></i>
+                <i class="fas fa-chart-bar main-menu__tile-icon"></i>
                 <h3 class="main-menu__tile-title">Statistics</h3>
             </div>
 
@@ -82,6 +82,7 @@
         <h1 class="main-menu__single-row-title">Menu</h1>
 
         <div class="main-menu__single-row">
+
             {% if user.assistant.doctors.all %}
                 <div class="main-menu__tile" onclick="window.location='{% url 'patients:patients' %}'">
                     <i class="fas fa-user-injured main-menu__tile-icon"></i>
@@ -105,6 +106,14 @@
             </div>
 
         </div>
+
+        {% if not user.assistant.doctors.all %}
+            <p class="main-menu__advice">
+                Your 'Patient' and 'Consult' widgets will appear once you're linked to a Doctor User <br>
+                Please follow this path to link to a Doctor by providing the corresponding Linking ID <br>
+                (Settings > Linking > Add Linking)
+            </p>
+        {% endif %}
 
     {% endif %}
 
