@@ -5,7 +5,7 @@
         <div class="social-section__cell">
             <div class="social-section__grid">
                 {% if not contact_request.from_user.profile.profile_pic %}
-                    {% if contact_request.from_user.profile.gender == 'Masculine' %}
+                    {% if contact_request.from_user.profile.gender == 'MASCULINE' %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
                     {% else %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">

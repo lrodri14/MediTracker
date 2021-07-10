@@ -5,10 +5,11 @@
 {% if chats %}
     {% for chat in chats %}
         {% get_destination chat user as destination %}
-        <div class="social-section__cell social-section__chat" data-url="{% url 'accounts:display_chat' destination.pk %}">
+        <div class="social-section__cell social-section__chat" data-url="{% url 'accounts:display_chat' chat.pk %}" data-pk="{{ chat.pk }}">
             <div class="social-section__grid">
+                <!-- Destination Profile Pic -->
                 {% if not destination.profile.profile_pic %}
-                    {% if destination.profile.gender == 'Masculine' %}
+                    {% if destination.profile.gender == 'MASCULINE' %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
                     {% else %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">

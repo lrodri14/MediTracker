@@ -2,8 +2,8 @@
     This views.py file contains all the views used for the accounts app to work properly, most of the views are generic
     views, it also contains function based views for more specific processes. It is composed of 21 views as whole.
 """
-
 from django.db.models import Q
+from django.utils import timezone
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.db import IntegrityError
@@ -13,10 +13,10 @@ from django.contrib.auth import get_user_model
 from twilio.jwt.access_token import AccessToken
 from django.template.loader import render_to_string
 from twilio.jwt.access_token.grants import ChatGrant
-from .models import UsersProfile, ContactRequest, Chat
+from .models import UsersProfile, ContactRequest, Chat, Message
 from utilities.accounts_utilities import check_requests
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
-from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, ChatForm, \
+from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
     UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
     PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, PasswordResetConfirmView
@@ -356,36 +356,51 @@ def chats(request):
 def display_chat(request, pk):
     """
         DOCSTRING:
-        The display_chat view is used to display a specific chat in which the current user is part of the chat partici-
-        pants, to display the chat there is some data we need to collect and send to the front-end first.
-        1. Create an identity: The identity we will use in our chat is the user's username
-        2. Device id: We return the device ID we collect from the 'device' key in our GET dictionary.
-        3. TOKEN: To create a Twilio Chat Client instance in the front-end we need to generate a unique token using our
-                  Twilio credentials. We make use of the AccessToken class to create this instance.
-        4. endpoint: Our chat will contain an endpoint we generate using the identity value and the device id.
-        5. We need to add an access grant to the token using the add_grant() method inside the instance, we add this
-           grant by passing the endpoint_id and the service string identifier.
-        6. Our chat will contain a unique channel_name we generate from the __str__ value of the Chat object instance
+        This display_chat function is used to display a specific chat, it receives two parameteres, a request and a pk which
+        is used to retrieve the specific chat, the response is sent in JSON format for rendering in the front end.
     """
-    identity = request.user.username
-    device_id = request.GET.get('device')
-    account_sid = TWILIO_ACCOUNT_SID
-    api_key = TWILIO_API_KEY
-    secret_key = TWILIO_API_SECRET_KEY
-    chat_service_sid = TWILIO_CHAT_SERVICE_SID
-    token = AccessToken(account_sid, api_key, secret_key, identity=identity)
-    endpoint = "PrivateChat:{}:{}".format(identity, device_id)
-    if chat_service_sid:
-        chat_grant = ChatGrant(endpoint_id=endpoint, service_sid=chat_service_sid)
-        token.add_grant(chat_grant)
+    form = MessageForm
+    chat = Chat.objects.get(pk=pk)
+
+    # Marking unread messages as read
+    unread_messages = Message.objects.filter(chat=chat, status='UNREAD').exclude(created_by=request.user)
+    if unread_messages:
+        for message in unread_messages:
+            message.status = 'READ'
+            message.save()
+
     template = 'accounts/chat.html'
-    form = ChatForm
-    destination = User.objects.get(pk=pk)
-    channel_name = str(Chat.objects.filter(participants__in=[request.user, destination])[0])
-    context = {'chat_form': form, 'destination': destination}
-    data = {'html': render_to_string(template, context, request), 'identity': identity, 'channel_name': channel_name,
-            'token': token.to_jwt().decode('utf-8')}
+    context = {'chat': chat, 'message_form': form}
+    data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
+
+
+def save_message(request, chat_pk):
+    """
+        DOCSTRING:
+        This send_message functions accepts two parameters, request and chat_id, the chat_id is used to retrieve the chat
+        to which the current message will be related to, it will save the message and update the corresponding last_message
+        and last_message sender.
+    """
+    chat = Chat.objects.get(pk=chat_pk)
+    to = None
+    success = False
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            # Message Saving
+            message = form.save(commit=False)
+            message.datetime = timezone.localtime()
+            message.chat = chat
+            message.created_by = request.user
+            message.save()
+            # Chat parameters setting
+            chat.last_message = form.cleaned_data['text']
+            chat.last_message_sender = request.user
+            chat.save()
+            to = chat.participants.all()[1].username if chat.participants.all()[0] == request.user else chat.participants.all()[0].username
+            success = True
+    return JsonResponse({'success': success, 'to': to})
 
 
 def contact_requests(request):

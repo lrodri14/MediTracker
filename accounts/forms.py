@@ -9,7 +9,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm as CreationForm
 from django.contrib.auth.forms import UserChangeForm as ChangeForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import CustomUser, Doctor, Assistant, UsersProfile, UserAccountSettings, UserGeneralSettings, MailingCredential
+from .models import CustomUser, Doctor, Assistant, UsersProfile, UserAccountSettings, UserGeneralSettings, MailingCredential, Message
 
 
 class UserCreationForm(CreationForm):
@@ -210,14 +210,19 @@ class MailingCredentialForm(forms.ModelForm):
         }
 
 
-class ChatForm(forms.Form):
+class MessageForm(forms.ModelForm):
     """
         DOCSTRING:
-        This ChatForm class form is used to display the chat, this form does not creating any instances of anything is
-        used as a reference to grab the sent message from the message field. This form class inherits from the model.Form
-        class.
+        This MessageForm class form is used to display the chat. This form class inherits from the forms.Modelform.
+        class. It's used to create message instances, we defined the Meta class assigning the model attribute to the
+        Message class and specified the proper fields.
     """
-    message = forms.CharField(widget=forms.Textarea(attrs={'cols': 35, 'rows': 2, 'placeholder': 'Send Message...'}))
+    class Meta:
+        model = Message
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={'cols': 35, 'rows': 2, 'placeholder': 'Send Message...'}),
+        }
 
 
 

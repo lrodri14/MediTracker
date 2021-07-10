@@ -172,12 +172,13 @@ h1,h2,h3,h4,h5,h6{
 
 /*////////////////////////////////////////////////////// Form ////////////////////////////////////////////////////////*/
 
-form{
+form:not(.social-section form){
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     background-clip: padding-box;
     text-align: center;
 }
+
 
 .creation-update-form{
     width: 25%;
@@ -831,7 +832,7 @@ a {
     border-radius: 5px;
 }
 
-#id_message{
+#id_text{
     margin-left: 10px;
 }
 

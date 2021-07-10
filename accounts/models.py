@@ -314,8 +314,15 @@ class Message(models.Model):
         DOCSTRING:
         Message class is used to create text messages which will be related to the corresponding chat.
     """
+
+    MESSAGE_STATUS_CHOICES = (
+        ('UNREAD', 'Unread'),
+        ('READ', 'Read')
+    )
+
     datetime = models.DateTimeField('datetime', blank=True, null=True, help_text='Message time creation')
     text = models.TextField('Text', blank=True, null=True, help_text='Message Text')
     image = models.ImageField('Image', blank=True, null=True, help_text='Message Image')
-    chat = models.ForeignKey(to=Chat, on_delete=models.CASCADE, blank=True, null=True, help_text='Chat', verbose_name='Sender')
+    status = models.CharField('status', max_length=6, blank=True, null=True, help_text='Message Status', default=MESSAGE_STATUS_CHOICES[0][0], choices=MESSAGE_STATUS_CHOICES)
+    chat = models.ForeignKey(to=Chat, on_delete=models.CASCADE, blank=True, null=True, help_text='Chat', verbose_name='Chat', related_name='message')
     created_by = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='Sender', verbose_name='Sender')

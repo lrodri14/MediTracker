@@ -1,7 +1,9 @@
 {% load static %}
+{% load accounts_custom_tags %}
+{% get_destination chat user as destination %}
 <!-- Destination Profile Picture -->
 {% if not destination.profile.profile_pic %}
-    {% if destination.profile.gender == 'Masculine' %}
+    {% if destination.profile.gender == 'MASCULINE' %}
         <img class="social-section__chat-destination-profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
     {% else %}
         <img class="social-section__chat-destination-profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">
@@ -12,8 +14,21 @@
 <h4 class="social-section__destination-user">{{ destination.first_name }} {{ destination.last_name }}</h4>
 <!-- Chat content area -->
 <div class="social-section__chat-content">
-    <div class="social-section__chat-loader"></div>
-    <p class="social-section__chat-loader">Loading messages...</p>
+    {% for message in chat.message.all %}
+        {% if message.created_by == user %}
+            <div class="social-section__message">
+                {{ message.text }}
+            </div>
+        {% else %}
+            <div class="social-section__reply">
+                {{ message.text }}
+            </div>
+        {% endif %}
+    {% endfor %}
 </div>
-<!-- Chat message input field and send button -->
-<p>{{ chat_form.message }}</p><i class="fas fa-paper-plane social_section__send-message-button"></i>
+
+<form action="{% url 'accounts:save_message' chat.pk%}" method="POST" class="social-section__chat-form" data-chat-pk="{{ chat.pk }}">
+    {% csrf_token %}
+    <!-- Chat message input field and send button -->
+    <p>{{ message_form.text }}</p><i class="fas fa-paper-plane social_section__send-message-button"></i>
+</form>

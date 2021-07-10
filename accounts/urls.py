@@ -5,7 +5,7 @@
 from django.urls import path
 from .views import Login, Logout, ChangePassword, ChangePasswordDone, PasswordReset, PasswordResetDone, \
     PasswordResetConfirm, PasswordResetComplete, signup, manage_subscription, profile_change, profile_picture_change, \
-    profile, user_lookup, contacts, remove_contact, chats, display_chat, contact_requests, \
+    profile, user_lookup, contacts, remove_contact, chats, display_chat, save_message, contact_requests, \
     send_cancel_contact_request, contact_request_response
 
 app_name = 'accounts'
@@ -30,6 +30,7 @@ urlpatterns = [
     path('remove_contact/<int:pk>', remove_contact, name='remove_contact'),
     path('chats', chats, name='chats'),
     path('display_chat/<int:pk>', display_chat, name='display_chat'),
+    path('save_message/<int:chat_pk>', save_message, name='save_message'),
     path('contact_requests', contact_requests, name='contact_requests'),
     path('send_cancel_contact_request/<int:pk>', send_cancel_contact_request, name='send_cancel_contact_request'),
     path('contact_request_response/<int:pk>', contact_request_response, name='contact_request_response'),

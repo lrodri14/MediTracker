@@ -5,7 +5,7 @@
         <div class="social-section__cell" onclick="window.location='{% url 'accounts:profile' contact.user.pk %}'">
             <div class="social-section__grid">
                 {% if not contact.profile_pic %}
-                    {% if contact.gender == 'Masculine' %}
+                    {% if contact.gender == 'MASCULINE' %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/male-avatar.png' %}" alt="">
                     {% else %}
                         <img class="social-section__profile-picture" src="{% static 'accounts/avatars/female-avatar.png' %}" alt="">

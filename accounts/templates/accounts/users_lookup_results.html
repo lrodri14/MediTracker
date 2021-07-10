@@ -7,10 +7,10 @@
                 {% if user.profile.profile_pic %}
                     <td class="data-table__data"><img src="{{ user.profile.profile_pic.url }}" alt=""></td>
                 {% else %}
-                    {% if user.profile.gender == 'Femenine' %}
-                        <td class="data-table__data"><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
-                    {% else %}
+                    {% if user.profile.gender == 'MASCULINE' %}
                         <td class="data-table__data"><img src="{% static 'accounts/avatars/male-avatar.png' %}" alt=""></td>
+                    {% else %}
+                        <td class="data-table__data"><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
                     {% endif %}
                 {% endif %}
                 <td class="data-table__data">{{ user.first_name }} {{ user.last_name }}</td>

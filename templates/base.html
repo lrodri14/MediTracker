@@ -46,7 +46,7 @@
 
             {% block social_section %}
                 <!-- Social Content -->
-                <div class="social-section">
+                <div class="social-section" data-user="{{ user.username }}">
                     <div class="social-section__navigator"><div class="social-section__tab social-section__tab--active" data-url="{% url 'accounts:contacts' %}">Contacts</div><div class="social-section__tab" data-url="{% url 'accounts:chats' %}">Chats</div><div class="social-section__tab" data-url="{% url 'accounts:contact_requests' %}">Requests</div></div>
                     <div class="social-section__data"></div>
                 </div>

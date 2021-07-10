@@ -4,19 +4,14 @@
 */
 
 ///////////////////////////////////////////////// Variables ////////////////////////////////////////////////////////////
-
-var loaderModal = document.querySelector('.global-loader-modal')
-var globalNavigator = document.querySelector('.global-navigator')
-var socialSection = document.querySelector('.social-section')
-var socialSectionData = document.querySelector('.social-section__data')
-var socialSectionTabs = document.querySelectorAll('.social-section__tab')
-var notificationsPopup = document.querySelector('.notifications-popup')
-
-// Variables used for the chat functionality
-let identity
-let chatWindow
-let chatClient
-let chatChannel
+let username = document.querySelector('.social-section').getAttribute('data-user')
+let loaderModal = document.querySelector('.global-loader-modal')
+let globalNavigator = document.querySelector('.global-navigator')
+let socialSection = document.querySelector('.social-section')
+let socialSectionData = document.querySelector('.social-section__data')
+let socialSectionTabs = document.querySelectorAll('.social-section__tab')
+let notificationsPopup = document.querySelector('.notifications-popup')
+let chatWindow = document.querySelector('.social-section__chat-content')
 
 ///////////////////////////////////////////////// Functions ////////////////////////////////////////////////////////////
 
@@ -34,6 +29,14 @@ async function displayChatAW(url){
     /*The displayChatAW async function is used to display all the chats the user has opened, it takes a single
       argument: url, used to perform the request to the server, the response will be return in json format.*/
     const result = await fetch(url)
+    const data = result.json()
+    return data
+}
+
+async function sendMessageAW(url, method, csrfmiddlwaretoken, formData){
+    /*The displayChatAW async function is used to display all the chats the user has opened, it takes a single
+      argument: url, used to perform the request to the server, the response will be return in json format.*/
+    const result = await fetch(url, {'method': method, 'headers': {'X-CSRFToken': csrfmiddlwaretoken}, 'body': formData})
     const data = result.json()
     return data
 }
@@ -70,78 +73,11 @@ function displayMessage(fromUser, message){
     chatWindow.scrollTop = chatWindow.scrollHeight
 }
 
-function setupChannel(name){
-    /* The setUpChannel function takes a single argument name, which the channel object we we collect from the response
-       when we either retrieved from the subscribed channels or we created, we will check if the channel.status attribute
-       is 'joined'... if this condition is fulfilled then we will directly retrieve all the messages from the channel, we
-       will receive a promise object we will consume, we call the processPage function to display the messages we collected
-       from the server. If the condition is not fulfilled then we will call the .join() method to join the channel and
-       follow the same procedure, retrieve the messages and process them.*/
-    if (chatChannel.status === 'joined'){
-        chatChannel.getMessages(pageSize=30, anchor=0, direction='forward')
-        .then( messages => {
-            processPage(messages)
-        })
-    }else{
-        chatChannel.join()
-        .then(channel => {
-            channel.getMessages(pageSize=30, anchor=0, direction='forward')
-            .then(messages => {
-                processPage(messages)
-            })
-        })
-    }
+// WebSockets
 
-    /* We will assign a messageAdded event listener to the chatChannel this way every time we capture this event, the
-       displayMessage function will be called passing the author and body message as parameters, this will display our
-       message in the chatWindow*/
-    chatChannel.on('messageAdded', message => {
-        displayMessage(message.author, message.body)
-    })
-
-}
-
-function processPage(page){
-    /* The processPage function is used to display all the messages that have been sent previously in the channel, it
-       takes one single argument: page, which expects a Paginator Object, this will print each and every single message
-       sent, it will check if the Paginator contains any other pages to render them too.*/
-    document.querySelectorAll('.social-section__chat-loader').forEach(loader => loader.classList.add('social-section__chat-loader--fade-out'))
-    page.items.forEach(message => {
-        displayMessage(message.author, message.body)
-    })
-    if (page.hasNextPage){
-        page.nextPage().then(processPage)
-    }
-}
-
-function createOrJoinChannel(){
-    /* This createOrJoinChannel function, is used to retrieve the channel with the channelName we received in our
-       server response, we will make use of the getChannelByUniqueName function to retrieve this channel, this function
-       will return us a promise we will consume which contains the channel itself, we will store this channel inside
-       the chatChannel variable for future uses, afterwards we will setup or start our channel using the setupChannel
-       function we defined. If that channel does not exist, we will create it making use of the chatClient.createChannel
-       function, this function receives an object as parameter which contains the uniqueName and friendlyName of the channel,
-       this function will return a promise with the channel itself, we do the same procedure, store the channel inside
-       the chatChannel variable and make use of the setupChannel function to set it up.*/
-    chatClient.getChannelByUniqueName(channelName)
-    .then(channel => {
-        chatChannel = channel
-        setupChannel(channelName)
-    })
-    .catch(() => {
-        chatClient.createChannel({
-            uniqueName: channelName,
-            friendlyName: channelName + 'Channel'
-        })
-        .then(channel => {
-            chatChannel = channel
-            setupChannel(channelName)
-        })
-    })
-}
-
-url = 'ws://' + window.location.host
-let notificationWebsocket = new WebSocket(url)
+// Notifications WebSocket Url
+NWSUrl = 'ws://' + window.location.host
+let notificationWebsocket = new WebSocket(NWSUrl)
 
 notificationWebsocket.addEventListener('message', (e) => {
     notificationsPopup.classList.add('notification-popup--display')
@@ -150,6 +86,25 @@ notificationWebsocket.addEventListener('message', (e) => {
         notificationsPopup.classList.remove('notification-popup--display')
     }, 5000)
 })
+
+// Chat Websocket URL
+let CWSUrlBluePrint = 'ws://' + window.location.host + '/chat'
+let chatWebsocket = null
+
+function activateChatWebSocketEvents(CWS){
+    if (CWS !== null){
+        CWS.addEventListener('message', (e) => {
+            data = JSON.parse(e.data)
+            if (data['username'] != username){
+                let messageContainer = document.createElement('div')
+                messageContainer.classList.add('social-section__reply')
+                messageContainer.textContent = data['message']
+                chatWindow.appendChild(messageContainer)
+            }
+        })
+    }
+}
+
 
 ///////////////////////////////////////////////// Event Listeners //////////////////////////////////////////////////////
 
@@ -341,18 +296,18 @@ if (socialSection){
            createOrJoinChannel function.*/
         if (e.target.closest('.social-section__chat')){
             let chatUrl = e.target.closest('.social-section__chat').getAttribute('data-url')
+            let pk = e.target.closest('.social-section__chat').getAttribute('data-pk')
+            let CWSUrl = CWSUrlBluePrint + '?pk=' + pk
+            // Closing current websocket connection, if there is one.
+            if (chatWebsocket !== null){
+                chatWebsocket.close()
+            }
+            chatWebsocket = new WebSocket(CWSUrl)
+            activateChatWebSocketEvents(chatWebsocket)
             displayChatAW(chatUrl)
             .then(data => {
                 socialSectionData.innerHTML = data['html']
                 chatWindow = document.querySelector('.social-section__chat-content')
-                identity = data['identity']
-                channelName = data['channel_name']
-                Twilio.Chat.Client.create(data['token'])
-                .then(client => {
-                    chatClient = client
-                    chatClient.getSubscribedChannels()
-                    .then(createOrJoinChannel)
-                })
             })
         }
 
@@ -363,10 +318,25 @@ if (socialSection){
 
            /* Why is it not working with the social-section__send-message-button class? */
         if (e.target.classList.contains('fa-paper-plane')){
-            let message = document.querySelector('#id_message').value
-            if (chatChannel && message.length > 0){
-                chatChannel.sendMessage(message)
-                document.querySelector('#id_message').value = ''
+            let message = document.querySelector('#id_text').value
+            if (message.length > 0){
+                let form = socialSection.querySelector('form')
+                let action = form.action
+                let method = form.method
+                let csrfmiddlwaretoken = socialSection.querySelector('[name=csrfmiddlewaretoken]').value
+                let formData = new FormData(form)
+                let pk = form.getAttribute('data-chat-pk')
+                sendMessageAW(action, method, csrfmiddlwaretoken, formData)
+                .then((data) => {
+                    if (data['success'] == true){
+                        chatWebsocket.send(JSON.stringify({'pk': pk, 'message': message, 'username': username}))
+                        document.querySelector('#id_text').value = ''
+                        let messageContainer = document.createElement('div')
+                        messageContainer.classList.add('social-section__message')
+                        messageContainer.textContent = message
+                        chatWindow.appendChild(messageContainer)
+                    }
+                })
             }
         }
     })
@@ -375,14 +345,29 @@ if (socialSection){
        and pass it to the sendMessage Twilio Channel instance method for further processing.*/
     socialSection.addEventListener('keypress', (e) => {
         if (e.which === 13){
-            let message = document.querySelector('#id_message').value
-            if (chatChannel && message.length > 0){
-                chatChannel.sendMessage(message)
-                document.querySelector('#id_message').value = ''
+            let message = document.querySelector('#id_text').value
+            if (message.length > 0){
+                let form = socialSection.querySelector('form')
+                let action = form.action
+                let method = form.method
+                let csrfmiddlwaretoken = socialSection.querySelector('[name=csrfmiddlewaretoken]').value
+                let formData = new FormData(form)
+                let pk = form.getAttribute('data-chat-pk')
+                sendMessageAW(action, method, csrfmiddlwaretoken, formData)
+                .then((data) => {
+                    if (data['success'] == true){
+                        chatWebsocket.send(JSON.stringify({'pk': pk, 'message': message, 'username': username}))
+                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `You have a received message from ${data['to']}`, 'nf_type':'received_message'}))
+                        document.querySelector('#id_text').value = ''
+                        let messageContainer = document.createElement('div')
+                        messageContainer.classList.add('social-section__message')
+                        messageContainer.textContent = message
+                        chatWindow.appendChild(messageContainer)
+                    }
+                })
             }
         }
     })
-
 }
 
 //// Window Event Listeners
