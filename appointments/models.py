@@ -276,7 +276,7 @@ class GeneralConsult(BaseConsult):
         DOCSTRING: The GeneralConsult class inherits from BaseConsults, this class is used to create consults for users
         with the "GENERAL MEDICINE", "INTERNAL MEDICINE" or "PEDIATRICS" speciality, it declares it's own Meta class.
     """
-    blood_pressure = models.FloatField('Blood Pressure', blank=True, null=True, help_text='Blood Pressure')
+    blood_pressure = models.CharField('Blood Pressure', max_length=10, blank=True, null=True, help_text='Blood Pressure')
     temperature = models.FloatField('Temperature', blank=True, null=True, help_text='Corporal Temperature')
     weight = models.FloatField('Weight', blank=True, null=True, help_text='Weight')
     size = models.FloatField('Height', blank=True, null=True, help_text='Size')

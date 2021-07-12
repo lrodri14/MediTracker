@@ -99,7 +99,6 @@ class ProfileForm(forms.ModelForm):
         model = UsersProfile
         exclude = ('user', 'profile_pic', 'background_pic', 'contacts')
         widgets = {
-            'address': forms.widgets.Textarea(attrs={'rows': 1, 'wrap': 'off'}),
             'birth_date': forms.widgets.SelectDateWidget(years=[x for x in range(1920, 2101)]),
         }
 
