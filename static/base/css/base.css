@@ -172,7 +172,7 @@ h1,h2,h3,h4,h5,h6{
 
 /*////////////////////////////////////////////////////// Form ////////////////////////////////////////////////////////*/
 
-form:not(.social-section form){
+form{
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     background-clip: padding-box;
@@ -750,6 +750,13 @@ a {
 .chat-identification{
     display: inline;
     margin-left: 15px;
+}
+
+.social-section form{
+    background-color: rgba(0,0,0,0);
+    backdrop-filter: none;
+    background-clip: none;
+    float: left;
 }
 
 .social-section__chat-loader:first-child{
