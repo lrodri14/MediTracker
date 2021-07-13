@@ -72,7 +72,7 @@ def filter_patients(request):
         doctor = False
         aimed_user = request.user.assistant.doctors.all()[0]
     today = timezone.localtime().date()
-    patients_list = Patient.objects.filter(Q(first_names__icontains=query) | Q(last_names__icontains=query),created_by=aimed_user).order_by('id_number')
+    patients_list = Patient.objects.filter(Q(first_names__icontains=query) | Q(last_names__icontains=query) | Q(id_number__icontains=query), created_by=aimed_user).order_by('id_number')
     template = 'patients/patients_partial_list.html'
     context = {'patients': patients_list, 'doctor': doctor, 'today': today}
     data = {'html': render_to_string(template, context, request)}
