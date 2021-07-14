@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 from twilio.jwt.access_token import AccessToken
 from django.template.loader import render_to_string
 from twilio.jwt.access_token.grants import ChatGrant
-from .models import UsersProfile, ContactRequest, Chat, Message
+from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message
 from utilities.accounts_utilities import check_requests
 from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
@@ -338,6 +338,36 @@ def remove_contact(request, pk):
     chat.delete()
     data = {'success': 'Contact removed successfully'}
     return JsonResponse(data)
+
+
+def display_block_list(request):
+    """
+        DOCSTRING
+        The display_block_list function view is used to display the user's block list.
+    """
+    template = 'accounts/block_list.html'
+    data = {'html': render_to_string(template, {}, request)}
+    return JsonResponse(data)
+
+
+def manage_block_list(request, pk, query=None):
+    """
+        DOCSTRING:
+        The manage_block_list function view is used to block or unblock specific contact and add or remove it from the
+        current user's block_list, it expects two arguments, request and a pk, last one is used to identify the user to
+        unblock or block.
+    """
+    template = None
+    context = None
+    target_user = CustomUser.objects.get(pk=pk)
+    block_list = request.user.profile.block_list
+    if target_user in block_list.all():
+        block_list.remove(target_user)
+    else:
+        block_list.add(target_user)
+    data = {'html': render_to_string(template, context, request), 'success': True}
+    return JsonResponse(data)
+
 
 
 def chats(request):

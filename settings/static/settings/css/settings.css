@@ -164,6 +164,11 @@
     left: 13%;
 }
 
+.profile-settings__content #no-data{
+    top: 40%;
+    left: 43%;
+}
+
 .profile-settings__content form{
     background-color: rgba(0,0,0,0);
     backdrop-filter: none;

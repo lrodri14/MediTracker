@@ -159,6 +159,7 @@ class UsersProfile(models.Model):
     address = models.TextField('Address', max_length=200, blank=False, null=True, help_text='Provide your exact address')
     phone_number = models.CharField('Phone Number', max_length=15, null=True, blank=False, help_text='Provide your phone number')
     contacts = models.ManyToManyField(to=CustomUser, blank=True, help_text='Contacts List')
+    block_list = models.ManyToManyField(to=CustomUser, blank=True, help_text="User's Block List", verbose_name="Block List", related_name='block_list')
 
     def __str__(self):
         return str(self.user) + ' - ' + 'User Profile'
