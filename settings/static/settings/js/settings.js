@@ -269,6 +269,12 @@ if (container){
             e.target.classList.add('data-table__unlink--active')
         }
 
+        /* This event will be fired every time the target contains the 'data-table__unblock' class in its classList, it will add
+           the 'data-table__unblock--active' to the target.*/
+        if (e.target.classList.contains('data-table__unblock')){
+            e.target.classList.add('data-table__unblock--active')
+        }
+
         /* This event will be fired every time the target contains the link class or the targets parent, this will add the
            link-hover class.*/
         if (e.target.closest('.links-container__link')){
@@ -351,6 +357,12 @@ if (container){
            the 'fa-unlink-hover' to the target.*/
         if (e.target.classList.contains('data-table__unlink')){
             e.target.classList.remove('data-table__unlink--active')
+        }
+
+        /* This event will be fired every time the target contains the 'data-table__unblock' class in its classList, it will remove
+           the 'data-table__unblock--active' from the target.*/
+        if (e.target.classList.contains('data-table__unblock')){
+            e.target.classList.remove('data-table__unblock--active')
         }
 
         /* This event will be fired every time the target contains the link class or the targets parent, this will remove the

@@ -9,13 +9,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in user.profile.block_list_set.all %}
-                    <tr>
-                        <td>{{ user.first_name }} {{ user.last_name }}</td>
-                        <td>{{ user }}</td>
-                        <td><i class="fas fa-ban" data-url="{% url 'accounts:manage_block_list' user.pk %}"></i></td>
-                    </tr>
-                {% endfor %}
+                {% include 'accounts/block_list_partial_list.html' %}
             </tbody>
         </table>
     </div>

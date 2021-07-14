@@ -293,6 +293,11 @@
     display: inline-block;
 }
 
+.data-table__unblock--active{
+    color: #25BB41;
+    transition: 0.5s;
+}
+
 .data-table__unlink--active{
     cursor: pointer;
     color: #A31621;
