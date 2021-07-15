@@ -32,6 +32,7 @@
     {% if user.profile == profile %}
         <i class="fas fa-edit card__edit-button" data-url="{% url 'accounts:profile_change' %}" data-type="profile"></i>
     {% else %}
+        <i class="fas fa-ban card__block-contact" data-url="{% url 'accounts:manage_block_list' profile.user.pk %}"></i>
         {% if profile.user in user.profile.contacts.all %}
             <i class="fas fa-trash card__delete-contact" data-url="{% url 'accounts:remove_contact' profile.user.pk %}"></i>
         {% else %}

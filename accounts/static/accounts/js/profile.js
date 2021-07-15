@@ -4,11 +4,12 @@
 
 /*////////////////////////////////////////////////////// Variables ///////////////////////////////////////////////////*/
 
-var body = document.querySelector('body')
-var content = document.querySelector('.container')
-var modal = document.querySelector('.modal')
-var modalContent = document.querySelector('.modal__content')
-var username = document.querySelector('#username').textContent
+let body = document.querySelector('body')
+let card = document.querySelector('.card')
+let content = document.querySelector('.container')
+let modal = document.querySelector('.modal')
+let modalContent = document.querySelector('.modal__content')
+let username = document.querySelector('#username').textContent
 
 /*////////////////////////////////////////////////////// Functions ///////////////////////////////////////////////////*/
 
@@ -50,6 +51,16 @@ async function removeContactAW(url){
     const data = result.json()
     return data
 }
+
+async function blockUnblockContactAW(url){
+    /* This blockUnblockContactAW async function is used to block or unblock a contact , it takes a single obligatory parameter:
+       url to which the request will be directed.
+     */
+    const result = await fetch(url)
+    const data = result.json()
+    return data
+}
+
 
 /*//////////////////////////////////////////////// Event Listeners ///////////////////////////////////////////////////*/
 
@@ -245,6 +256,50 @@ if (body){
                     e.target.setAttribute('data-url', '/accounts/send_cancel_contact_request/' + contactID)
                     e.target.setAttribute('data-procedure', 'send')
                     e.target.classList.add('fa-user-plus')
+                }
+            })
+        }
+
+        if (e.target.classList.contains('card__block-contact') || e.target.classList.contains('card__unblock-contact')){
+            /* This event will be fired every time the target's classList contains the card__block-contact class in it's classList,
+               the event collect's the data-url from the data-url attribute and makes the request using the blockContactAW
+               async func, once we receive a success response, the icon will be changed and the data-url attribute set.*/
+            let url = e.target.getAttribute('data-url')
+            let contactID = url.slice(url.length - 2, url.length)
+            blockUnblockContactAW(url)
+            .then(data => {
+                if (data['success']){
+                    if (e.target.classList.contains('card__block-contact')){
+                        e.target.classList.remove('fa-ban')
+                        e.target.classList.remove('card__block-contact')
+                        e.target.classList.add('fa-user-friends')
+                        e.target.classList.add('card__unblock-contact')
+
+                        if (document.querySelector('.card__send-request') !== null &&
+                            document.querySelector('.card__send-request') !== undefined){
+                               document.querySelector('.card__send-request').remove()
+                        }
+
+                        if (document.querySelector('.card__cancel-request') !== null &&
+                            document.querySelector('.card__cancel-request') !== undefined){
+                               document.querySelector('.card__cancel-request').remove()
+                        }
+
+                        if (document.querySelector('.card__delete-contact') !== null &&
+                            document.querySelector('.card__delete-contact') !== undefined){
+                               document.querySelector('.card__delete-contact').remove()
+                        }
+
+                    }else{
+                        e.target.classList.remove('fa-user-friends')
+                        e.target.classList.remove('card__unblock-contact')
+                        e.target.classList.add('fa-ban')
+                        e.target.classList.add('card__block-contact')
+                        let operationIcon = document.createElement('i')
+                        operationIcon.setAttribute('class', 'fas fa-user-plus card__send-request')
+                        operationIcon.setAttribute('data-url', '/accounts/send_cancel_contact_request/' + contactID)
+                        card.appendChild(operationIcon)
+                    }
                 }
             })
         }

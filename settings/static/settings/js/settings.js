@@ -172,6 +172,14 @@ async function updateSettingsAW(url, method, csrfmiddlewaretoken, formData){
     return data
 }
 
+async function unblockUser(url){
+    /* This unblockUser function is used to unblock a specific user selected, the function accepts one single parameter:
+    'url' to make the 'GET' request, the response will be returned in JSON format, for further processing.*/
+    const result = await fetch(url)
+    const data =  result.json()
+    return data
+}
+
 /*###################################################### Events Listeners ############################################*/
 
 // Body Event Listeners
@@ -527,6 +535,19 @@ if (container){
             .then(data => {
                 modal.classList.add('modal--display')
                 modalContent.innerHTML = data['html']
+            })
+        }
+
+        if (e.target.classList.contains('data-table__unblock')){
+        /* This event will be fired every time the target contains the 'data-table__unblock' class in it's classList, this event
+           will unblock the user selected and will return the list with the new data.*/
+            e.preventDefault()
+            e.stopPropagation()
+            const url = e.target.getAttribute('data-url')
+            unblockUser(url)
+            .then(data => {
+                let container = document.querySelector('.profile-settings__content')
+                container.innerHTML = data['html']
             })
         }
 

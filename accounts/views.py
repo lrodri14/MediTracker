@@ -303,7 +303,8 @@ def user_lookup(request):
         filtering, independently if the searching was successful or not, the response will be returned in JSON Format.
     """
     query = request.GET.get('query')
-    users = User.objects.filter(Q(username__startswith=query) | Q(first_name__startswith=query) | Q(last_name__startswith=query), roll='DOCTOR').exclude(username=request.user).order_by('first_name')
+    users = User.objects.filter(Q(username__startswith=query) | Q(first_name__startswith=query) | Q(last_name__startswith=query), roll='DOCTOR')\
+            .exclude(username=request.user).order_by('first_name')
     template = 'accounts/users_lookup_results.html'
     context = {'users': users}
     data = {'html': render_to_string(template, context, request)}
@@ -350,24 +351,28 @@ def display_block_list(request):
     return JsonResponse(data)
 
 
-def manage_block_list(request, pk, query=None):
+def manage_block_list(request, pk):
     """
         DOCSTRING:
         The manage_block_list function view is used to block or unblock specific contact and add or remove it from the
         current user's block_list, it expects two arguments, request and a pk, last one is used to identify the user to
         unblock or block.
     """
+    data = None
     template = None
-    context = None
     target_user = CustomUser.objects.get(pk=pk)
     block_list = request.user.profile.block_list
+    user_contacts = request.user.profile.contacts
     if target_user in block_list.all():
+        template = 'accounts/block_list.html'
         block_list.remove(target_user)
+        data = {'html': render_to_string(template, {}, request), 'success': True}
     else:
         block_list.add(target_user)
-    data = {'html': render_to_string(template, context, request), 'success': True}
+        user_contacts.remove(target_user)
+        target_user.profile.contacts.remove(request.user)
+        data = {'success': True}
     return JsonResponse(data)
-
 
 
 def chats(request):

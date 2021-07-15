@@ -28,7 +28,6 @@ urlpatterns = [
     path('user_lookup', user_lookup, name='user_lookup'),
     path('display_block_list', display_block_list, name='display_block_list'),
     path('manage_block_list/<int:pk>', manage_block_list, name='manage_block_list'),
-    path('manage_block_list/<int:pk>/<slug:query>', manage_block_list, name='manage_block_list'),
     path('contacts', contacts, name='contacts'),
     path('remove_contact/<int:pk>', remove_contact, name='remove_contact'),
     path('chats', chats, name='chats'),

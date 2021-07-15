@@ -1,24 +1,29 @@
 {% load static %}
 <!-- If any requests in existence, they will be displayed. -->
+
 {% if users %}
     <table class="data-table">
-        {% for user in users %}
-            <tr class="data-table__item" onclick="window.location='{% url 'accounts:profile' user.pk %}'">
-                {% if user.profile.profile_pic %}
-                    <td class="data-table__data"><img src="{{ user.profile.profile_pic.url }}" alt=""></td>
-                {% else %}
-                    {% if user.profile.gender == 'MASCULINE' %}
-                        <td class="data-table__data"><img src="{% static 'accounts/avatars/male-avatar.png' %}" alt=""></td>
-                    {% else %}
-                        <td class="data-table__data"><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
-                    {% endif %}
+        {% with current_user=user %}
+            {% for user in users %}
+                {% if user not in current_user.profile.block_list.all and current_user not in user.profile.block_list.all%}
+                    <tr class="data-table__item" onclick="window.location='{% url 'accounts:profile' user.pk %}'">
+                        {% if user.profile.profile_pic %}
+                            <td class="data-table__data"><img src="{{ user.profile.profile_pic.url }}" alt=""></td>
+                        {% else %}
+                            {% if user.profile.gender == 'MASCULINE' %}
+                                <td class="data-table__data"><img src="{% static 'accounts/avatars/male-avatar.png' %}" alt=""></td>
+                            {% else %}
+                                <td class="data-table__data"><img src="{% static 'accounts/avatars/female-avatar.png' %}" alt=""></td>
+                            {% endif %}
+                        {% endif %}
+                        <td class="data-table__data">{{ user.first_name }} {{ user.last_name }}</td>
+                        <td class="data-table__data">{{ user.doctor.get_speciality_display }}</td>
+                        <td class="data-table__data">{{ user.profile.get_origin_display }}</td>
+                        <td class="data-table__data">{{ user }}</td>
+                    </tr>
                 {% endif %}
-                <td class="data-table__data">{{ user.first_name }} {{ user.last_name }}</td>
-                <td class="data-table__data">{{ user.doctor.get_speciality_display }}</td>
-                <td class="data-table__data">{{ user.profile.get_origin_display }}</td>
-                <td class="data-table__data">{{ user }}</td>
-            </tr>
-        {% endfor %}
+            {% endfor %}
+        {% endwith %}
     </table>
 <!-- If no users in existence, this message will be displayed -->
 {% else %}

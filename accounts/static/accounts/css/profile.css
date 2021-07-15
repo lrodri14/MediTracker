@@ -44,6 +44,24 @@ body{
     cursor: pointer;
     position: absolute;
     top: 5%;
+    left: 92%;
+    transition: 0.5s;
+}
+
+.card__block-contact{
+    font-size: 17px;
+    cursor: pointer;
+    position: absolute;
+    top: 5%;
+    left: 96%;
+    transition: 0.5s;
+}
+
+.card__unblock-contact{
+    font-size: 17px;
+    cursor: pointer;
+    position: absolute;
+    top: 5%;
     left: 96%;
     transition: 0.5s;
 }
@@ -63,6 +81,15 @@ body{
     transition: 0.5s;
 }
 
+.card__block-contact--active{
+    color: #A31621;
+    transition: 0.5s;
+}
+
+.card__unblock-contact--active{
+    color: #25BB41;
+    transition: 0.5s;
+}
 /*/////////////////////////////////////////////////////// Profile Pic ///////////////////////////////////////////////*/
 
 .card__picture-container{
