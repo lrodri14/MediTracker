@@ -273,7 +273,7 @@ def update_mailing_information(request):
         if mailing_info.is_valid():
             mailing_info.save()
             mailing_form = MailingCredentialForm(instance=MailingCredential.objects.get(user=request.user))
-            context = {'mailing_form': mailing_form}
+            context = {'mailing_form': mailing_form, 'success': True}
             data = {'html': render_to_string(template, context, request)}
             return JsonResponse(data)
 

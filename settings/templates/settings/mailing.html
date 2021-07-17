@@ -1,5 +1,6 @@
 {% load static %}
 <form method="POST" action="{% url 'settings:update_mailing_information' %}" autocomplete="off" id="mailing-info-form">
+    {% if success == True %}<p><small>* Mailing settings updated successfully</small></p>{% endif %}
     {% csrf_token %}
     <p>{{ mailing_form.smtp_server.label }}</p>
     <p>{{ mailing_form.smtp_server }}</p>

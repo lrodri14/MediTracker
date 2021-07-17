@@ -178,7 +178,7 @@ async function updateSettingsAW(url, method, csrfmiddlewaretoken, formData){
        parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
        'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
        the form's inputs, the response will be returned in JSON format for further processing.*/
-    await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
     const data = result.json()
     return data
 }
