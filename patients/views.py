@@ -183,7 +183,7 @@ def patient_details(request, pk):
     vaccines = VaccineApplication.objects.filter(patient=patient)
     surgeries = Surgery.objects.filter(patient=patient)
     template = 'patients/patient_details.html'
-    context = {'patient': patient, 'consults': consults_list, 'allergies': allergies, 'antecedents': antecedents, 'insurance': insurance, 'exams': exams_list, 'charges': charges_list, 'vaccines': vaccines, 'surgeries': surgeries, 'consults_form': ConsultDetailsFilterForm}
+    context = {'patient': patient, 'consults': consults_list, 'allergies': allergies, 'antecedents': antecedents, 'insurance': insurance, 'exams': exams_list, 'charges': charges_list, 'vaccines': vaccines, 'surgeries': surgeries, 'consults_filter_form': ConsultDetailsFilterForm}
     return render(request, template, context)
 
 
@@ -318,8 +318,6 @@ def update_patient(request, pk):
             insurance.save()
 
             return redirect('patients:patients_details', pk=patient.pk)
-    print(allergies_form.errors)
-    print(antecedents_form.errors)
     context_data = {'patient_form': patient_form, 'allergies_form': allergies_form, 'insurance_form': insurance_form, 'antecedents_form': antecedents_form, 'country_code': country_code}
     return render(request, template, context_data)
 

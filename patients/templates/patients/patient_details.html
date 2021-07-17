@@ -23,6 +23,7 @@
         <div class="details-container__general-information">
             <h2>General</h2>
             <h4 class="details-container__title">General Information</h4>
+            <i class="far fa-calendar-check" data-url="{% url 'appointments:create_appointment' patient.pk %}"></i>
             {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
             <p>Id Card Number: {{ patient.id_number }}</p>
             <p>First Name: {{ patient.first_names }}</p>
@@ -93,10 +94,10 @@
                 <i class="fas fa-filter filter-container__display-filter-button appointments-filter"></i>
                 <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form appointments-form">
                     <h3 class="filter-container__form-title">Filter Results</h3>
-                    <p>{{ consults_form.date_from.label }}</p>
-                    <p>{{ consults_form.date_from }}</p>
-                    <p>{{ consults_form.date_to.label }}</p>
-                    <p>{{ consults_form.date_to }}</p>
+                    <p>{{ consults_filter_form.date_from.label }}</p>
+                    <p>{{ consults_filter_form.date_from }}</p>
+                    <p>{{ consults_filter_form.date_to.label }}</p>
+                    <p>{{ consults_filter_form.date_to }}</p>
                     <p class="error"><small>{{ error }}</small></p>
                     <button type="submit">Submit</button>
                 </form>
@@ -131,10 +132,10 @@
                 <i class="fas fa-filter filter-container__display-filter-button"></i>
                 <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form exams-form">
                     <h3 class="filter-container__filter-form">Filter Results</h3>
-                    <p>{{ consults_form.date_from.label }}</p>
-                    <p>{{ consults_form.date_from }}</p>
-                    <p>{{ consults_form.date_to.label }}</p>
-                    <p>{{ consults_form.date_to }}</p>
+                    <p>{{ consults_filter_form.date_from.label }}</p>
+                    <p>{{ consults_filter_form.date_from }}</p>
+                    <p>{{ consults_filter_form.date_to.label }}</p>
+                    <p>{{ consults_filter_form.date_to }}</p>
                     <p class="error"><small>{{ error }}</small></p>
                     <button type="submit">Submit</button>
                 </form>
@@ -170,10 +171,10 @@
             <i class="fas fa-filter filter-container__display-filter-button charges-filter"></i>
             <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form charges-form">
                 <h3 class="filter-container__form-title">Filter Results</h3>
-                <p>{{ consults_form.date_from.label }}</p>
-                <p>{{ consults_form.date_from }}</p>
-                <p>{{ consults_form.date_to.label }}</p>
-                <p>{{ consults_form.date_to }}</p>
+                <p>{{ consults_filter_form.date_from.label }}</p>
+                <p>{{ consults_filter_form.date_from }}</p>
+                <p>{{ consults_filter_form.date_to.label }}</p>
+                <p>{{ consults_filter_form.date_to }}</p>
                 <p class="error"><small>{{ error }}</small></p>
                 <button type="submit">Submit</button>
             </form>
@@ -210,10 +211,10 @@
                     <i class="fas fa-filter filter-container__display-filter-button vaccines-filter"></i>
                     <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="filter-container__filter-form vaccines-form">
                         <h3>Filter Results</h3>
-                        <p>{{ consults_form.date_from.label }}</p>
-                        <p>{{ consults_form.date_from }}</p>
-                        <p>{{ consults_form.date_to.label }}</p>
-                        <p>{{ consults_form.date_to }}</p>
+                        <p>{{ consults_filter_form.date_from.label }}</p>
+                        <p>{{ consults_filter_form.date_from }}</p>
+                        <p>{{ consults_filter_form.date_to.label }}</p>
+                        <p>{{ consults_filter_form.date_to }}</p>
                         <p class="error"><small>{{ error }}</small></p>
                         <button type="submit">Submit</button>
                     </form>

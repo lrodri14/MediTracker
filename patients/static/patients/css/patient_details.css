@@ -6,6 +6,20 @@
     position: fixed;
 }
 
+.fa-calendar-check{
+    position: absolute;
+    top: 22.8%;
+    left: 44%;
+    font-size: 21px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.fa-calendar-check--active{
+    color: #25BB41;
+    transition: 0.5s;
+}
+
 .fa-envelope{
     position: absolute;
     top: 23%;
@@ -15,7 +29,7 @@
     transition: 0.5s;
 }
 
-.fa-envelope-hover{
+.fa-envelope--active{
     color: #00CCFF;
     transition: 0.5s;
 }

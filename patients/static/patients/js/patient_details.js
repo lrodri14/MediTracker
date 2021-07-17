@@ -181,7 +181,7 @@ async function addVaccineTypeAW(url, method, csrfmiddlewaretoken, formData){
 
 
 async function addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData){
-    /*Function used to add vaccines or surgeries related to the current patient, this functions takes
+    /*Function used to add appointments, vaccines or surgeries related to the current patient, this functions takes
       three parameters, the 'url' for the "POST" request, the 'method' which
       we collect from the form's method attribute, the 'csrfmiddlewaretoken'
       parameter, which receives the value from the csrfmiddlewaretoken attribute
@@ -292,9 +292,14 @@ if (container){
             row.style.color = '#000000'
         }
 
-        /*This event will be fired every time a hover occurs over the fa-envelope icon and the fa-envelope-hover class will be added*/
+        /*This event will be fired every time a hover occurs over the fa-calendar-check icon and the fa-calendar-check--active class will be added*/
+        if (e.target.classList.contains('fa-calendar-check')){
+            e.target.classList.add('fa-calendar-check--active')
+        }
+
+        /*This event will be fired every time a hover occurs over the fa-envelope icon and the fa-envelope--active class will be added*/
         if (e.target.classList.contains('fa-envelope')){
-            e.target.classList.add('fa-envelope-hover')
+            e.target.classList.add('fa-envelope--active')
         }
 
         /*This event will be fired every time a hover occurs over the fa-filter icon and the fa-filter-hover class will be added*/
@@ -346,9 +351,14 @@ if (container){
             row.style.color = ''
         }
 
-        /*This event will be fired every time a mouseout occurs off the fa-envelope icon and the fa-envelope-hover class will be removed*/
+        /*This event will be fired every time a mouseout occurs off the fa-calendar-check icon and the fa-calendar-check--active class will be removed*/
+        if (e.target.classList.contains('fa-calendar-check')){
+            e.target.classList.remove('fa-calendar-check--active')
+        }
+
+        /*This event will be fired every time a mouseout occurs off the fa-envelope icon and the fa-envelope--active class will be removed*/
         if (e.target.classList.contains('fa-envelope')){
-            e.target.classList.remove('fa-envelope-hover')
+            e.target.classList.remove('fa-envelope--active')
         }
 
         /*This event will be fired every time a mouseout occurs off the fa-filter icon and the fa-filter-hover class will be removed*/
@@ -400,6 +410,17 @@ if (container){
             let url = e.target.parentNode.getAttribute('data-url')
             displayDetailsAW(url)
             .then(data => {
+                modalContent.innerHTML = data['html']
+                modal.classList.add('modal--display')
+            })
+        }
+
+        // If the target contains the 'fa-calendar-check' class, the modal will be displayed along with the appointment creation form.
+
+        if (e.target.classList.contains('fa-calendar-check')){
+            let url = e.target.getAttribute('data-url')
+            requestFormAW(url).
+            then(data => {
                 modalContent.innerHTML = data['html']
                 modal.classList.add('modal--display')
             })
@@ -514,8 +535,17 @@ if (modal){
         let csrfmiddlewaretoken = document.querySelector('.modal [name=csrfmiddlewaretoken]').value
         let formData = new FormData(form)
 
-        /* This event will be fired every time the target's id is 'add-vaccine-operation' it is used to create vaccines */
+        /* This event will be fired every time the target's id is 'appointment-create-form' it is used to create appointments */
+        if (e.target.id = 'appointment-create-form'){
+            addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
+            .then(data => {
+                appointments.innerHTML = data['html']
+                modal.classList.remove('modal--display')
+                modalContent.innerHTML = ''
+            })
+        }
 
+        /* This event will be fired every time the target's id is 'add-vaccine-operation' it is used to create vaccines */
         if (e.target.id === 'add-new-vaccine-form'){
             let primary_key = e.target.getAttribute('data-primary-key')
             addVaccineTypeAW(url  + '/' + primary_key, method, csrfmiddlewaretoken, formData)
@@ -525,7 +555,6 @@ if (modal){
         }
 
         /* This event will be fired every time the target's id is 'add-vaccine-record' it is used to create vaccine records */
-
         if (e.target.id === 'add-vaccine-record-form' ||
             e.target.id === 'update-vaccine-record-form' ||
             e.target.id === 'delete-vaccine-record-form'){
@@ -538,8 +567,6 @@ if (modal){
         }
 
         /* This event will be fired every time the target's id is 'email-form' it is used to send emails */
-
-
         if (e.target.id === 'email-form'){
             sendEmailAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {

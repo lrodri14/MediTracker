@@ -20,8 +20,9 @@ from .models import BaseConsult, MedicalTestResult, VaccineApplication, Surgery
 from utilities.accounts_utilities import speciality_mapping
 from django.template.loader import render_to_string
 from .forms import DrugForm, DrugCategoryFilterForm, MedicalTestForm, MedicalTestTypeFilterForm, \
-                    MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm, VaccineCreationAndUpdateForm, \
-                    SurgeryCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm, SurgicalConsultCreationForm
+    MedicalTestResultFormset, AgendaDateFilterForm, RegisterFilterForm, VaccineCreationAndUpdateForm, \
+    SurgeryCreationAndUpdateForm, VaccineApplicationCreationAndUpdateForm, SurgicalConsultCreationForm, \
+    ConsultDetailsFilterForm
 from utilities.appointments_utilities import evaluate_consult, generate_pdf, send_sms, check_delayed_consults, \
                                             collect_months_names, filter_conditional_results
 
@@ -65,7 +66,7 @@ def appointments(request):
     return render(request, template, context)
 
 
-def create_appointment(request):
+def create_appointment(request, pk=None):
     """
         DOCSTRING:
         This create_appointment() view processes consult instance creation logic, if the request.method is a 'GET' then
@@ -89,8 +90,17 @@ def create_appointment(request):
 
     creation_form = speciality_mapping[aimed_user.doctor.speciality]['creation_form']
     consults_form = creation_form(user=aimed_user)
+
+    # Variable used to display the patient addition button if necessary
+    addition_button = True
+
+    if pk is not None:
+        patient = Patient.objects.get(pk=pk)
+        consults_form.initial = {'patient': patient}
+        addition_button = False
+
     template = 'appointments/create_appointment.html'
-    context = {}
+    context = {'addition_button': addition_button}
     data = {}
     if request.method == 'POST':
         consults_form = creation_form(request.POST, user=aimed_user)
@@ -104,6 +114,11 @@ def create_appointment(request):
                 data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
                 data['created_by'] = request.user.username if request.user.roll == 'ASSISTANT' else 'You'
                 data['to'] = request.user.username if request.user.roll == 'DOCTOR' else request.user.assistant.doctors.all()[0].username
+                if 'patients' in request.META['HTTP_REFERER']:
+                    consults = BaseConsult.objects.filter(patient=consult.patient)
+                    context['consults_filter_form'] = ConsultDetailsFilterForm
+                    template = 'patients/patient_consults_list.html'
+                    context['consults'] = consults
             except IntegrityError:
                 date = consults_form.cleaned_data.get('datetime').date()
                 time = consults_form.cleaned_data.get('datetime').time().strftime('%I:%M:%S %p')

@@ -11,6 +11,7 @@ app_name = 'appointments'
 urlpatterns = [
     path('', appointments, name='appointments'),
     path('create_appointment', create_appointment, name='create_appointment'),
+    path('create_appointment/<int:pk>', create_appointment, name='create_appointment'),
     path('consult_details/<int:pk>', consults_details, name='consult_details'),
     path('consult_summary/<int:pk>', consult_summary, name='consult_summary'),
     path('update_consult/<int:pk>', update_consult, name='update_consult'),

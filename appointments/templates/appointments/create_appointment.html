@@ -4,7 +4,9 @@
     {% csrf_token %}
     <h2>Create Appointment</h2><div class="create-update-appointment-loader"></div>
     <p>{{ consults_form.patient.label }}</p>
-    <i class="fas fa-plus modal__add-patient" onclick="window.location.href='{% url 'patients:add_patient' %}'"></i>
+    {% if addition_button %}
+        <i class="fas fa-plus modal__add-patient" onclick="window.location.href='{% url 'patients:add_patient' %}'"></i>
+    {% endif %}
     <p>{{ consults_form.patient }}</p>
     <p>{{ consults_form.datetime.label }}</p>
     <p class="error"><small>{{ error }}</small></p>

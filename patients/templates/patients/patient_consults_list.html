@@ -1,0 +1,36 @@
+<!--If no consults are present this code will be rendered-->
+{% if consults %}
+    <div class="data-container">
+        <table class="data-table">
+            <thead>
+                <tr id="heading">
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Medical Status</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Included template for dynamic displaying of results-->
+                {% include 'patients/patient_consults_partial_list.html' %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="filter-container">
+        <!--Filtering form-->
+        <i class="fas fa-filter filter-container__display-filter-button appointments-filter"></i>
+        <form method="GET" action="{% url 'patients:filter_patient_details' %}" class="filter-container__filter-form appointments-form">
+            <h3 class="filter-container__form-title">Filter Results</h3>
+            <p>{{ consults_filter_form.date_from.label }}</p>
+            <p>{{ consults_filter_form.date_from }}</p>
+            <p>{{ consults_filter_form.date_to.label }}</p>
+            <p>{{ consults_filter_form.date_to }}</p>
+            <p class="error"><small>{{ error }}</small></p>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% else %}
+    <p id="no-consults-data">No Data</p>
+{% endif %}
