@@ -108,12 +108,19 @@ def add_patient(request):
         country_code = 'flag-icon-' + request.user.assistant.doctors.all()[0].profile.location.lower()
         user_creating = request.user.assistant.doctors.all()[0]
 
+    # Redirected to view based on this condition
+    next_target = 'patients:patients' if 'patients' in request.META['HTTP_REFERER'] else 'appointments:appointments'
+    backwards_target = 'patients:patients' if 'patients' in request.META['HTTP_REFERER'] else 'appointments:appointments'
+
     patient_form = PatientForm(initial={'phone_number': country_number_codes[country_number_code]})
     allergies_form = AllergyInformationFormset()
     antecedents_form = AntecedentFormset()
     insurance_form = InsuranceInformationForm()
     template = 'patients/add_patient.html'
     if request.method == 'POST':
+
+        # View to be redirected after successful POST request
+        next_target = request.POST['next_target']
         patient_form = PatientForm(request.POST)
         allergies_form = AllergyInformationFormset(request.POST)
         antecedents_form = AntecedentFormset(request.POST)
@@ -142,9 +149,15 @@ def add_patient(request):
             insurance.patient = patient
             insurance.save()
 
-            return redirect('patients:patients')
+            return redirect(next_target)
 
-    context_data = {'patient_form': patient_form, 'allergies_form': allergies_form, 'insurance_form': insurance_form, 'antecedents_form': antecedents_form, 'country_code': country_code}
+    context_data = {'patient_form': patient_form,
+                    'allergies_form': allergies_form,
+                    'insurance_form': insurance_form,
+                    'antecedents_form': antecedents_form,
+                    'country_code': country_code,
+                    'next_target': next_target,
+                    'backwards_target': backwards_target}
     return render(request, template, context=context_data)
 
 

@@ -27,7 +27,7 @@
         <!-- General Info -->
         <div class="patient-form__information-container patient-form__general-information">
 
-            <a href="{% url 'patients:patients' %}"><i class="fas fa-long-arrow-alt-left"></i></a>
+            <a href="{% url backwards_target %}"><i class="fas fa-long-arrow-alt-left"></i></a>
 
             <h1>Add Patient</h1>
 
@@ -55,6 +55,9 @@
                 {% if insurance_form.non_field_errors %}
                     <p class="form__error"><small>{{ insurance_form.non_field_errors.as_text }}</small></p>
                 {% endif %}
+
+                <!-- Hidden input used as a reference to redirect to a different view after a POST request based on this value -->
+                <input name="next_target" type="hidden" value="{{ next_target }}">
 
                 <p>{{ patient_form.id_number.label }}</p>
                 <p>{{ patient_form.id_number }}</p>
