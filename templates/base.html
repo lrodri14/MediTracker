@@ -20,7 +20,7 @@
 
     <img id=background src="{% display_wallpaper request.user.general_settings.wallpaper %}" alt="">
 
-        {% block notifications_popup %}<div class="notifications-popup"></div>{% endblock %}
+        {% block notifications_popup %}<div class="notifications-popup" data-status="{{ user.general_settings.notifications }}"></div>{% endblock %}
 
         {% block return %} {% endblock %}
 

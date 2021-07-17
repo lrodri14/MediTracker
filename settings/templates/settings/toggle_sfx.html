@@ -1,5 +1,6 @@
-<form action="{% url 'settings:toggle_sfx' %}" method="POST">
+<form action="{% url 'settings:toggle_sfx' %}" method="POST" class="general-settings__update-sfx-form">
     {% csrf_token %}
     <p>{{ form.wallpaper }}</p>
+    <p>{{ form.notifications }}</p>
     <p>{{ form.sfx.label }} {{ form.sfx }}</p>
 </form>

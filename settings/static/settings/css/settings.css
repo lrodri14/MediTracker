@@ -130,7 +130,19 @@
     text-align: left;
 }
 
+.general-settings__update-sfx-form #id_notifications{
+    display: none;
+}
+
+.general-settings__update-notifications-form #id_sfx{
+    display: none;
+}
+
 #id_sfx{
+    width: 15%;
+}
+
+#id_notifications{
     width: 15%;
 }
 /*####################################################### Profile Settings ###########################################*/

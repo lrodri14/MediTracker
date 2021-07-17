@@ -92,6 +92,19 @@ def toggle_sfx(request):
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 
+
+def toggle_notifications(request):
+    if request.method == 'POST':
+        form = UserGeneralSettingsForm(request.POST, instance=request.user.general_settings)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'response': 'success'})
+    form = UserGeneralSettingsForm(instance=request.user.general_settings)
+    template = 'settings/toggle_notifications.html'
+    context = {'form': form}
+    data = {'html': render_to_string(template, context, request)}
+    return JsonResponse(data)
+
 # Profile
 #############################
 

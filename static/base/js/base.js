@@ -80,11 +80,13 @@ NWSUrl = 'ws://' + window.location.host
 let notificationWebsocket = new WebSocket(NWSUrl)
 
 notificationWebsocket.addEventListener('message', (e) => {
-    notificationsPopup.classList.add('notification-popup--display')
-    notificationsPopup.textContent = e.data
-    setTimeout(function(){
-        notificationsPopup.classList.remove('notification-popup--display')
-    }, 5000)
+    if (notificationsPopup.getAttribute('data-status') === 'True'){
+        notificationsPopup.classList.add('notification-popup--display')
+        notificationsPopup.textContent = e.data
+        setTimeout(function(){
+            notificationsPopup.classList.remove('notification-popup--display')
+        }, 5000)
+    }
 })
 
 // Chat Websocket URL

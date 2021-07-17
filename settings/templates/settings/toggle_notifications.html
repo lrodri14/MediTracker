@@ -1,0 +1,6 @@
+<form action="{% url 'settings:toggle_notifications' %}" method="POST" class="general-settings__update-notifications-form">
+    {% csrf_token %}
+    <p>{{ form.wallpaper }}</p>
+    <p>{{ form.sfx }}</p>
+    <p>{{ form.notifications.label }} {{ form.notifications }}</p>
+</form>

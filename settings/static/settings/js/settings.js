@@ -66,6 +66,17 @@ async function toggleSFX(url, method, csrfmiddlewaretoken, formData){
     return data
 }
 
+async function toggleNotifications(url, method, csrfmiddlewaretoken, formData){
+    /* This toggleNotifications function is used update the users notification settings, this function will display the corresponding
+       form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
+       parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
+       'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
+       the form's inputs, the response will be returned in JSON format for further processing.*/
+    let result = await fetch(url, {method: method, headers:{'X-CSRFToken': csrfmiddlewaretoken}, body:formData})
+    let data = result.json()
+    return data
+}
+
 async function showForm(url){
     /* This showForm async function is used to display the form for a particular use such as adding, deleting or updating
        any instances of any object, this form will be displayed in the modal container, this function accepts one single
@@ -415,7 +426,6 @@ if (container){
 
     container.addEventListener('click', (e) => {
 
-
         if (e.target.classList.contains('general-settings__tab')){
             let tab = e.target
             let tabs = document.querySelectorAll('.general-settings__tab')
@@ -619,13 +629,23 @@ if (container){
         }
 
         if (e.target.id === 'id_sfx'){
-            /* This event will be fired every time the target contains an id_availability id, this will change the users status. */
+            /* This event will be fired every time the target contains an id_sfx id, this will change the users status. */
             let form = document.querySelector('form')
             let url = form.action
             let method = form.method
             let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
             let formData = new FormData(form)
             toggleSFX(url, method, csrfmiddlewaretoken, formData)
+        }
+
+        if (e.target.id === 'id_notifications'){
+            /* This event will be fired every time the target contains an id_notifications id, this will change the users status. */
+            let form = document.querySelector('form')
+            let url = form.action
+            let method = form.method
+            let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+            let formData = new FormData(form)
+            toggleNotifications(url, method, csrfmiddlewaretoken, formData)
         }
 
         if (e.target.id === 'id_session_expire_time' || e.target.id === 'id_tzone'){

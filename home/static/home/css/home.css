@@ -118,10 +118,10 @@
 
 .data-table__query-results{
     position: absolute;
-    top: 10%;
+    top: 12%;
     left: 10%;
     width: 82%;
-    max-height: 74%;
+    max-height: 678px;
     overflow: scroll;
     opacity: 0;
     visibility: hidden;

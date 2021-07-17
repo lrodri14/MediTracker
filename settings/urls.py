@@ -10,6 +10,7 @@ urlpatterns = [
     path('', settings, name='settings'),
     path('general', general, name='general'),
     path('toggle_sfx', toggle_sfx, name='toggle_sfx'),
+    path('toggle_notifications', toggle_notifications, name='toggle_notifications'),
     path('change_wallpaper', change_wallpaper, name='change_wallpaper'),
     path('profile', profile, name='profile'),
     path('change_availability', change_availability, name='change_availability'),
