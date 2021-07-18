@@ -29,9 +29,9 @@ class Provider(models.Model):
     )
 
     company = models.CharField('Company', max_length=100, blank=False, null=True, help_text="Provider's Brand")
-    address = models.CharField('Address', max_length=250, blank=False, null=True, help_text="Company's Address")
-    email = models.EmailField('Email', blank=False, null=True, help_text="Company's Email")
-    contact = models.CharField('Phone Number', max_length=100, blank=False, null=True, help_text='Providers Contact')
+    address = models.CharField('Address', max_length=250, blank=True, null=True, help_text="Company's Address")
+    email = models.EmailField('Email', blank=True, null=True, help_text="Company's Email")
+    contact = models.CharField('Phone Number', max_length=100, blank=True, null=True, help_text='Providers Contact')
     provider_type = models.CharField('Type', max_length=100, blank=True, null=True, help_text="Provider's Type", choices=PROVIDERS_TYPE_CHOICES)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, help_text='provider')
 
@@ -42,7 +42,8 @@ class Provider(models.Model):
         
     def save(self, *args, **kwargs):
         self.company = self.company.title()
-        self.address = self.address.capitalize()
+        if self.address:
+            self.address = self.address.capitalize()
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -58,10 +59,10 @@ class Visitor(models.Model):
         attributes. Also contains it's own __str__ dunder method.
     """
 
-    name = models.CharField("Visitor's Name", max_length=100, blank=True, null=True, help_text="Visitor's First Name")
-    last_name = models.CharField("Visitor's Last Name", max_length=100, blank=True, null=True, help_text="Visitor's Last Name")
-    contact = models.CharField('Phone Number', max_length=100, blank=False, null=True, help_text="Visitor's Contact")
-    email = models.EmailField('Email', blank=False, null=True, help_text="Visitor's Email")
+    name = models.CharField("Visitor's Name", max_length=100, blank=False, null=True, help_text="Visitor's First Name")
+    last_name = models.CharField("Visitor's Last Name", max_length=100, blank=False, null=True, help_text="Visitor's Last Name")
+    contact = models.CharField('Phone Number', max_length=100, blank=True, null=True, help_text="Visitor's Contact")
+    email = models.EmailField('Email', blank=True, null=True, help_text="Visitor's Email")
     company = models.ForeignKey(Provider, on_delete=models.CASCADE, blank=False, null=True, help_text='Providers Brand')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, help_text='Created By', related_name='visitor')
 

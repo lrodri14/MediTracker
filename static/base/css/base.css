@@ -188,6 +188,10 @@ form{
     width: 35%;
 }
 
+.obligatory{
+    color: #f54242;
+}
+
 input{
     text-align: center;
     color: #FFFFFF;
@@ -224,7 +228,7 @@ textarea:focus{
 }
 
 textarea::-webkit-input-placeholder {
-  color: #FFFFFF;
+  color: rgba(255,255,255,0.5);
 }
 
 select{

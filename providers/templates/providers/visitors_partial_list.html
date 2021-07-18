@@ -7,10 +7,10 @@
             <td class="data-table__data">{{ visitor.last_name }}</td>
             <td class="data-table__data">{{ visitor.company }}</td>
             <td class="data-table__data">{{ visitor.contact }}</td>
-            <td class="data-table__data">{{ visitor.email }}</td>
+            <td class="data-table__data">{% if visitor.email %} {{ visitor.email }} {% else %} ---------- {% endif %}</td>
             <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'providers:update_visitor' visitor.pk %}"></i></td>
             <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'providers:delete_visitor' visitor.pk %}"></i></td>
-            <td class="data-table__data"><i class="fas fa-envelope data-table__send-mail"></i></td>
+            <td class="data-table__data"><i class="fas fa-envelope data-table__send-mail" data-url="{% url 'providers:send_email' visitor.pk %}"></i></td>
         </tr>
     {% endfor %}
 {% endif %}

@@ -48,8 +48,8 @@ class BaseConsultCreationForm(forms.ModelForm):
         model = BaseConsult
         fields = ('patient', 'datetime', 'motive', 'suffering',)
         widgets = {
-            'motive': forms.Textarea(attrs={'rows': 8, 'columns': 5}),
-            'suffering': forms.Textarea(attrs={'rows': 8, 'columns': 5})
+            'motive': forms.Textarea(attrs={'rows': 8, 'columns': 5, 'placeholder': 'e.g. Routinary monthly appointment'}),
+            'suffering': forms.Textarea(attrs={'rows': 8, 'columns': 5, 'placeholder': 'e.g. Headache, Fever, Vomiting, Uncomfortable sensation'})
         }
 
 

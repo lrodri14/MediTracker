@@ -3,15 +3,15 @@
 <form method="POST" action="{% url 'providers:update_visitor' visitor.pk %}" id="update-visitor-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Create Visitor</h2>
-    <p>{{ form.name.label }}</p>
+    <p>{{ form.name.label }} <span class="obligatory">*</span></p>
     <p>{{ form.name }}</p>
-    <p>{{ form.last_name.label }}</p>
+    <p>{{ form.last_name.label }} <span class="obligatory">*</span></p>
     <p>{{ form.last_name }}</p>
     <p>{{ form.contact.label }}</p>
     <p><span class="flag-icon {{ country_code }}" ></span>{{ form.country_code }}{{ form.contact }}</p>
     <p>{{ form.email.label }}</p>
     <p>{{ form.email }}</p>
-    <p>{{ form.company.label }}</p>
+    <p>{{ form.company.label }} <span class="obligatory">*</span></p>
     <p>{{ form.company }}</p>
     <!--Custom Error-->
     <p class="error"><small>{{ error }}</small></p>

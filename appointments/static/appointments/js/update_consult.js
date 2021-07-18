@@ -796,7 +796,7 @@ if (modal){
                 if (data['html']){
                     modalContent.innerHTML = data['html']
                 }else{
-                    testing.innerHTML = data['updated_tests_list']
+                    testingList.innerHTML = data['updated_tests_list']
                     let checkboxes = document.querySelectorAll('#id_testing input[type=checkbox]')
                     for (let i = 0; i<checkedTests.length; i++){
                         let checkedTest = checkedTests[i]

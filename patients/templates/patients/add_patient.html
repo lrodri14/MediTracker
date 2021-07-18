@@ -61,23 +61,23 @@
 
                 <p>{{ patient_form.id_number.label }}</p>
                 <p>{{ patient_form.id_number }}</p>
-                <p>{{ patient_form.first_names.label }}</p>
+                <p>{{ patient_form.first_names.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.first_names }}</p>
-                <p>{{ patient_form.last_names.label }}</p>
+                <p>{{ patient_form.last_names.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.last_names }}</p>
-                <p>{{ patient_form.gender.label }}</p>
+                <p>{{ patient_form.gender.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.gender }}</p>
-                <p>{{ patient_form.birthday.label }}</p>
+                <p>{{ patient_form.birthday.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.birthday }}</p>
                 <p>{{ patient_form.phone_number.label }}</p>
                 <p><span class="flag-icon {{ country_code }}"></span>{{ patient_form.country_code }}{{ patient_form.phone_number }}</p>
                 <p>{{ patient_form.email.label }}</p>
                 <p>{{ patient_form.email }}</p>
-                <p>{{ patient_form.civil_status.label }}</p>
+                <p>{{ patient_form.civil_status.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.civil_status }}</p>
-                <p>{{ patient_form.origin.label }}</p>
+                <p>{{ patient_form.origin.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.origin }}</p>
-                <p>{{ patient_form.residence.label }}</p>
+                <p>{{ patient_form.residence.label }} <span class="obligatory">*</span></p>
                 <p>{{ patient_form.residence }}</p>
                 <button type="submit">Save</button>
 

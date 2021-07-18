@@ -5,9 +5,9 @@
     <h3>Company</h3>
     <p>{{ provider.company }}</p>
     <h3>Address</h3>
-    <p>{{ provider.address }}</p>
+    <p>{% if provider.address %} {{ provider.address }} {% else %} ---------- {% endif %}</p>
     <h3>Contact</h3>
     <p>{{ provider.contact }}</p>
     <h3>Email</h3>
-    <p>{{ provider.email }}</p>
+    <p>{% if provider.email %} {{ provider.email }} {% else %} ---------- {% endif %}</p>
 </div>

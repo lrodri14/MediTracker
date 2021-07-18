@@ -38,6 +38,7 @@ DRUG_CATEGORY_CHOICES = (
 )
 
 MEDICAL_TEST_CHOICES = (
+    ('', '----------'),
     ('AMN', 'Amniocentesis'),
     ('BA', 'Blood Analysis'),
     ('GFA', 'Gastric Fluid Analysis'),

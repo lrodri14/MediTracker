@@ -87,7 +87,7 @@
                 <p class="error"><small>{{ consult_form.non_field_errors.as_text }}</small></p>
             {% endif %}
             <p class="error"><small>{{ error }}</small></p>
-            <h4 id="charge-label">{{ consult_form.charge.label }}</h4>
+            <h4 id="charge-label">{{ consult_form.charge.label }} <span class="obligatory">*</span></h4>
             <p>{{ consult_form.charge }}</p>
             <button type="submit">Continue</button>
         </div>

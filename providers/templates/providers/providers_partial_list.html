@@ -4,9 +4,9 @@
     {% for provider in providers %}
     <tr class="data-table__item" data-url="{% url 'providers:provider_details' provider.pk %}">
         <td class="data-table__data">{{ provider.company }}</td>
-        <td class="data-table__data">{{ provider.address }}</td>
+        <td class="data-table__data">{% if provider.address %} {{ provider.address }} {% else %} ---------- {% endif %}</td>
         <td class="data-table__data">{{ provider.contact }}</td>
-        <td class="data-table__data">{{ provider.email }}</td>
+        <td class="data-table__data">{% if provider.email %} {{ provider.email }} {% else %} ---------- {% endif %}</td>
         <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'providers:update_provider' provider.pk %}"></i></td>
         <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'providers:delete_provider' provider.pk %}"></i></td>
         <td class="data-table__data"><i class="fas fa-envelope data-table__send-mail" data-url="{% url 'providers:send_email' provider.pk %}"></i></td>

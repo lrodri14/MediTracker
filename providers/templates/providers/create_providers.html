@@ -3,7 +3,7 @@
 <form method="POST" action="{% url 'providers:create_provider' %}" autocomplete="off" id="create-provider-form" class="modal__form creation-update-form">
     {% csrf_token %}
     <h2>Create Provider</h2>
-    <p>{{ form.company.label }}</p>
+    <p>{{ form.company.label }} <span class="obligatory">*</span></p>
     <p>{{ form.company }}</p>
     <p>{{ form.address.label }}</p>
     <p>{{ form.address }}</p>

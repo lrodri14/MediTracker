@@ -25,14 +25,14 @@
             <h4 class="details-container__title">General Information</h4>
             <i class="far fa-calendar-check" data-url="{% url 'appointments:create_appointment' patient.pk %}"></i>
             {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
-            <p>Id Card Number: {{ patient.id_number }}</p>
+            <p>Id Card Number: {% if patient.id_number %} {{ patient.id_number }} {% else %} ---------- {% endif %}</p>
             <p>First Name: {{ patient.first_names }}</p>
             <p>Last Name: {{ patient.last_names }}</p>
             <p>Gender: {{ patient.get_gender_display }}</p>
             <p>Birthday: {{ patient.birthday|date:"d M, Y" }}</p>
             <p>Age: {{ patient.age }}</p>
-            <p>Phone Number: {{ patient.phone_number }}</p>
-            <p>Email: {{ patient.email }}</p>
+            <p>Phone Number: {% if patient.phone_number %} {{ patient.phone_number }} {% else %} ---------- {% endif %}</p>
+            <p>Email: {% if patient.email %} {{ patient.email }} {% else %} ---------- {% endif %}</p>
             <p>Civil Status: {{ patient.get_civil_status_display }}</p>
             <p>Origin: {{ patient.get_origin_display }}</p>
             <p>Residence: {{ patient.get_residence_display }}</p>

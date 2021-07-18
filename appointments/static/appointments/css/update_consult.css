@@ -324,7 +324,7 @@ Prescription Modal*/
     transition: 0.5s;
 }
 
-.consult__diagnose input[type=number]{
+.consult__diagnose input[type=number], .consult__diagnose input[type=text]{
   height: 30px;
   width:40%;
   transition: 0.5s;
