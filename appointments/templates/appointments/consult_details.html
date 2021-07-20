@@ -11,7 +11,7 @@
     <h3>Date: {{ consult.datetime }}</h3>
 </div>
 
-<i class="fas fa-print" data-pdf="{{ MEDIA_URL }}{{consult.prescription.name}}"></i>
+{% if consult.prescription.name != '' %} <i class="fas fa-print" data-pdf="{{ MEDIA_URL }}{{consult.prescription.name}}"></i> {% endif %}
 <div class="general-info">
     <div class="general">
         <h1>Appointment General Info</h1>

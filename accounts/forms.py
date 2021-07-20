@@ -100,6 +100,7 @@ class ProfileForm(forms.ModelForm):
         exclude = ('user', 'profile_pic', 'background_pic', 'contacts')
         widgets = {
             'birth_date': forms.widgets.SelectDateWidget(years=[x for x in range(1920, 2101)]),
+            'address': forms.widgets.Textarea(attrs={'rows': 3})
         }
 
     def __init__(self, *args, **kwargs):

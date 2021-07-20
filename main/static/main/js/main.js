@@ -13,16 +13,6 @@ var modal = document.querySelector('.modal')
 var modalContent = document.querySelector('.modal__content')
 var accountType = document.querySelector('.account-type-selector')
 
-// Login Inputs
-let username
-let password
-let passwordResetEmail
-
-// Sign Up Inputs
-let signUpInputs = []
-
-// Submit Button
-let submitBtn
 
 ///////////////////////////////////////////////// Functions ////////////////////////////////////////////////////////////
 
@@ -243,8 +233,6 @@ if (modal){
             passwordResetFormAW(e.target.href)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                passwordResetEmail = document.querySelector('#id_email')
-                submitBtn = document.querySelector('.password-reset-form__submit-button')
             })
         }
 
@@ -257,53 +245,10 @@ if (modal){
             loginFormAW(url)
             .then(data => {
                 modalContent.innerHTML = data['html']
-                username = document.querySelector('#id_username')
-                password = document.querySelector('#id_password')
-                submitBtn = document.querySelector('.login-form__submit-button')
             })
         }
 
     })
-
-    // Input Events
-    modal.addEventListener('input', (e) => {
-
-        /* This event will be fired every time an input is typed in the username or password elements, it will check if
-           none of the elements.value is empty, if the condition is fulfilled, then the submit button will be displayed
-           if not, it will be hidden.*/
-        if (e.target === username || e.target === password){
-            if (username.value.length > 0 && password.value.length > 0){
-                submitBtn.classList.add('submit-button--fade-in')
-            }else{
-                submitBtn.classList.remove('submit-button--fade-in')
-            }
-        }
-
-        /* This event will be fired every time an input is typed in the passwordResetEmail element, it will check if
-           none of the elements.value is empty, if the condition is fulfilled, then the submit button will be displayed
-           if not, it will be hidden.*/
-        if (e.target === passwordResetEmail){
-            if (passwordResetEmail.value.length > 0 && passwordResetEmail.value.search('@') !== -1){
-                submitBtn.classList.add('submit-button--fade-in')
-            }else{
-                submitBtn.classList.remove('submit-button--fade-in')
-            }
-        }
-
-        /* This event will be fired every time the target is an input or select field, this will check if all the inputs
-           are not empty, if the condition is fulfilled the submit button will be displayed, otherwise it will be hidden.*/
-        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'SELECT'){
-            for (let i = 0; i<signUpInputs.length; i++){
-                if (signUpInputs[i].value && signUpInputs.length - i === 1){
-                    submitBtn.classList.add('submit-button--fade-in')
-                }else{
-                   submitBtn.classList.remove('submit-button--fade-in')
-                }
-            }
-        }
-
-    })
-
 
     // Submit Events
     modal.addEventListener('submit', (e) => {

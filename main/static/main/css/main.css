@@ -127,8 +127,6 @@ form button{
     border: 1px solid #FFFFFF;
     border-radius: 10px;
     background-color: transparent;
-    opacity: 0;
-    visibility: hidden;
     transition: background-color 0.5s, color 0.5s, opacity 0.5s;
 }
 
@@ -140,12 +138,6 @@ button:focus{
     background-color: #FFFFFF;
     color: #000000;
     cursor: pointer;
-    transition: 0.5s;
-}
-
-.submit-button--fade-in{
-    opacity: 1;
-    visibility: visible;
     transition: 0.5s;
 }
 
