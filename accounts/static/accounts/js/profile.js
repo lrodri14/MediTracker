@@ -93,6 +93,18 @@ if (body){
             e.target.classList.add('card__delete-contact--active')
         }
 
+        /* This event will be fired whenever the 'card__block-contact' class resides in the target's classList, the card__block-contact--active class will be added */
+
+        if (e.target.classList.contains('card__block-contact')){
+            e.target.classList.add('card__block-contact--active')
+        }
+
+        /* This event will be fired whenever the 'card__unblock-contact' class resides in the target's classList, the card__unblock-contact--active class will be added */
+
+        if (e.target.classList.contains('card__unblock-contact')){
+            e.target.classList.add('card__unblock-contact--active')
+        }
+
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
         if (e.target.classList.contains('card__picture-edit-button')){
@@ -151,6 +163,19 @@ if (body){
         if (e.target.classList.contains('card__delete-contact')){
             e.target.classList.remove('card__delete-contact--active')
         }
+
+        /* This event will be fired whenever the 'card__block-contact' class resides in the target's classList, the card__block-contact--active class will be removed */
+
+        if (e.target.classList.contains('card__block-contact')){
+            e.target.classList.remove('card__block-contact--active')
+        }
+
+        /* This event will be fired whenever the 'card__unblock-contact' class resides in the target's classList, the card__unblock-contact--active class will be removed */
+
+        if (e.target.classList.contains('card__unblock-contact')){
+            e.target.classList.remove('card__unblock-contact--active')
+        }
+
 
         /* This event will be fired whenever the 'fa-camera' class resides in the target's classList, the fa-camera-hover class will be removed */
 
@@ -212,21 +237,25 @@ if (body){
            target attributes, the event ises the sendCancelContactRequest async func to make the request, when we receive
            our server response, depending on the response content a process will be executed.*/
         if (e.target.classList.contains('card__send-request') || e.target.classList.contains('card__cancel-request')){
+            e.target.classList.remove('card__send-request--active')
+            e.target.classList.remove('card__cancel-request--active')
             let url = e.target.getAttribute('data-url') + '?procedure=' + e.target.getAttribute('data-procedure')
             sendCancelContactRequest(url)
             .then(data => {
                 if (data['success']){
                     if (e.target.classList.contains('fa-user-plus')){
                         e.target.classList.remove('fa-user-plus')
-                        e.target.classList.remove('fa-user-plus-hover')
-                        e.target.setAttribute('data-procedure', 'cancel')
                         e.target.classList.add('fa-user-slash')
+                        e.target.classList.remove('card__send-request')
+                        e.target.classList.add('card__cancel-request')
+                        e.target.setAttribute('data-procedure', 'cancel')
                         notificationWebsocket.send(JSON.stringify({'to': data['to'], 'created_by': data['created_by'], 'message':"You've received a contact add request from ", 'nf_type': 'contact_request'}))
                     }else{
                         e.target.classList.remove('fa-user-slash')
-                        e.target.classList.remove('fa-user-slash-hover')
-                        e.target.setAttribute('data-procedure', 'send')
                         e.target.classList.add('fa-user-plus')
+                        e.target.classList.remove('card__cancel-request')
+                        e.target.classList.add('card__send-request')
+                        e.target.setAttribute('data-procedure', 'send')
                     }
                 }else if (data['unsuccessfulSending']){
                     // Pass
@@ -234,8 +263,8 @@ if (body){
                     let oldURL = e.target.getAttribute('data-url')
                     let url = '/accounts/remove_contact/' + oldURL.slice(oldURL.lastIndexOf('/') + 1, oldURL.length)
                     e.target.classList.remove('fa-user-slash')
-                    e.target.classList.remove('fa-user-slash-hover')
                     e.target.classList.add('fa-trash')
+                    e.target.classList.add('card__delete-contact')
                     e.target.setAttribute('data-url', url)
                     e.target.removeAttribute('data-procedure')
                 }
@@ -264,6 +293,8 @@ if (body){
             /* This event will be fired every time the target's classList contains the card__block-contact class in it's classList,
                the event collect's the data-url from the data-url attribute and makes the request using the blockContactAW
                async func, once we receive a success response, the icon will be changed and the data-url attribute set.*/
+            e.target.classList.remove('card__block-contact--active')
+            e.target.classList.remove('card__unblock-contact--active')
             let url = e.target.getAttribute('data-url')
             let contactID = url.slice(url.length - 2, url.length)
             blockUnblockContactAW(url)
