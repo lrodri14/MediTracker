@@ -609,7 +609,7 @@ a {
     width: 10%;
     top: 0;
     left:0;
-    z-index: 1;
+    z-index: 2;
     display: block;
     transition: all 0.5s;
 }
@@ -664,7 +664,7 @@ a {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-clip: padding-box;
-    z-index: 1;
+    z-index: 2;
     transition: 0.5s;
 }
 

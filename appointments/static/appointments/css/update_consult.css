@@ -353,7 +353,7 @@ Prescription Modal*/
     width: 10%;
     height: 20px;
     position: absolute;
-    top: 85%;
+    bottom: 2%;
     left: 59%;
 }
 
@@ -627,6 +627,7 @@ Prescription Modal*/
     backdrop-filter: blur(10px);
     visibility: hidden;
     opacity: 0;
+    z-index: 2;
     transition: opacity 0.3s;
 }
 
