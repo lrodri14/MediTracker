@@ -32,25 +32,19 @@
             </div>
         </div>
 
+        {% if consult.drugs.all %}
+            <h2>Drugs</h2>
+            <ol>
+                {% for drug in consult.drugs.all %}
+                    <li>{{ drug }}</li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+
         <!-- Consult Drug Prescriptions -->
-        {% if consult.drugs.all or consult.indications %}
-            <h2>Prescriptions</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Drug</th>
-                        <th>Indications</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for drug in consult.drugs.all %}
-                        <tr>
-                            <td class="drug">{{ drug }}</td>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        {% if consult.indications %}
+            <h2>Indications</h2>
+            <p>{{ consult.indications|linebreaks }}</p>
         {% endif %}
 
         <!-- Consult Testing Prescriptions -->
@@ -61,8 +55,10 @@
                     <li>{{ test }}</li>
                 {% endfor %}
             </ol>
-            <p>Instructions</p>
-            <p>{{ consult.instructions }}</p>
+            {% if consult.instructions %}
+            <h2>Instructions</h2>
+                <p>{{ consult.instructions }}</p>
+            {% endif %}
         {% endif %}
 
         <!-- Consult Extra Notes -->
