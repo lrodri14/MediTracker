@@ -3,9 +3,9 @@
     {% csrf_token %}
     <h2>Vaccine Application</h2>
     <i class="fas fa-plus modal__add-item" id="add-new-vaccine" data-url="{% url 'settings:add_vaccine' patient.pk %}"></i>
-    <p>{{ form.vaccine_applied.label }}</p>
+    <p>{{ form.vaccine_applied.label }} <span class="obligatory">*</span></p>
     <p>{{ form.vaccine_applied }}</p>
-    <p>{{ form.datetime.label }}</p>
+    <p>{{ form.datetime.label }} <span class="obligatory">*</span></p>
     <p>{{ form.datetime }}</p>
     <p>{{ form.comments.label }}</p>
     <p>{{ form.comments }}</p>

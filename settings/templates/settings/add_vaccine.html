@@ -1,12 +1,16 @@
 {% load static %}
-<form action="{% url 'settings:add_vaccine' %}" method="POST" id="add-vaccine-form" class="modal__form creation-update-form" data-primary-key="{{ patient.pk }}">
+{% if patient %}
+    <form action="{% url 'settings:add_vaccine' patient.pk %}" method="POST" id="add-vaccine-form" class="modal__form creation-update-form">
+{% else %}
+    <form action="{% url 'settings:add_vaccine' %}" method="POST" id="add-vaccine-form" class="modal__form creation-update-form">
+{% endif %}
     {% csrf_token %}
     <h2>Add Vaccine</h2>
-    <p>{{ form.name.label }}</p>
+    <p>{{ form.name.label }} <span class="obligatory">*</span></p>
     <p>{{ form.name }}</p>
     <p>{{ form.scientific_name.label }}</p>
     <p>{{ form.scientific_name }}</p>
-    <p>{{ form.purpose.label }}</p>
+    <p>{{ form.purpose.label }}  <span class="obligatory">*</span></p>
     <p>{{ form.purpose }}</p>
     <p>{{ form.laboratory.label }}</p>
     <p>{{ form.laboratory }}</p>

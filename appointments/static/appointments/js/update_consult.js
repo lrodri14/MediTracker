@@ -850,7 +850,7 @@ if (modal){
            create Vaccine instances, and return an updated form as a response. */
 
        if (e.target.id === 'add-vaccine-form'){
-            url = url + '/' + e.target.getAttribute('data-primary-key')
+            url = url
             addElementAsync(url, method, formData, csrfmiddlewaretoken)
             .then(data => {
                 if (data['html']){

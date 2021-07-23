@@ -274,6 +274,11 @@ if (container){
             e.target.classList.add('data-table__create--active')
         }
 
+        // This event will be fired, every time the user hovers over a 'add-data', the add-data--active class will be added.
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.add('add-data--active')
+        }
+
         // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be added.
         if (e.target.classList.contains('data-table__update')){
             e.target.classList.add('data-table__update--active')
@@ -293,8 +298,8 @@ if (container){
         }
 
         /*This event will be fired every time a hover occurs over the fa-calendar-check icon and the fa-calendar-check--active class will be added*/
-        if (e.target.classList.contains('fa-calendar-check')){
-            e.target.classList.add('fa-calendar-check--active')
+        if (e.target.classList.contains('quick-consult')){
+            e.target.classList.add('quick-consult--active')
         }
 
         /*This event will be fired every time a hover occurs over the fa-envelope icon and the fa-envelope--active class will be added*/
@@ -333,6 +338,12 @@ if (container){
             e.target.classList.remove('data-table__create--active')
         }
 
+        // This event will be fired, every time the user hovers over a 'add-data', the add-data--active class will be removed.
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.remove('add-data--active')
+        }
+
+
         // This event will be fired, every time the user hovers over a 'fa-edit', the fa-edit-hover class will be removed.
         if (e.target.classList.contains('data-table__update')){
             e.target.classList.remove('data-table__update--active')
@@ -352,8 +363,8 @@ if (container){
         }
 
         /*This event will be fired every time a mouseout occurs off the fa-calendar-check icon and the fa-calendar-check--active class will be removed*/
-        if (e.target.classList.contains('fa-calendar-check')){
-            e.target.classList.remove('fa-calendar-check--active')
+        if (e.target.classList.contains('quick-consult')){
+            e.target.classList.remove('quick-consult--active')
         }
 
         /*This event will be fired every time a mouseout occurs off the fa-envelope icon and the fa-envelope--active class will be removed*/
@@ -387,8 +398,10 @@ if (container){
         /* This event will be fired every time the target contains the 'fa-plus' class, this will display the modal and the
            content that it's been requested.*/
         if (e.target.classList.contains('data-table__create') ||
+            e.target.classList.contains('add-data') ||
             e.target.classList.contains('data-table__update') ||
-            e.target.classList.contains('data-table__delete')){
+            e.target.classList.contains('data-table__delete') ||
+            e.target.classList.contains('quick-consult')){
             let url = e.target.getAttribute('data-url')
             requestFormAW(url)
             .then(data => {
@@ -410,17 +423,6 @@ if (container){
             let url = e.target.parentNode.getAttribute('data-url')
             displayDetailsAW(url)
             .then(data => {
-                modalContent.innerHTML = data['html']
-                modal.classList.add('modal--display')
-            })
-        }
-
-        // If the target contains the 'fa-calendar-check' class, the modal will be displayed along with the appointment creation form.
-
-        if (e.target.classList.contains('fa-calendar-check')){
-            let url = e.target.getAttribute('data-url')
-            requestFormAW(url).
-            then(data => {
                 modalContent.innerHTML = data['html']
                 modal.classList.add('modal--display')
             })
@@ -536,7 +538,7 @@ if (modal){
         let formData = new FormData(form)
 
         /* This event will be fired every time the target's id is 'appointment-create-form' it is used to create appointments */
-        if (e.target.id = 'appointment-create-form'){
+        if (e.target.id === 'appointment-create-form'){
             addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 appointments.innerHTML = data['html']
@@ -546,9 +548,8 @@ if (modal){
         }
 
         /* This event will be fired every time the target's id is 'add-vaccine-operation' it is used to create vaccines */
-        if (e.target.id === 'add-new-vaccine-form'){
-            let primary_key = e.target.getAttribute('data-primary-key')
-            addVaccineTypeAW(url  + '/' + primary_key, method, csrfmiddlewaretoken, formData)
+        if (e.target.id === 'add-vaccine-form'){
+            addVaccineTypeAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
                 modalContent.innerHTML = data['html']
             })
@@ -560,7 +561,7 @@ if (modal){
             e.target.id === 'delete-vaccine-record-form'){
             addUpdateDeleteRecordAW(url, method, csrfmiddlewaretoken, formData)
             .then(data => {
-                document.querySelector('#vaccine-records').innerHTML = data['html']
+                document.querySelector('.vaccines').innerHTML = data['html']
                 modal.classList.remove('modal--display')
                 modalContent.innerHTML = ''
             })

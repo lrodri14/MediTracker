@@ -399,7 +399,6 @@ select:focus{
     transform: translate(-50%, -50%);
     font-size: 25px;
     transition: top 0.5s;
-    animation: levitate 2s linear infinite;
 }
 
 .add-data--active{
@@ -936,6 +935,7 @@ a {
     text-align: center;
     color: #FFFFFF;
     padding: 15px;
+    box-shadow: -2px 2px 8px rgba(255,255,255,0.3);
 }
 
 .modal--display{
@@ -996,12 +996,6 @@ a {
 }
 
 /*//////////////////////////////////////////////////// Animations ////////////////////////////////////////////////////*/
-
-@keyframes levitate{
-	0% {transform: translatey(0px);}
-	50% {transform: translatey(-20px);}
-	100% {transform: translatey(0px);}
-}
 
 @keyframes show-up{
     from {opacity: 0;}

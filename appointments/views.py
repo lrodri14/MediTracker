@@ -245,8 +245,8 @@ def add_vaccination_record(request, pk):
             vaccination_record.patient = patient
             vaccination_record.save()
             updated_vaccination_records = VaccineApplication.objects.filter(patient=patient)
-            template = 'patients/patient_vaccines_partial_list.html'
-            context = {'vaccines': updated_vaccination_records, 'patient': patient}
+            template = 'patients/patient_vaccines_list.html'
+            context = {'vaccines': updated_vaccination_records, 'consults_filter_form': ConsultDetailsFilterForm, 'patient': patient}
             data = {'html': render_to_string(template, context, request)}
             return JsonResponse(data)
 
@@ -273,9 +273,9 @@ def update_vaccination_record(request, record_pk, patient_pk):
             updated_record = form.save(commit=False)
             updated_record.patient = patient
             updated_record.save()
-            template = 'patients/patient_vaccines_partial_list.html'
+            template = 'patients/patient_vaccines_list.html'
             updated_vaccination_records = VaccineApplication.objects.filter(patient=patient)
-            context = {'vaccines': updated_vaccination_records, 'patient': patient}
+            context = {'vaccines': updated_vaccination_records, 'consults_filter_form': ConsultDetailsFilterForm, 'patient': patient}
             data = {'html': render_to_string(template, context, request)}
             return JsonResponse(data)
 
@@ -309,8 +309,8 @@ def delete_vaccination_record(request, record_pk, patient_pk):
     if request.method == 'POST':
         vaccination_record.delete()
         update_vaccination_records = VaccineApplication.objects.filter(patient=patient)
-        template = 'patients/patient_vaccines_partial_list.html'
-        context = {'vaccines': update_vaccination_records, 'patient': patient}
+        template = 'patients/patient_vaccines_list.html'
+        context = {'vaccines': update_vaccination_records, 'consults_filter_form': ConsultDetailsFilterForm, 'patient': patient}
         data = {'html': render_to_string(template, context, request)}
         return JsonResponse(data)
     template = 'appointments/delete_vaccination_record.html'

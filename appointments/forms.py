@@ -508,6 +508,7 @@ class VaccineApplicationCreationAndUpdateForm(forms.ModelForm):
     """
         DOCSTRING: This VaccineApplicationCreationAndUpdateForm is used to create and update VaccineApplication instances.
     """
+    datetime = forms.DateTimeField(input_formats=['%Y-%m-%dT%H:%M'], widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'), initial=timezone.localtime(timezone.now()))
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')

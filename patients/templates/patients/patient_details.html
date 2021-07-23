@@ -23,7 +23,7 @@
         <div class="details-container__general-information">
             <h2>General</h2>
             <h4 class="details-container__title">General Information</h4>
-            <i class="far fa-calendar-check" data-url="{% url 'appointments:create_appointment' patient.pk %}"></i>
+            <i class="far fa-calendar-check quick-consult" data-url="{% url 'appointments:create_appointment' patient.pk %}"></i>
             {% if patient.email %}<i class="fas fa-envelope" data-url="{% url 'patients:send_email' patient.pk %}"></i>{% endif %}
             <p>Id Card Number: {% if patient.id_number %} {{ patient.id_number }} {% else %} ---------- {% endif %}</p>
             <p>First Name: {{ patient.first_names }}</p>
@@ -188,39 +188,11 @@
     {% if user.doctor.speciality == 'PED' %}
         <div class="data vaccines">
             {% if vaccines %}
-                <div class="data-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr id="heading">
-                                <th>Vaccine</th>
-                                <th>Scientific Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                                <th><i class="fas fa-plus data-table__create" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="vaccine-records">
-                            <!-- Included template for dynamic displaying of results-->
-                            {% include 'patients/patient_vaccines_partial_list.html' %}
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <i class="fas fa-filter filter-container__display-filter-button vaccines-filter"></i>
-                    <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="filter-container__filter-form vaccines-form">
-                        <h3>Filter Results</h3>
-                        <p>{{ consults_filter_form.date_from.label }}</p>
-                        <p>{{ consults_filter_form.date_from }}</p>
-                        <p>{{ consults_filter_form.date_to.label }}</p>
-                        <p>{{ consults_filter_form.date_to }}</p>
-                        <p class="error"><small>{{ error }}</small></p>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
+                <!-- Included template for dynamic displaying of results-->
+                {% include 'patients/patient_vaccines_list.html' %}
             {% else %}
                 <p id="no-vaccines-data">No Data</p>
+                <i class="fas fa-plus add-data" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i>
             {% endif %}
         </div>
     {% elif user.doctor.speciality == 'SRG'%}

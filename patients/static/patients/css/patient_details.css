@@ -6,7 +6,7 @@
     position: fixed;
 }
 
-.fa-calendar-check{
+.quick-consult{
     position: absolute;
     top: 22.8%;
     left: 44%;
@@ -15,7 +15,7 @@
     transition: 0.5s;
 }
 
-.fa-calendar-check--active{
+.quick-consult--active{
     color: #25BB41;
     transition: 0.5s;
 }
@@ -297,6 +297,10 @@
     left: 450%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+.add-data{
+    left: 450%;
 }
 
 /*##################################################### Modal ######################################################*/

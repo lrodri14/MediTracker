@@ -1,0 +1,53 @@
+{% load static %}
+
+{% if vaccines %}
+    <div class="data-container">
+        <table class="data-table">
+            <thead>
+                <tr id="heading">
+                    <th>Vaccine</th>
+                    <th>Scientific Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <th><i class="fas fa-plus data-table__create" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i></th>
+                </tr>
+            </thead>
+            <tbody id="vaccine-records">
+                {% for vaccine in vaccines %}
+                    <tr class="data-table__item vaccine-details" data-url="{% url 'appointments:vaccination_record_details' vaccine.pk %}">
+                        <td class="data-table__data">{{ vaccine.vaccine_applied.name }}</td>
+                        <td class="data-table__data">
+                            {% if vaccine.vaccine_applied.scientific_name is not None %}
+                                {{ vaccine.vaccine_applied.scientific_name }}
+                            {% else %}
+                                -------------
+                            {% endif %}
+                        </td>
+                        <td class="data-table__data">{{ vaccine.datetime.date }}</td>
+                        <td class="data-table__data">{{ vaccine.datetime.time }}</td>
+                        <td class="data-table__data"><i class="fas fa-edit data-table__update" data-url="{% url 'appointments:update_vaccination_record' vaccine.pk patient.pk %}"></i></td>
+                        <td class="data-table__data"><i class="fas fa-trash data-table__delete" data-url="{% url 'appointments:delete_vaccination_record' vaccine.pk patient.pk %}"></i></td>
+                        <td class="data-table__data"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <i class="fas fa-filter filter-container__display-filter-button vaccines-filter"></i>
+        <form method="GET" action="{% url 'patients:filter_patient_details' patient.pk %}" class="filter-container__filter-form vaccines-form">
+            <h3>Filter Results</h3>
+            <p>{{ consults_filter_form.date_from.label }}</p>
+            <p>{{ consults_filter_form.date_from }}</p>
+            <p>{{ consults_filter_form.date_to.label }}</p>
+            <p>{{ consults_filter_form.date_to }}</p>
+            <p class="error"><small>{{ error }}</small></p>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% else %}
+    <p id="no-vaccines-data">No Data</p>
+    <i class="fas fa-plus add-data" data-url="{% url 'appointments:add_vaccination_record' patient.pk %}"></i>
+{% endif %}

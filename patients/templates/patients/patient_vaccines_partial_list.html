@@ -1,4 +1,5 @@
 {% load static %}
+
 {% for vaccine in vaccines %}
     <tr class="data-table__item vaccine-details" data-url="{% url 'appointments:vaccination_record_details' vaccine.pk %}">
         <td class="data-table__data">{{ vaccine.vaccine_applied.name }}</td>
