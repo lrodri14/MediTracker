@@ -210,7 +210,7 @@ class VaccineApplication(models.Model):
     class Meta:
         verbose_name = 'Vaccine applied'
         verbose_name_plural = 'Vaccines applied'
-        ordering = ('datetime',)
+        ordering = ('-datetime',)
 
 
 class BaseConsult(models.Model):
