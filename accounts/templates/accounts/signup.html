@@ -7,31 +7,31 @@
             <!-- Personal Information -->
             <div class="signup-form__personal-information">
                 <h1>Sign Up</h1>
-                <p>{{ user_creation_form.first_name.label }}</p>
+                <p>{{ user_creation_form.first_name.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.first_name }}</p>
-                <p>{{ user_creation_form.last_name.label }}</p>
+                <p>{{ user_creation_form.last_name.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.last_name }}</p>
-                <p>{{ profile_creation_form.gender.label }}</p>
+                <p>{{ profile_creation_form.gender.label }} <span class="obligatory">*</span></p>
                 <p>{{ profile_creation_form.gender }}</p>
-                <p>{{ profile_creation_form.origin.label }}</p>
+                <p>{{ profile_creation_form.origin.label }} <span class="obligatory">*</span></p>
                 <p>{{ profile_creation_form.origin }}</p>
-                <p>{{ profile_creation_form.location.label }}</p>
+                <p>{{ profile_creation_form.location.label }} <span class="obligatory">*</span></p>
                 <p>{{ profile_creation_form.location }}</p>
-                <p>{{ profile_creation_form.birth_date.label }}</p>
+                <p>{{ profile_creation_form.birth_date.label }} <span class="obligatory">*</span></p>
                 <p>{{ profile_creation_form.birth_date }}</p>
-                <p>{{ user_creation_form.speciality.label }}</p>
+                <p>{{ user_creation_form.speciality.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.speciality }}</p>
             </div>
             <!-- Account Information -->
             <div class="signup-form__account-information">
-                <p>{{ user_creation_form.username.label }}</p>
+                <p>{{ user_creation_form.username.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.username }}</p>
-                <p>{{ user_creation_form.email.label }}</p>
+                <p>{{ user_creation_form.email.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.email }}</p>
-                <p>{{ user_creation_form.password1.label }}</p>
+                <p>{{ user_creation_form.password1.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.password1 }}</p>
-                <p>Password Confirmation</p>
-                <p>{{ user_creation_form.password2 }}</p>
+                <p>Password Confirmation <span class="obligatory">*</span></p>
+                <p>{{ user_creation_form.password2 }} </p>
                 <p>{{ profile_creation_form.phone_number.label }}</p>
                 <p>{{ profile_creation_form.phone_number }}</p>
                 <p>{{ profile_creation_form.address.label }}</p>
@@ -53,22 +53,22 @@
             <!-- Personal Information -->
             <div class="signup-form__personal-information">
                 <h1>Sign Up</h1>
-                <p>{{ user_creation_form.first_name.label }}</p>
+                <p>{{ user_creation_form.first_name.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.first_name }}</p>
-                <p>{{ user_creation_form.last_name.label }}</p>
+                <p>{{ user_creation_form.last_name.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.last_name }}</p>
-                <p>{{ user_creation_form.email.label }}</p>
+                <p>{{ user_creation_form.email.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.email }}</p>
                 <p>{{ user_creation_form.speciality.label }}</p>
                 <p>{{ user_creation_form.speciality }}</p>
             </div>
             <!-- Account Information -->
             <div class="signup-form__account-information">
-                <p>{{ user_creation_form.username.label }}</p>
+                <p>{{ user_creation_form.username.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.username }}</p>
-                <p>{{ user_creation_form.password1.label }}</p>
+                <p>{{ user_creation_form.password1.label }} <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.password1 }}</p>
-                <p>Password Confirmation</p>
+                <p>Password Confirmation <span class="obligatory">*</span></p>
                 <p>{{ user_creation_form.password2 }}</p>
                 <button type="submit" class="signup-form__submit-button">Sign Up</button>
                 {% if user_creation_form.errors %}

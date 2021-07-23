@@ -597,6 +597,26 @@ a {
 
 /*////////////////////////////////////////////////// Global Navigator ////////////////////////////////////////////////*/
 
+.navigator-display-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    top: 45%;
+    left: -25px;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.navigator-display-button__arrow{
+    margin-left: 30px;
+}
+
 .global-navigator{
     background-color: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
@@ -649,6 +669,26 @@ a {
 }
 
 /*//////////////////////////////////////////////////// Social Content ////////////////////////////////////////////////*/
+
+.social-section-display-button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    top: 45%;
+    right: -25px;
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.social-section-display-button__arrow{
+    margin-left: 10px;
+}
 
 .social-section{
     position: fixed;
@@ -858,6 +898,15 @@ a {
 
 .social-section__send-message-button--active{
     color: #00CCFF;
+    transition: 0.5s;
+}
+
+/*///////////////////////////////////////////// Navigator display buttons  ///////////////////////////////////////////*/
+
+.display-navigator-button--active{
+    background-color: #FFFFFF;
+    color: #000000;
+    cursor: pointer;
     transition: 0.5s;
 }
 

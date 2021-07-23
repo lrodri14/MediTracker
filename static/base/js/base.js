@@ -110,37 +110,81 @@ function activateChatWebSocketEvents(CWS){
 
 ///////////////////////////////////////////////// Event Listeners //////////////////////////////////////////////////////
 
+// Window Event Listeners
+
+// Window Mousemove Events
 window.addEventListener('mousemove', (e) => {
 
-    /* This event will be fired every time the cursor is 50px or more in the Y Axis and 5px or less in the X Axis, this event
-       will display the globalNavigator, if the it does not fulfills these conditions, the navigator will not be shown or it
-       will be hidden.*/
+    // This will hide the globalNavigator whenever the e.clientX is higher than the offsetWidth
     if (globalNavigator){
-        if ((e.clientY >= 50) && (e.clientX <= 0)){
-        globalNavigator.classList.add('global-navigator--display')
-        }else if (e.clientX > globalNavigator.offsetWidth){
+        if (e.clientX > globalNavigator.offsetWidth){
             globalNavigator.classList.remove('global-navigator--display')
         }
     }
 
-    /* This event will be fired every time the cursor is 10px less than the screen width this event will display the socialSection,
-       if the it does not fulfills these conditions, the socialSection will not be shown or it will be hidden.*/
+    // This will hide the socialSection whenever the e.clientX is higher than the offsetWidth
     if (socialSection){
-        if (e.clientX >= (window.screen.width - 1) && !socialSection.classList.contains('social-section--display')){
-            socialSection.classList.add('social-section--display')
-            if (socialSectionData.innerHTML == ""){
-                let url = socialSectionTabs[0].getAttribute('data-url')
-                socialSectionTabs[0].classList.add('social-section__tab--active')
-                displayContactsAW(url)
-                .then(data => {
-                    socialSectionData.innerHTML = data['html']
-                })
-            }
-        }else if (e.clientX <= (window.screen.width - socialSection.offsetWidth)){
+        if (e.clientX <= (window.screen.width - socialSection.offsetWidth)){
             socialSection.classList.remove('social-section--display')
         }
     }
 
+})
+
+// Window Mouseover events
+
+window.addEventListener('mouseover', (e) => {
+
+// This event will be fired if the target is a display navigator element
+    if (e.target.closest('.navigator-display-button')){
+        let target = e.target.closest('.navigator-display-button')
+        target.classList.add('display-navigator-button--active')
+    }
+
+    if (e.target.closest('.social-section-display-button')){
+        let target = e.target.closest('.social-section-display-button')
+        target.classList.add('display-navigator-button--active')
+    }
+})
+
+// Window mouseout events
+window.addEventListener('mouseout', (e) => {
+
+// This event will be fired if the target is a display navigator element
+    if (e.target.closest('.navigator-display-button')){
+        let target = e.target.closest('.navigator-display-button')
+        target.classList.remove('display-navigator-button--active')
+    }
+
+    if (e.target.closest('.social-section-display-button')){
+        let target = e.target.closest('.social-section-display-button')
+        target.classList.remove('display-navigator-button--active')
+    }
+})
+
+// Window click events
+window.addEventListener('click', (e) => {
+
+// This event will be fired if the target is a display navigator element
+    if (e.target.closest('.navigator-display-button')){
+        if (globalNavigator){
+            globalNavigator.classList.add('global-navigator--display')
+        }
+    }
+
+    if (e.target.closest('.social-section-display-button')){
+        if (socialSection){
+            socialSection.classList.add('social-section--display')
+            if (socialSectionData.innerHTML == ""){
+                    let url = socialSectionTabs[0].getAttribute('data-url')
+                    socialSectionTabs[0].classList.add('social-section__tab--active')
+                    displayContactsAW(url)
+                    .then(data => {
+                        socialSectionData.innerHTML = data['html']
+                    })
+            }
+        }
+    }
 })
 
 // Global Navigator Event Listeners

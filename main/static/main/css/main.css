@@ -119,6 +119,10 @@ form{
     z-index: 1;
 }
 
+.obligatory{
+    color: #f54242;
+}
+
 form button{
     cursor: pointer;
     margin-top: 5%;
