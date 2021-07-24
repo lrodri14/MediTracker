@@ -4,20 +4,18 @@
 """
 import requests
 import random
-from meditracker.settings import PAPERQUOTES_API_KEY
+from meditracker.settings import X_RAPID_API_KEY_QUOTES, X_RAPID_API_KEY_HOST_QUOTES
 
-
-api_key = PAPERQUOTES_API_KEY
-quote_tags = ['inspirational', 'knowledge', 'wisdom']
-endpoint = 'http://api.paperquotes.com/apiv1/quotes?'
-headers = {'Authorization': 'TOKEN {}'.format(api_key)}
+api_key = X_RAPID_API_KEY_QUOTES
+host = X_RAPID_API_KEY_HOST_QUOTES
+quote_categories = ['love', 'god', 'wisdom', 'beauty', 'education', 'dreams', 'intelligence']
+endpoint = "https://famous-quotes4.p.rapidapi.com/random"
+headers = {'x-rapidapi-key': api_key, 'x-rapidapi-host': host}
+querystring = {'category': random.choice(quote_categories), 'count': '1'}
 
 
 def collect_quote():
-    response = requests.get(endpoint, params={'tags': random.choice(quote_tags), 'limit': 100}, headers=headers).json()
-    random_quote = random.choice(response['results'])
-    quote = random_quote['quote']
-    author = random_quote['author']
-    if author is not None and author in quote:
-        quote = quote.strip(author)
+    response = requests.get(endpoint, headers=headers, params=querystring).json()
+    quote = response[0]['text']
+    author = response[0]['author']
     return tuple([quote, author])
