@@ -257,11 +257,13 @@ class BaseConsult(models.Model):
         super().save(*args, **kwargs)
 
     def generate_message(self):
+        title = 'Mr' if self.patient.gender == 'M' else 'Ms'
         first_names = self.patient.first_names
         last_names = self.patient.last_names
         date = self.datetime.date()
         time = self.datetime.time().strftime('%I:%M %p')
-        message = 'Dear Mr/Mrs. {} {}, \nyou have a pending appointment in {} at {}'.format(first_names, last_names, date, time)
+        message = 'Dear {}. {} {}, \nyou have a pending appointment for {} at {}\nSent from Sealena'\
+                    .format(title, first_names, last_names, date, time)
         return message
 
     class Meta:

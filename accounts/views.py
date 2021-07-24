@@ -10,12 +10,9 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from twilio.jwt.access_token import AccessToken
 from django.template.loader import render_to_string
-from twilio.jwt.access_token.grants import ChatGrant
 from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message
 from utilities.accounts_utilities import check_requests
-from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_API_KEY, TWILIO_API_SECRET_KEY, TWILIO_CHAT_SERVICE_SID
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
     UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \

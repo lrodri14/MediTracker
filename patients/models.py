@@ -6,7 +6,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from utilities.global_utilities import LOCATION_CHOICES, ORIGIN_CHOICES
+from utilities.global_utilities import LOCATION_CHOICES, ORIGIN_CHOICES, country_number_codes
 user = get_user_model()
 # Create your models here.
 
@@ -71,6 +71,8 @@ class Patient(models.Model):
     def save(self, *args, **kwargs):
         self.first_names = self.first_names.title()
         self.last_names = self.last_names.title()
+        if '+' not in self.phone_number:
+            self.phone_number = country_number_codes[self.residence] + self.phone_number
         super().save(*args, **kwargs)
 
 # Insurance Companies Model

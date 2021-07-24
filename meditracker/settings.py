@@ -97,7 +97,14 @@ TEMPLATES = [
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtppro.zoho.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'sealena@sealena.com'
+EMAIL_HOST_PASSWORD = 'Sealena_app2021'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'sealena@sealena.com'
 
 WSGI_APPLICATION = 'meditracker.wsgi.application'
 ASGI_APPLICATION = 'meditracker.asgi.application'
@@ -165,9 +172,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_API_KEY = os.environ.get('TWILIO_API_KEY')
-TWILIO_API_SECRET_KEY = os.environ.get('TWILIO_API_SECRET_KEY')
-TWILIO_CHAT_SERVICE_SID = os.environ.get('TWILIO_CHAT_SERVICE_SID')
 
 NUMVERIFY_API_KEY = os.environ.get('NUMVERIFY_API_KEY')
 

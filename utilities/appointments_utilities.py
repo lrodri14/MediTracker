@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.core.files import File
 from django.template.loader import render_to_string
 from twilio.base.exceptions import TwilioRestException
-from meditracker.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, NUMVERIFY_API_KEY
+from meditracker.settings import NUMVERIFY_API_KEY, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 
 # Twilio Client instance
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
@@ -126,10 +126,9 @@ async def send_sms(consult):
         if response:
             message = consult.generate_message()
             try:
-                client.messages.create(from_='+12534997932', to=consult.patient.phone_number, body=message)
+                client.messages.create(from_='+18175325217', to=consult.patient.phone_number, body=message)
             except TwilioRestException:
                 pass
-
 
 # Sync Functions
 
