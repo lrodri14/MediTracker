@@ -179,7 +179,6 @@ form{
     text-align: center;
 }
 
-
 .creation-update-form{
     width: 25%;
 }
@@ -935,7 +934,6 @@ a {
     text-align: center;
     color: #FFFFFF;
     padding: 15px;
-    box-shadow: -2px 2px 8px rgba(255,255,255,0.3);
 }
 
 .modal--display{

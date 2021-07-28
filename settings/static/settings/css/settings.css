@@ -197,14 +197,14 @@
     transition: 0.5s;
 }
 
-.upgrade-button{
-    transition: 0.5s;
-}
-
 .downgrade-button--active{
     background-color: #d93725;
     border-color: #d93725;
     color: #FFFFFF;
+    transition: 0.5s;
+}
+
+.upgrade-button{
     transition: 0.5s;
 }
 
@@ -224,10 +224,24 @@
 }
 
 .upgrade-form{
-    background-color: #32a852;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    height: 58%;
+    width: 50%;
+    padding: 0px;
 }
 
-.manage-subscription-form{
+.upgrade-form__subscription-details{
+    background-color: #32a852;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.upgrade-form__payment-details{
+    padding: 0px 16px;
+}
+
+.manage-subscription-form:not(.upgrade-form){
     height: 50%;
     width: 20%;
 }

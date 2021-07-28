@@ -108,6 +108,7 @@ def toggle_notifications(request):
 # Profile
 #############################
 
+
 def profile(request):
     """
         DOCSTRING:

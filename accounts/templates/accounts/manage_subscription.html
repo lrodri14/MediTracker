@@ -1,16 +1,26 @@
-<form action="{% url 'accounts:manage_subscription' %}" method="POST" class="modal__form manage-subscription-form {{ action }}-form">
+<form action="{% url 'accounts:manage_subscription' %}" method="POST" class="modal__form manage-subscription-form {{ action }}-form" data-plan-id="{{ plan.product_plan_id }}"
+                                                                                                                                    data-user-first-name="{{ user.first_name }}"
+                                                                                                                                    data-user-last-name="{{ user.last_name }}"
+                                                                                                                                    data-user-email="{{ user.email }}">
     {% csrf_token %}
     {% if action == 'upgrade' %}
-        <h1>Premium</h1>
-        <h2>$24.99</h2>
-        <small>*Monthly Charge</small>
-        <h3>Perks within this subscription:</h3>
-        <p>No advertising</p>
-        <p>Patient's reminder sending</p>
-        <p>Unlimited amount of patients</p>
-        <p>Unlimited amount of consults</p>
-        <p>Unlimited linking to assistants</p>
-        <button type="submit">Upgrade</button>
+        <div class="upgrade-form__subscription-details">
+            <h1>Premium</h1>
+            <h2>$25</h2>
+            <small>*Monthly Charge</small>
+            <h3>Perks within this subscription:</h3>
+<!--            <p>No advertising</p>-->
+            <p>Patient's reminder sending</p>
+            <p>Unlimited amount of patients</p>
+            <p>Unlimited amount of consults</p>
+            <p>Unlimited linking to assistants</p>
+        </div>
+        <div class="upgrade-form__payment-details">
+            <h1>Payment Details</h1>
+            <p>Choose the payment option of your preference</p>
+            <p><small>* Keep in mind, this is the method through which you'll be charged monthly</small></p>
+            <div id="paypal-button-container"></div>
+        </div>
     {% else %}
         <h1>Basic</h1>
         <h2>Free</h2>

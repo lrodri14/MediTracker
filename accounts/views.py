@@ -11,8 +11,9 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message
+from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message, Plan, Subscription
 from utilities.accounts_utilities import check_requests
+from utilities.paypal_utilities import cancel_subscription
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
     UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
@@ -200,22 +201,32 @@ def signup(request):
 
 
 def manage_subscription(request, action=None):
+    """
+        DOCSTRING:
+        This manage_subscription function view is used to upgrade or downgrade subscriptions based in the user's
+        election, it expects a required and an optional argument, request and the action to be performed.
+    """
     if request.method == 'POST':
         user = request.user.doctor
         action = request.POST.get('action')
+        subscription_id = request.POST.get('subscription_id')
 
         if action == 'upgrade':
-            # Check for payment settings
+            Subscription.objects.create(subscription_id=subscription_id, user=request.user)
             user.subscription = 'PREMIUM'
             user.save()
         else:
+            subscription = Subscription.objects.get(user=request.user)
+            subscription_id = subscription.subscription_id
+            cancel_subscription(subscription_id)
+            subscription.delete()
             user.subscription = 'BASIC'
             user.save()
 
         subscription = request.user.doctor.get_subscription_display()
         if subscription == 'Basic':
             action = 'upgrade'
-            action_message = 'GO premium'
+            action_message = 'GO Premium'
         else:
             action = 'downgrade'
             action_message = 'Cancel Premium'
@@ -226,8 +237,9 @@ def manage_subscription(request, action=None):
                 'response': render_to_string('accounts/subscription_change_response.html', {'subscription':subscription}, request)}
         return JsonResponse(data)
 
+    plan = Plan.objects.all()[0]
     template = 'accounts/manage_subscription.html'
-    context = {'action': action}
+    context = {'action': action, 'plan': plan}
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 

@@ -129,7 +129,7 @@ async function filterResultsAW(url){
 }
 
 async function manageSubscriptionSettingsAW(url){
-    /* This updateSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
+    /* This manageSubscriptionSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
        form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
        parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
        'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
@@ -139,13 +139,13 @@ async function manageSubscriptionSettingsAW(url){
     return data
 }
 
-async function changeSubscriptionType(url, method, csrfmiddlewaretoken, action){
+async function changeSubscriptionType(url, method, csrfmiddlewaretoken, subscriptionData){
     /* This updateSettingsAW function is used update the users settings upon a change event, this function will display the corresponding
        form for the specific operation, this form will be displayed in the modal container, the function accepts, 4
        parameters: 'url' we collect from the form.action attribute, 'method' we grab from the form.method attribute,
        'csrfmiddlewaretoken' that we collect form the form's hidden input, and finally the 'formData' we collect from
        the form's inputs, the response will be returned in JSON format for further processing.*/
-    const result = await fetch(url, {method:method, headers:{'X-CSRFToken':csrfmiddlewaretoken}, body:action})
+    const result = await fetch(url, {method:method, headers:{'X-CSRFToken':csrfmiddlewaretoken}, body:subscriptionData})
     const data = result.json()
     return data
 }
@@ -573,12 +573,59 @@ if (container){
             })
         }
 
-        if (e.target.classList.contains('upgrade-button') || e.target.classList.contains('downgrade-button')){
+        if (e.target.classList.contains('upgrade-button')){
+            /* This event will be fired every time the upgrade-button is clicked, this will display the subscription details
+               and the payment details view. */
             let url = e.target.getAttribute('data-url')
             manageSubscriptionSettingsAW(url)
             .then((data) => {
                 modalContent.innerHTML = data['html']
                 modal.classList.add('modal--display')
+                let form = document.querySelector('.upgrade-form')
+                let url = form.action
+                let method = form.method
+                let csrfmiddlewaretoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+                let plan_id = form.getAttribute('data-plan-id')
+                let name = form.getAttribute('data-user-first-name')
+                let lastName = form.getAttribute('data-user-last-name')
+                let email = form.getAttribute('data-user-email')
+                /* This PayPal code is used to render the buttons in the payment details section, we are passing along our
+                   Subscription Plan ID to which the user will be subscribed to. The onApprove key contains the function to be
+                   called when a payment process has been approved which will display the success message to the user.*/
+                paypal.Buttons({
+                  createSubscription: function(data, actions) {
+                      return actions.subscription.create({
+                        'plan_id': plan_id,
+                        'name': name,
+                        'surname': lastName,
+                        'email': email
+                      });
+                  },
+                  onApprove: function(data, actions) {
+                       let subscriptionData = new FormData
+                       subscriptionData.append('action', 'upgrade')
+                       subscriptionData.append('subscription_id', data['subscriptionID'])
+                       changeSubscriptionType(url, method, csrfmiddlewaretoken, subscriptionData)
+                       .then((data) => {
+                            modalContent.innerHTML = data['response']
+                            container.innerHTML = data['html']
+                            setTimeout(() => {
+                                modalContent.innerHTML = ''
+                                modal.classList.remove('modal--display')
+                            }, 15000)
+                       })
+                  }
+                }).render('#paypal-button-container');
+            })
+        }
+
+        if (e.target.classList.contains('downgrade-button')){
+           /* This event will be fired every time the downgrade-button is clicked, this will display the subscription cancel details. */
+            let url = e.target.getAttribute('data-url')
+            manageSubscriptionSettingsAW(url)
+            .then(data => {
+               modalContent.innerHTML = data['html']
+               modal.classList.add('modal--display')
             })
         }
 
@@ -751,21 +798,6 @@ if (modal){
          // All these events will be fired if the target's nodeName is a FORM
 
          if (e.target.nodeName === 'FORM'){
-
-            /* This event will be fired every time the form contains the 'upgrade-form' class in it's classList, it makes sure to
-               upgrade the user's account from basic to premium */
-            if (e.target.classList.contains('upgrade-form')){
-                   const action = new FormData
-                   action.append('action', 'upgrade')
-                   changeSubscriptionType(url, method, csrfmiddlewaretoken, action)
-                   .then((data) => {
-                        modalContent.innerHTML = data['response']
-                        container.innerHTML = data['html']
-                        setTimeout(() => {
-                            modal.classList.remove('modal--display')
-                        }, 15000)
-                   })
-            }
 
             /* This event will be fired every time the form contains the 'upgrade-form' class in it's classList, it makes sure to
                downgrade the user's account from basic to premium */

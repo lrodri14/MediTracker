@@ -8,9 +8,9 @@ import random
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from utilities.global_utilities import LOCATION_CHOICES, ORIGIN_CHOICES
+from utilities.paypal_utilities import create_product, create_plan
 
 # Create your models here.
-
 
 class CustomUser(AbstractUser):
 
@@ -328,3 +328,105 @@ class Message(models.Model):
     status = models.CharField('status', max_length=6, blank=True, null=True, help_text='Message Status', default=MESSAGE_STATUS_CHOICES[0][0], choices=MESSAGE_STATUS_CHOICES)
     chat = models.ForeignKey(to=Chat, on_delete=models.CASCADE, blank=True, null=True, help_text='Chat', verbose_name='Chat', related_name='message')
     created_by = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE, blank=True, null=True, help_text='Sender', verbose_name='Sender')
+
+
+class Product(models.Model):
+    """
+        DOCSTRING:
+        This model is used to create subscription product which can be consumed by the users.
+    """
+    USER_TYPE_CHOICES = (('DOCTOR', 'Doctor'), ('ASSISTANT', 'Assistant'),)
+    PLAN_CHOICES = (('PREMIUM', 'Premium'),)
+    TYPE_CHOICES = (('SERVICE', 'Service'),)
+    CATEGORY_CHOICES = (('SOFTWARE', 'Software'),)
+    product_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Product ID', help_text='Product ID')
+    user_type = models.CharField(max_length=50, blank=False, null=True, verbose_name='Product User Type', help_text='Product User Type', choices=USER_TYPE_CHOICES)
+    plan = models.CharField(max_length=50, blank=False, null=True, verbose_name='Product Plan Type',help_text='Product Plan Type', choices=PLAN_CHOICES)
+    name_id = models.CharField(max_length=50, blank=True, null=True, verbose_name='Name ID', help_text='Product Name ID', unique=True)
+    name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Name', help_text='Product Name', unique=True)
+    description = models.TextField('Description', blank=False, null=True, help_text='Product Description')
+    product_type = models.CharField(max_length=50, blank=False, null=True, verbose_name='Type', help_text='Product Type', choices=TYPE_CHOICES, default=TYPE_CHOICES[0][1])
+    category = models.CharField(max_length=50, blank=False, null=True, verbose_name='Category', help_text='Product Category', choices=CATEGORY_CHOICES, default=CATEGORY_CHOICES[0][1])
+    image = models.ImageField('Image', blank=True, null=True, help_text='Product Image')
+    home_image = models.ImageField('Home Image', blank=True, null=True, help_text='Product Image')
+    get_product_url = models.URLField(blank=True, null=True, verbose_name='Get Product URL', help_text='Get Product URL')
+    edit_product_url = models.URLField(blank=True, null=True, verbose_name='Edit Product URL', help_text='Edit Product URL')
+
+    def save(self, *args, **kwargs):
+        self.name_id = 'SEALENA-{}-{}'.format(self.user_type, self.plan)
+        self.name = 'SEALENA {} {} SUBSCRIPTION'.format(self.user_type, self.plan)
+        self.description = self.description.capitalize()
+        response = create_product(self.name_id, self.name, self.description, self.product_type, self.category)
+        self.product_id = response['id']
+        self.get_product_url = response['links'][0]['href']
+        self.edit_product_url = response['links'][1]['href']
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class Plan(models.Model):
+    """
+        DOCSTRING:
+        This model is used to create plans which can be consumed by the users, such as a monthly or yearly subscription
+        plan.
+    """
+    FREQUENCY_CHOICES = (('MONTH', 'Monthly'),)
+    STATUS_CHOICES = (('CREATED', 'Created'), ('ACTIVE', 'Active'), ('INACTIVE', 'Inactive'))
+    TENURE_CHOICES = (('TRIAL', 'Trial'), ('REGULAR', 'Regular'))
+    SEQUENCE_CHOICES = [(str(x), x) for x in range(1, 6)]
+    SETUP_FEE_FAILURE_ACTIONS = (('CANCEL', 'Cancel'), ('CONTINUE', 'Continue'))
+    product_plan_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='Product ID', help_text='Product Plan ID')
+    user_type = models.CharField(max_length=50, blank=True, null=True, verbose_name='Product User Type', help_text='Product User Type')
+    plan = models.CharField(max_length=50, blank=True, null=True, verbose_name='Product Plan Type',help_text='Product Plan Type')
+    name_id = models.CharField(max_length=50, blank=True, null=True, verbose_name='Name ID', help_text='Plan Name ID', unique=True)
+    name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Name', help_text='Plan Name', unique=True)
+    description = models.TextField('Description', blank=False, null=True, help_text='Plan Description')
+    status = models.CharField(max_length=50, blank=False, null=True, verbose_name='Status' ,help_text='Plan Status', choices=STATUS_CHOICES)
+    frequency = models.CharField(max_length=50, blank=False, null=True, verbose_name='Frequency', help_text='Plan Billing Frequency', choices=FREQUENCY_CHOICES)
+    price = models.CharField(max_length=5, blank=False, null=True, verbose_name='Price' ,help_text='Plan Price')
+    tenure = models.CharField(max_length=50, blank=False, null=True, verbose_name='Tenure', help_text='Plan Tenure', choices=TENURE_CHOICES)
+    sequence = models.CharField(max_length=2, blank=False, null=True, verbose_name='Sequence', help_text='Plan Sequence')
+    total_cycles = models.IntegerField('Cycles', blank=False, null=True, help_text='Cycles to be billed')
+    auto_billing = models.BooleanField('Auto Billing', blank=False, null=True, help_text='Plan Billing Type')
+    setup_fee = models.IntegerField('Setup Fee', blank=False, null=True, help_text='Setup Fee', default=0)
+    setup_fee_failure_action = models.CharField(max_length=10, blank=False, null=True, verbose_name='Billing Failure Action', help_text='Billing Failure Action', choices=SETUP_FEE_FAILURE_ACTIONS)
+    payment_failure_threshold = models.IntegerField('Payment Failure Threshold', blank=False, null=True, help_text='Payment Failure Threshold')
+    get_plan_url = models.URLField(blank=True, null=True, verbose_name='Get Plan URL', help_text='Get Plan URL')
+    edit_plan_url = models.URLField(blank=True, null=True, verbose_name='Edit Plan URL', help_text='Edit Plan URL')
+    deactivate_plan_url = models.URLField(blank=True, null=True, verbose_name='Deactivate Plan URL', help_text='Deactivate Plan URL')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Plan Product', help_text='Plan Product', related_name='product_plan')
+
+    def save(self, *args, **kwargs):
+        self.user_type = self.product.user_type
+        self.plan = self.product.plan
+        self.name_id = 'SEALENA-{}-{}-{}-PLAN'.format(self.user_type, self.plan, self.frequency)
+        self.name = 'SEALENA {} {} {} PLAN'.format(self.user_type, self.plan, self.frequency)
+        if self.total_cycles >= 1 and self.price > 0:
+            self.price = 0
+        if self.payment_failure_threshold >= 4:
+            self.payment_failure_threshold = 3
+        response = create_plan(self.product.product_id, self.name_id, self.name, self.description, self.status, self.frequency,
+                               self.price, self.tenure, self.sequence, self.total_cycles, self.auto_billing,
+                               self.setup_fee, self.setup_fee_failure_action, self.payment_failure_threshold)
+        self.product_plan_id = response['id']
+        self.get_plan_url = response['links'][0]['href']
+        self.edit_plan_url = response['links'][1]['href']
+        self.deactivate_plan_url = response['links'][2]['href']
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class Subscription(models.Model):
+    """
+        DOCSTRING:
+        This Subscription model is used to store subscription information belonging to a specific user
+    """
+    subscription_id = models.CharField(max_length=255, blank=False, null=True, verbose_name='Subscription ID', help_text='Subscription ID')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=False, null=True, verbose_name='Subscription User', help_text='Subscription User', related_name='subs')
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name + ' Subscription'
