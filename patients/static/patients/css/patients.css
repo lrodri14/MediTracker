@@ -13,6 +13,12 @@
     transition: 0.5s;
 }
 
+.data-container__basic-account-message{
+    position: absolute;
+    top: 6%;
+    right: 21%;
+}
+
 /*##################################################### PopUp #########################################################*/
 
 .popup{

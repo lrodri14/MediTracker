@@ -26,6 +26,7 @@ def populate_patients(iters=5):
             last_names=faker.last_name(),
             gender=random.choice(genders),
             birthday=faker.date_between(start_date="-100y", end_date=timezone.localtime().date()),
+            phone_number='+504',
             civil_status=random.choice(civil_status),
             origin=random.choice(origin_res),
             residence=random.choice(origin_res),
@@ -55,5 +56,7 @@ def populate_consults(iters=5):
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 if __name__ == '__main__':
-    pass
+    print('Populating Database...')
+    populate_patients(iters=5)
+    print('Finished...')
 

@@ -28,8 +28,7 @@ def patients(request):
     """
         DOCSTRING:
         The patients function is used to display all the patients belonging to this user, first the view will check if the
-        user belongs to the doctor group searching in the users groups, afterwards it will collect all the patients that are
-        related to him and paginate them in groups of 17 instances, the patient filtering form will also be sent for rendering,
+        user belongs to the doctor group searching in the users groups, the patient filtering form will also be sent for rendering,
         this function only accepts 'GET' requests, the 'page' query parameter will be evaluated every time, so the function knows
         which page should it send, if the 'page' parameter exists, then the content will be returned in JSON Format. It accepts only
         one parameter, 'request' which expects a request object.
@@ -44,11 +43,21 @@ def patients(request):
     else:
         doctor = False
         aimed_user = request.user.assistant.doctors.all()[0]
+
+    message = None
+    creation_enabled = True
+    records_left = 10 - len(Patient.objects.filter(created_by=aimed_user)[:10])
+    account_type = aimed_user.doctor.subscription
+    if account_type == 'BASIC':
+        message = 'You are currently using a Sealena Basic account, you have {} records left'.format(records_left)
+        if records_left <= 0:
+            creation_enabled = False
+
     today = timezone.localtime().date()
     patients_list = Patient.objects.filter(created_by=aimed_user).order_by('id_number')
     patient_filter = PatientFilterForm
     template = 'patients/patients.html'
-    context = {'patients': patients_list, 'form': patient_filter, 'doctor': doctor, 'today': today}
+    context = {'patients': patients_list, 'form': patient_filter, 'doctor': doctor, 'today': today, 'message': message, 'creation_enabled': creation_enabled}
     return render(request, template, context)
 
 
@@ -126,28 +135,35 @@ def add_patient(request):
         antecedents_form = AntecedentFormset(request.POST)
         insurance_form = InsuranceInformationForm(request.POST)
         if patient_form.is_valid() and allergies_form.is_valid() and antecedents_form.is_valid() and insurance_form.is_valid():
-            patient = patient_form.save(commit=False)
-            allergies_instances = allergies_form.save(commit=False)
-            antecedents_instances = antecedents_form.save(commit=False)
-            insurance = insurance_form.save(commit=False)
 
-            if patient.phone_number is None:
-                patient.phone_number = country_number_codes[country_number_code]
-            patient.save()
-            patient.created_by = user_creating
-            patient.date_created = timezone.localtime().date()
-            patient.save()
+            subscription = user_creating.doctor.subscription
+            patients_length = len(Patient.objects.filter(created_by=user_creating))
+            valid = subscription == 'PREMIUM' or (subscription == 'BASIC' and patients_length < 10)
 
-            for allergy_instance in allergies_instances:
-                allergy_instance.patient = patient
-                allergy_instance.save()
+            if valid:
 
-            for antecedent_instance in antecedents_instances:
-                antecedent_instance.patient = patient
-                antecedent_instance.save()
+                patient = patient_form.save(commit=False)
+                allergies_instances = allergies_form.save(commit=False)
+                antecedents_instances = antecedents_form.save(commit=False)
+                insurance = insurance_form.save(commit=False)
 
-            insurance.patient = patient
-            insurance.save()
+                if patient.phone_number is None:
+                    patient.phone_number = country_number_codes[country_number_code]
+                patient.save()
+                patient.created_by = user_creating
+                patient.date_created = timezone.localtime().date()
+                patient.save()
+
+                for allergy_instance in allergies_instances:
+                    allergy_instance.patient = patient
+                    allergy_instance.save()
+
+                for antecedent_instance in antecedents_instances:
+                    antecedent_instance.patient = patient
+                    antecedent_instance.save()
+
+                insurance.patient = patient
+                insurance.save()
 
             return redirect(next_target)
 
@@ -239,13 +255,13 @@ def delete_patient(request, pk):
         leted successfully, else, an error will be raised, this to protect the data integrity, it will retrieve the
         updated list of patients and render a new template with this content, this data will be returned as a
         JsonResponse, it accepts two parameters, 'request' and 'pk' which expects an patients instance pk.
-
     """
     today = timezone.localtime().date()
     patient = Patient.objects.get(pk=pk)
     doctor_group = Group.objects.get(name='Doctor')
     doctor = doctor_group in request.user.groups.all()
     consults = BaseConsult.objects.filter(created_by=request.user, patient=patient, medical_status=True)
+
     template = 'patients/delete_patient.html'
     context = {'patient': patient, 'today': today}
     data = {'html': render_to_string(template, context, request=request)}
@@ -255,10 +271,20 @@ def delete_patient(request, pk):
             data = {'html': render_to_string(template, context, request)}
         else:
             patient.delete()
+
+            message = None
+            creation_enabled = True
+            records_left = 10 - len(Patient.objects.filter(created_by=request.user)[:10])
+            account_type = request.user.doctor.subscription
+            if account_type == 'BASIC':
+                message = 'You are currently using a Sealena Basic account, you have {} records left'.format(records_left)
+                if records_left <= 0:
+                    creation_enabled = False
+
             context = {'patient_deleted': 'Patient deleted successfully, your records have been updated'}
             patients_list = Patient.objects.filter(created_by=request.user).order_by('id_number')
             data = {'html': render_to_string(template, context, request),
-                    'patients': render_to_string('patients/patients_list.html', {'patients': patients_list, 'doctor': doctor}, request)}
+                    'patients': render_to_string('patients/patients_list.html', {'patients': patients_list, 'doctor': doctor, 'message': message, 'creation_enabled': creation_enabled}, request)}
     return JsonResponse(data)
 
 

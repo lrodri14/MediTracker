@@ -4,6 +4,9 @@
 {% if patients %}
 
     <div class="data-container">
+        {% if message %}
+            <p class="data-container__basic-account-message">{{ message }}</p>
+        {% endif %}
         <table class="data-table">
             <thead>
                 <tr id="heading">
@@ -19,7 +22,13 @@
                         <th>Edit</th>
                         <th>Delete</th>
                     {% endif %}
-                    <th><i class="fas fa-plus data-table__create" onclick="window.location='{% url 'patients:add_patient' %}'"></i></th>
+                    <th>
+                        {% if creation_enabled %}
+                            <i class="fas fa-plus data-table__create" onclick="window.location='{% url 'patients:add_patient' %}'"></i>
+                        {% else %}
+                            <i class="fas fa-plus data-table__create"></i>
+                        {% endif %}
+                    </th>
                 </tr>
             </thead>
             <tbody>
