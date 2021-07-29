@@ -213,9 +213,23 @@ def add_linking(request):
         linking_id = request.POST.get('linking_id')
         try:
             doctor = Doctor.objects.get(linking_id=linking_id)
-            request.user.assistant.doctors.add(doctor)
-            links = request.user.assistant.doctors.all()
-            data = {'updated_html': render_to_string('settings/linkings.html', request=request, context={'links': links})}
+            message = None
+            subscription = doctor.doctor.subscription
+            total_linkings = len(Assistant.objects.filter(doctors__in=[doctor]))
+
+            if subscription == 'BASIC' and total_linkings == 1:
+                message = 'The user you are tying to get linked to is using a Sealena Basic account and is already linked' \
+                          'to an Assistant account, in order to get linked the user must switch to a Premium Account following ' \
+                          'the next path (Settings > Account > Go Premium)'
+                context = {'message': message}
+                data = {'warning': render_to_string(template, context, request)}
+
+            else:
+                request.user.assistant.doctors.add(doctor)
+                links = request.user.assistant.doctors.all()
+                template = 'settings/linkings.html'
+                data = {'updated_html': render_to_string(template, request=request, context={'links': links})}
+
         except Doctor.DoesNotExist:
             context['error'] = 'The linking ID provided does not belong to any entity'
             data = {'html': render_to_string(template, context, request)}

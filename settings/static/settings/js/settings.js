@@ -821,8 +821,10 @@ if (modal){
             if (e.target.classList.contains('creation-update-form')){
                 addUpdateElementAW(url, method, csrfmiddlewaretoken, data)
                 .then(data => {
-                    if ('html' in data){
+                    if (data['html']){
                         modalContent.innerHTML = data['html']
+                    }else if (data['warning']){
+                        modalContent.innerHTML = data['warning']
                     }else{
                         container.innerHTML = data['updated_html']
                         modal.classList.remove('modal--display')

@@ -28,10 +28,6 @@ button{
     padding: 15px;
 }
 
-.account-subscription-warning a{
-    text-decoration: underline;
-}
-
 .data-container{
     margin-top: 1%;
     max-height: 727px;

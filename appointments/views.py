@@ -144,11 +144,12 @@ def create_appointment(request, pk=None):
         if request.user.roll == 'DOCTOR':
             message = 'You are currently using a Sealena Basic account, you have {} ' \
                       'records left, if you want to continue creating appointments ' \
-                      'please switch your account to Premium by following this path '.format(records_left)
+                      'please switch your account to Premium by following this path ' \
+                      '(Settings > Account > Go Premium)'.format(records_left)
         else:
             message = 'The user you are linked to uses a Sealena Basic account, it has {} ' \
                       'records left, to continue creating appointments the account must be' \
-                      'switched from Basic to Premium following this path in their account '.format(records_left)
+                      'switched from Basic to Premium '.format(records_left)
 
         if records_left <= 0:
             creation_enabled = False

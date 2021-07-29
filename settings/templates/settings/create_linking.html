@@ -1,9 +1,16 @@
 {% load static %}
-<form method="POST" action="{% url 'settings:add_linking' %}" autocomplete="off" id="create-linking-form" class="modal__form creation-update-form">
-    {% csrf_token %}
-    <h2>Add Linking</h2>
-    <p>Linking ID</p>
-    <p>{{ linking_form.linking_id }}</p>
-    <p class="error"><small>{{ error }}</small></p>
-    <button type="submit">Link</button>
-</form>
+{% if linking_form %}
+    <form method="POST" action="{% url 'settings:add_linking' %}" autocomplete="off" id="create-linking-form" class="modal__form creation-update-form">
+        {% csrf_token %}
+        <h2>Add Linking</h2>
+        <p>Linking ID</p>
+        <p>{{ linking_form.linking_id }}</p>
+        <p class="error"><small>{{ error }}</small></p>
+        <button type="submit">Link</button>
+    </form>
+{% else %}
+    <div class="account-subscription-warning">
+        <h2>Subscription Upgrade</h2>
+        <p>{{ message }}</p>
+    </div>
+{% endif %}
