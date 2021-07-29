@@ -298,7 +298,8 @@ if (container){
         }
 
         if (e.target.classList.contains('data-table__send-mail')){
-            let url = e.target.getAttribute('data-url')
+            let providerType = e.target.getAttribute('data-provider-type')
+            let url = e.target.getAttribute('data-url') + '?provider_type=' + providerType
             sendEmailFormAW(url).
             then(data => {
                 modalContent.innerHTML = data['html']

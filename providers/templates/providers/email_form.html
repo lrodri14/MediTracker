@@ -1,6 +1,10 @@
 {% load static %}
 {% if form %}
-    <form method="POST" action="{% url 'providers:send_email' receiver.pk %}" autocomplete="off" class="email-form modal__form">
+    {% if provider_type == 'provider' %}
+        <form method="POST" action="{% url 'providers:send_provider_email' receiver.pk %}" autocomplete="off" class="email-form modal__form">
+    {% else %}
+        <form method="POST" action="{% url 'providers:send_visitor_email' receiver.pk %}" autocomplete="off" class="email-form modal__form">
+    {% endif %}
         {% csrf_token %}
         <div class="loader"></div>
         <h2>Send Email</h2>

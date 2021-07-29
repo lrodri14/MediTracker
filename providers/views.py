@@ -341,10 +341,40 @@ def delete_visitor(request, pk):
     return JsonResponse(data)
 
 
-def send_email(request, pk):
+def send_providers_email(request, pk):
     template = 'providers/email_form.html'
     provider = Provider.objects.get(pk=pk)
-    context = {'form': EmailForm, 'receiver': provider, 'today': timezone.localdate()}
+    provider_type = 'provider'
+    context = {'form': EmailForm, 'receiver': provider, 'provider_type': provider_type, 'today': timezone.localdate()}
+    data = {'html': render_to_string(template, context, request)}
+    if request.POST:
+        mailing_credentials = MailingCredential.objects.get(user=request.user)
+        connection = open_connection(mailing_credentials)
+        sender = mailing_credentials.email
+        receiver = provider.email
+        subject = request.POST.get('subject')
+        message = request.POST.get('body')
+        try:
+            send_mail(subject, message, sender, (receiver,), connection=connection, fail_silently=False)
+            context = {'success': 'Email has been sent successfully'}
+        except ConnectionRefusedError:
+            context = {'error': 'SMTP Server not configured, set up your credentials in settings'}
+        except SMTPSenderRefused:
+            context = {'error': 'Incomplete credentials in SMTP Server settings'}
+        except SMTPAuthenticationError:
+            context = {'error': 'Incorrect credentials in SMTP Server Settings'}
+        except SMTPNotSupportedError:
+            context = {'error': 'TLS Protocol must be active to open connection'}
+        data = {'html': render_to_string(template, context, request)}
+        return JsonResponse(data)
+    return JsonResponse(data)
+
+
+def send_visitors_email(request, pk):
+    template = 'providers/email_form.html'
+    provider = Visitor.objects.get(pk=pk)
+    provider_type = 'visitor'
+    context = {'form': EmailForm, 'receiver': provider, 'provider_type': provider_type, 'today': timezone.localdate()}
     data = {'html': render_to_string(template, context, request)}
     if request.POST:
         mailing_credentials = MailingCredential.objects.get(user=request.user)

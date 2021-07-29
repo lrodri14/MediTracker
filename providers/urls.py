@@ -28,6 +28,8 @@ urlpatterns = [
     path('update_visitor/<int:pk>', update_visitor, name='update_visitor'),
     path('delete_visitor/<int:pk>', delete_visitor, name='delete_visitor'),
     # Email Sending
-    path('send_email', send_email, name='send_email'),
-    path('send_email/<int:pk>', send_email, name='send_email')
+    path('send_provider_email', send_providers_email, name='send_provider_email'),
+    path('send_provider_email/<int:pk>', send_providers_email, name='send_provider_email'),
+    path('send_visitor_email', send_visitors_email, name='send_visitor_email'),
+    path('send_visitor_email/<int:pk>', send_visitors_email, name='send_visitor_email')
 ]
