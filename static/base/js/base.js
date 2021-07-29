@@ -4,14 +4,18 @@
 */
 
 ///////////////////////////////////////////////// Variables ////////////////////////////////////////////////////////////
-let username = document.querySelector('.social-section').getAttribute('data-user')
+if (document.querySelector('.social-section')){
+    var socialSection = document.querySelector('.social-section')
+    var socialSectionData = document.querySelector('.social-section__data')
+    var socialSectionTabs = document.querySelectorAll('.social-section__tab')
+    var username = document.querySelector('.social-section').getAttribute('data-user')
+    var chatWindow = document.querySelector('.social-section__chat-content')
+}
+
 let loaderModal = document.querySelector('.global-loader-modal')
 let globalNavigator = document.querySelector('.global-navigator')
-let socialSection = document.querySelector('.social-section')
-let socialSectionData = document.querySelector('.social-section__data')
-let socialSectionTabs = document.querySelectorAll('.social-section__tab')
 let notificationsPopup = document.querySelector('.notifications-popup')
-let chatWindow = document.querySelector('.social-section__chat-content')
+
 
 ///////////////////////////////////////////////// Functions ////////////////////////////////////////////////////////////
 
@@ -403,7 +407,7 @@ if (socialSection){
                 .then((data) => {
                     if (data['success'] == true){
                         chatWebsocket.send(JSON.stringify({'pk': pk, 'message': message, 'username': username}))
-                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `You have a received message from ${data['to']}`, 'nf_type':'received_message'}))
+                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `You have a received message from ${data['from']}`, 'nf_type':'received_message'}))
                         document.querySelector('#id_text').value = ''
                         let messageContainer = document.createElement('div')
                         messageContainer.classList.add('social-section__message')

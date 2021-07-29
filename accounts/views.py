@@ -428,6 +428,7 @@ def save_message(request, chat_pk):
     """
     chat = Chat.objects.get(pk=chat_pk)
     to = None
+    sent_by = None
     success = False
     if request.method == 'POST':
         form = MessageForm(request.POST)
@@ -443,8 +444,9 @@ def save_message(request, chat_pk):
             chat.last_message_sender = request.user
             chat.save()
             to = chat.participants.all()[1].username if chat.participants.all()[0] == request.user else chat.participants.all()[0].username
+            sent_by = chat.participants.all()[0].username if chat.participants.all()[0] == request.user else chat.participants.all()[1].username
             success = True
-    return JsonResponse({'success': success, 'to': to})
+    return JsonResponse({'success': success, 'to': to, 'from': sent_by})
 
 
 def contact_requests(request):
