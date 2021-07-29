@@ -20,6 +20,23 @@
     transition: 0.5s;
 }
 
+.account-subscription-warning{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255,255,255,0.1);
+    width: 50%;
+    height: 20%;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.account-subscription-warning a{
+    text-decoration: underline;
+}
+
 .fa-envelope{
     position: absolute;
     top: 23%;

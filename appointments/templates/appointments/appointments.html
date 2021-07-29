@@ -13,6 +13,9 @@
 {% if appointments %}
 
 <div class="data-container">
+    {% if message %}
+        <p class="data-container__basic-account-message">{{ message }}</p>
+    {% endif %}
     <table class="data-table">
         <thead>
             <tr id="heading">

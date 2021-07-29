@@ -60,9 +60,16 @@ def appointments(request):
     else:
         doctor = False
         aimed_user = request.user.assistant.doctors.all()[0]
+
+    message = None
+    records_left = 10 - len(BaseConsult.objects.filter(created_by=request.user)[:10])
+    subscription = aimed_user.doctor.subscription
+    if subscription == 'BASIC':
+        message = 'You are using a Sealena Basic account, you have {} records left'.format(records_left)
+
     appointments_list = BaseConsult.objects.filter(Q(created_by=aimed_user, datetime__date=today.date(), medical_status=False, status='CONFIRMED') | Q(created_by=aimed_user, lock=False)).order_by('datetime')
     template = 'appointments/appointments.html'
-    context = {'appointments': appointments_list, 'doctor': doctor}
+    context = {'appointments': appointments_list, 'doctor': doctor, 'message': message}
     return render(request, template, context)
 
 
@@ -102,6 +109,7 @@ def create_appointment(request, pk=None):
     template = 'appointments/create_appointment.html'
     context = {'addition_button': addition_button}
     data = {}
+
     if request.method == 'POST':
         consults_form = creation_form(request.POST, user=aimed_user)
         if consults_form.is_valid():
@@ -123,7 +131,21 @@ def create_appointment(request, pk=None):
                 date = consults_form.cleaned_data.get('datetime').date()
                 time = consults_form.cleaned_data.get('datetime').time().strftime('%I:%M:%S %p')
                 context['error'] = 'There is already a reservation for {} at {}'.format(date, time)
+
+    message = None
+    creation_enabled = True
+    records_left = 10 - len(BaseConsult.objects.filter(created_by=aimed_user)[:10])
+    account_type = aimed_user.doctor.subscription
+    if account_type == 'BASIC':
+        message = 'You are currently using a Sealena Basic account, you have {} ' \
+                  'records left, if you want to continue creating appointments ' \
+                  'please switch your account to Premium by following this path '.format(records_left)
+        if records_left <= 0:
+            creation_enabled = False
+
     context['consults_form'] = consults_form
+    context['message'] = message
+    context['creation_enabled'] = creation_enabled
     data['html'] = render_to_string(template, context, request)
     return JsonResponse(data)
 

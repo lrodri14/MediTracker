@@ -1,23 +1,28 @@
 {% load static %}
-{% block body_block %}
-<form method="POST" action="{% url 'appointments:create_appointment' %}" id="appointment-create-form" class="modal__form creation-update-form">
-    {% csrf_token %}
-    <h2>Create Appointment</h2><div class="create-update-appointment-loader"></div>
-    <p>{{ consults_form.patient.label }}</p>
-    {% if addition_button %}
-        <i class="fas fa-plus modal__add-patient" onclick="window.location.href='{% url 'patients:add_patient' %}'"></i>
-    {% endif %}
-    <p>{{ consults_form.patient }}</p>
-    <p>{{ consults_form.datetime.label }}</p>
-    <p class="error"><small>{{ error }}</small></p>
-    {% if consults_form.errors %}
-        <p class="error"><small>{{ consults_form.non_field_errors.as_text }}</small></p>
-    {% endif %}
-    <p>{{ consults_form.datetime }}</p>
-    <p>{{ consults_form.motive.label }}</p>
-    <p>{{ consults_form.motive }}</p>
-    <p>{{ consults_form.suffering.label }}</p>
-    <p>{{ consults_form.suffering }}</p>
-    <button type="submit">Create</button>
-</form>
-{% endblock %}
+{% if creation_enabled %}
+    <form method="POST" action="{% url 'appointments:create_appointment' %}" id="appointment-create-form" class="modal__form creation-update-form">
+        {% csrf_token %}
+        <h2>Create Appointment</h2><div class="create-update-appointment-loader"></div>
+        <p>{{ consults_form.patient.label }}</p>
+        {% if addition_button %}
+            <i class="fas fa-plus modal__add-patient" onclick="window.location.href='{% url 'patients:add_patient' %}'"></i>
+        {% endif %}
+        <p>{{ consults_form.patient }}</p>
+        <p>{{ consults_form.datetime.label }}</p>
+        <p class="error"><small>{{ error }}</small></p>
+        {% if consults_form.errors %}
+            <p class="error"><small>{{ consults_form.non_field_errors.as_text }}</small></p>
+        {% endif %}
+        <p>{{ consults_form.datetime }}</p>
+        <p>{{ consults_form.motive.label }}</p>
+        <p>{{ consults_form.motive }}</p>
+        <p>{{ consults_form.suffering.label }}</p>
+        <p>{{ consults_form.suffering }}</p>
+        <button type="submit">Create</button>
+    </form>
+{% else %}
+    <div class="account-subscription-warning">
+        <h2>Subscription Upgrade</h2>
+        <p>{{ message }}<a href="{% url 'settings:settings' %}">(Settings > General > Go Premium)</a></p>
+    </div>
+{% endif %}

@@ -115,15 +115,6 @@ function updateItem(event){
 // addData Event Listeners, this events will be fired when there is not data available to show.
 
 if (addData){
-    /*This function will be called every time the addPatient element is present,
-      It will create a levitating effect in this element.*/
-    setInterval(function(){
-        if (addData.style.top == '90%'){
-            addData.style.top = '88%'
-        } else {
-            addData.style.top = '90%'
-        }
-    },500)
 
     /* Every time a hover occurs over this element, this event will be fired, it will add the add-patient-hover
        class to the element*/
