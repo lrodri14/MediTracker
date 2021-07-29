@@ -120,7 +120,8 @@ def create_appointment(request, pk=None):
                 consult = consults_form.save(commit=False)
                 consult.created_by = aimed_user
                 consult.save()
-                loop.run_until_complete(send_sms(consult))
+                if aimed_user.doctor.subscription == 'PREMIUM':
+                    loop.run_until_complete(send_sms(consult))
                 data['success'] = 'Consult created successfully'
                 data['datetime'] = consult.datetime.strftime('%B %-d, %Y at %I:%M %p')
                 data['created_by'] = request.user.username if request.user.roll == 'ASSISTANT' else 'You'
