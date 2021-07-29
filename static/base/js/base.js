@@ -380,6 +380,7 @@ if (socialSection){
                 .then((data) => {
                     if (data['success'] == true){
                         chatWebsocket.send(JSON.stringify({'pk': pk, 'message': message, 'username': username}))
+                        notificationWebsocket.send(JSON.stringify({'to': data['to'], 'message': `You have a received message from ${data['from']}`, 'nf_type':'received_message'}))
                         document.querySelector('#id_text').value = ''
                         let messageContainer = document.createElement('div')
                         messageContainer.classList.add('social-section__message')
