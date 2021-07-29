@@ -62,10 +62,13 @@ def appointments(request):
         aimed_user = request.user.assistant.doctors.all()[0]
 
     message = None
-    records_left = 10 - len(BaseConsult.objects.filter(created_by=request.user)[:10])
+    records_left = 10 - len(BaseConsult.objects.filter(created_by=aimed_user)[:10])
     subscription = aimed_user.doctor.subscription
     if subscription == 'BASIC':
-        message = 'You are using a Sealena Basic account, you have {} records left'.format(records_left)
+        if request.user.roll == 'DOCTOR':
+            message = 'You are using a Sealena Basic account, you have {} records left'.format(records_left)
+        else:
+            message = 'The user you are linked to has Sealena Basic account, it has {} records left'.format(records_left)
 
     appointments_list = BaseConsult.objects.filter(Q(created_by=aimed_user, datetime__date=today.date(), medical_status=False, status='CONFIRMED') | Q(created_by=aimed_user, lock=False)).order_by('datetime')
     template = 'appointments/appointments.html'
@@ -137,9 +140,15 @@ def create_appointment(request, pk=None):
     records_left = 10 - len(BaseConsult.objects.filter(created_by=aimed_user)[:10])
     account_type = aimed_user.doctor.subscription
     if account_type == 'BASIC':
-        message = 'You are currently using a Sealena Basic account, you have {} ' \
-                  'records left, if you want to continue creating appointments ' \
-                  'please switch your account to Premium by following this path '.format(records_left)
+        if request.user.roll == 'DOCTOR':
+            message = 'You are currently using a Sealena Basic account, you have {} ' \
+                      'records left, if you want to continue creating appointments ' \
+                      'please switch your account to Premium by following this path '.format(records_left)
+        else:
+            message = 'The user you are linked to uses a Sealena Basic account, it has {} ' \
+                      'records left, to continue creating appointments the account must be' \
+                      'switched from Basic to Premium following this path in their account '.format(records_left)
+
         if records_left <= 0:
             creation_enabled = False
 
