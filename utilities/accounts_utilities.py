@@ -5,7 +5,7 @@
     some initial information will be filled, this file contains two function definitions.
 """
 from django.utils.html import strip_tags
-from accounts.models import ContactRequest
+from accounts.models import UsersProfile, ContactRequest
 from django.template.loader import render_to_string
 from email.mime.image import MIMEImage
 from django.core.mail import EmailMultiAlternatives
@@ -57,7 +57,7 @@ def send_email(user):
                 title = 'Mr.'
             else:
                 title = 'Ms.'
-    except:
+    except UsersProfile.DoesNotExist:
         pass
 
     context = {'title': title, 'first_name': user_first_name, 'roll': roll}
