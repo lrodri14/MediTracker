@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body{
+            margin: 0px;
+            font-family: 'Nunito', sans-serif;
+            text-align: justify;
+        }
+
+        h1, h2, h3{
+            color: #566399;
+        }
+
+        .letter{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            background-color: #f2f2f0;
+        }
+
+        .letter__inner-letter{
+            width: 80%;
+            margin-left: 8%;
+            padding: 20px;
+            background-color: #FFFFFF;
+        }
+
+        img{
+            width: 100px;
+            height: 100px;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<div class="letter">
+<div class="letter__inner-letter">
+<div class="line"></div>
+<h1>Welcome to Sealena</h1>
+<h2>Your registration was successful</h2>
+<p>We are so glad to have you as part of the <b>Sealena</b> Family {{ title }} {{ first_name }}.
+We hope you have a good time making use of the Sealena App. We are constantly
+adding new features to help you and ease your day to day activities. If you
+encounter any inconvenience within the app or have any suggestions to improve the
+app, please don't hesitate in contacting us or opening a ticket from the app. We
+promise we will be so thankful to hear from you and we will do our best to provide you
+with the best experience.
+</p>
+<h3>Need Help?</h3>
+<p>Please contact us <br> <a href="mailto: sealena-support@sealena.com">sealena-support@sealena.com</a></p>
+<h3>Bugs?</h3>
+<p>Please contact us <br> <a href="mailto: sealena-support@sealena.com">sealena-support@sealena.com</a></p>
+{% if roll == 'DOCTOR' %}
+<p>Or consider opening a Ticket from within the app following this path: <br><b>Settings > General > Ticket</b></p>
+{% endif %}
+<hr>
+<p><br>Best Regards,</p>
+<p>- Sealena Support</p>
+</div>
+</div>
+</body>
+</html>

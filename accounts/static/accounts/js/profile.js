@@ -9,7 +9,6 @@ let card = document.querySelector('.card')
 let content = document.querySelector('.container')
 let modal = document.querySelector('.modal')
 let modalContent = document.querySelector('.modal__content')
-let username = document.querySelector('#username').textContent
 
 /*////////////////////////////////////////////////////// Functions ///////////////////////////////////////////////////*/
 

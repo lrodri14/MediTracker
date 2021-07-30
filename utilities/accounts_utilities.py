@@ -4,8 +4,11 @@
     all the most used smtp servers worldwide, this way every time a user is created if the account email meets these requirements
     some initial information will be filled, this file contains two function definitions.
 """
-
+from django.utils.html import strip_tags
 from accounts.models import ContactRequest
+from django.template.loader import render_to_string
+from email.mime.image import MIMEImage
+from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.smtp import EmailBackend
 from appointments.models import GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult, \
                                 GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult
@@ -37,6 +40,36 @@ speciality_mapping = {
     'SRG': {'model': SurgicalConsult, 'creation_form': SurgicalConsultCreationForm, 'updating_form': UpdateSurgicalConsultForm},
     'URO': {'model': UrologicalConsult, 'creation_form': UrologicalConsultCreationForm, 'updating_form': UpdateUrologicalConsultForm}
 }
+
+
+def send_email(user):
+    """
+        This send_email function is to send an emails to users when a successful registration has occurred, an account
+        verification is needed or a password change request is been made.
+    """
+    title = ''
+    user_first_name = user.first_name
+    roll = user.roll
+
+    try:
+        if user.profile is not None:
+            if user.profile.gender == 'MASCULINE':
+                title = 'Mr.'
+            else:
+                title = 'Ms.'
+    except:
+        pass
+
+    context = {'title': title, 'first_name': user_first_name, 'roll': roll}
+    template = 'accounts/email.html'
+    html_content = render_to_string(template, context)
+    plain_content = strip_tags(html_content)
+    plain_content = plain_content[plain_content.find('Welcome'):]
+
+    email = EmailMultiAlternatives(subject='Welcome to Sealena', body=plain_content, to=[user.email])
+    email.attach_alternative(html_content, 'text/html')
+    email.content_subtype = 'html'
+    email.send()
 
 
 def set_mailing_credentials(email):
@@ -74,6 +107,9 @@ def open_connection(user_mailing_credentials):
 
 
 def check_requests(user):
+    """
+        DOCSTRING: This check_requests function is used to check if there are any requests sent to a specific user.
+    """
     if not ContactRequest.objects.filter(to_user=user):
         return False
     return True

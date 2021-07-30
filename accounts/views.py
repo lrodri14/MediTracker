@@ -12,8 +12,8 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message, Plan, Subscription
-from utilities.accounts_utilities import check_requests
 from utilities.paypal_utilities import cancel_subscription
+from utilities.accounts_utilities import check_requests, send_email
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
     UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
@@ -192,6 +192,7 @@ def signup(request):
                 user.assign_roll(speciality=False)
                 user.save()
                 user.groups.add(assistant)
+            send_email(user)
         else:
             data['error'] = True
 
