@@ -130,5 +130,9 @@
 
 </div>
 
+{% if not user.confirmed %}
+    <p class="confirmed_status"><i class="fas fa-exclamation-triangle"></i> Identity unverified, please check your email in order to get verified</p>
+{% endif %}
+
 <script src="{% static 'home/js/home.js' %}"></script>
 {% endblock %}

@@ -1,36 +1,47 @@
-<form action="{% url 'accounts:manage_subscription' %}" method="POST" class="modal__form manage-subscription-form {{ action }}-form" data-plan-id="{{ plan.product_plan_id }}"
-                                                                                                                                    data-user-first-name="{{ user.first_name }}"
-                                                                                                                                    data-user-last-name="{{ user.last_name }}"
-                                                                                                                                    data-user-email="{{ user.email }}">
-    {% csrf_token %}
-    {% if action == 'upgrade' %}
-        <div class="upgrade-form__subscription-details">
-            <h1>Premium</h1>
-            <h2>$25</h2>
-            <small>*Monthly Charge</small>
-            <h3>Perks within this subscription:</h3>
-<!--            <p>No advertising</p>-->
-            <p>Patient's reminder sending</p>
-            <p>Unlimited amount of patients</p>
-            <p>Unlimited amount of consults</p>
-            <p>Unlimited linking to assistants</p>
-        </div>
-        <div class="upgrade-form__payment-details">
-            <h1>Payment Details</h1>
-            <p>Choose the payment option of your preference</p>
-            <p><small>* Keep in mind, this is the method through which you'll be charged monthly</small></p>
-            <div id="paypal-button-container"></div>
-        </div>
-    {% else %}
-        <h1>Basic</h1>
-        <h2>Free</h2>
-        <p>Limited amount of patients</p>
-        <p>Limited amount of consults</p>
-        <p>Limited linking to assistants</p>
-        <h4>IMPORTANT NOTES</h4>
-        <p class="downgrade-warning"><small>If you downgrade your subscription to basic, you will only be able to access the data created during
-               your basic account holding period, however, your data will still be stored if you decide to upgrade again
-               at any point in time</small></p>
-        <button type="submit">Confirm</button>
-    {% endif %}
-</form>
+{% if valid %}
+    <form action="{% url 'accounts:manage_subscription' %}" method="POST" class="modal__form manage-subscription-form {{ action }}-form" data-plan-id="{{ plan.product_plan_id }}"
+                                                                                                                                        data-user-first-name="{{ user.first_name }}"
+                                                                                                                                        data-user-last-name="{{ user.last_name }}"
+                                                                                                                                        data-user-email="{{ user.email }}">
+        {% csrf_token %}
+            {% if action == 'upgrade' %}
+                <div class="upgrade-form__subscription-details">
+                    <h1>Premium</h1>
+                    <h2>$25</h2>
+                    <small>*Monthly Charge</small>
+                    <h3>Perks within this subscription:</h3>
+                    <p>Patient's reminder sending</p>
+                    <p>Unlimited amount of patients</p>
+                    <p>Unlimited amount of consults</p>
+                    <p>Unlimited linking to assistants</p>
+                </div>
+                <div class="upgrade-form__payment-details">
+                    <h1>Payment Details</h1>
+                    <p>Choose the payment option of your preference</p>
+                    <p><small>* Keep in mind, this is the method through which you'll be charged monthly</small></p>
+                    <div id="paypal-button-container"></div>
+                </div>
+            {% else %}
+                <h1>Basic</h1>
+                <h2>Free</h2>
+                <p>Limited amount of patients</p>
+                <p>Limited amount of consults</p>
+                <p>Limited linking to assistants</p>
+                <h4>IMPORTANT NOTES</h4>
+                <p class="downgrade-warning"><small>If you downgrade your subscription to basic, you will only be able to access the data created during
+                       your basic account holding period, however, your data will still be stored if you decide to upgrade again
+                       at any point in time</small></p>
+                <button type="submit">Confirm</button>
+            {% endif %}
+    </form>
+{% else %}
+    <div class="identity-unverified-container">
+        <h1>Identity Unverified</h1>
+        <h2>Account upgrading can not be completed</h2>
+        <p>For security purposes, your account must be verified before doing any monetary transactions, therefore the
+           account upgrading can not be processed, we encourage you to check your email for the verification email,
+           follow the instructions in order to verify your identity and be able to upgrade to Sealean Premium.</p>
+        <p>If you encounter any issues feel free to open a ticket following this path: (Settings > General > Ticket)</p>
+        <p>Or contact us at: <a href="mailto: sealena-support@sealena.com">sealena-support@sealena.com</a></p>
+    </div>
+{% endif %}

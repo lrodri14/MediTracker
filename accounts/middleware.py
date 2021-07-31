@@ -30,7 +30,8 @@ class LoginRequiredMiddleware:
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         view_names = ['Login', 'signup', 'main', 'PasswordReset',
-                      'PasswordResetDone', 'PasswordResetConfirm', 'PasswordResetComplete']
+                      'PasswordResetDone', 'PasswordResetConfirm',
+                      'PasswordResetComplete', 'confirm_identity']
 
         if view_func.__name__ not in view_names and not request.user.is_authenticated:
             return redirect(settings.LOGIN_URL)

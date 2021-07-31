@@ -33,6 +33,7 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(blank=False, unique=True)
     roll = models.CharField(verbose_name='Roll', max_length=25, blank=False, help_text='Choose the roll you will acquire in this account.', choices=ROLL_CHOICES)
+    confirmed = models.BooleanField(verbose_name='Confirmed?', blank=False, null=True, help_text='Confirmed User Account', default=False)
 
     def assign_roll(self, speciality):
         """

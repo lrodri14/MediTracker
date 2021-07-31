@@ -296,9 +296,12 @@ if (modal){
                called and depending if we received errors or not, they will be displayed, else, the login form will
                be displayed.*/
             if (e.target.classList.contains('signup-form')){
+                let loader = document.querySelector('.signup-form__loader')
+                loader.classList.add('signup-form__loader--display')
                 signUpAW(formData, url, method, csrfmiddlewaretoken)
                 .then(data => {
                     if (data['error']){
+                        loader.classList.remove('signup-form__loader--display')
                         modalContent.innerHTML = data['html']
                         signUpInputs = document.querySelectorAll('input,select')
                         submitBtn = document.querySelector('.signup-form__submit-button')

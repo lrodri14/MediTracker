@@ -8,7 +8,7 @@ from meditracker.settings import X_RAPID_API_KEY_QUOTES, X_RAPID_API_KEY_HOST_QU
 
 api_key = X_RAPID_API_KEY_QUOTES
 host = X_RAPID_API_KEY_HOST_QUOTES
-quote_categories = ['love', 'god', 'wisdom', 'beauty', 'education', 'dreams', 'intelligence']
+quote_categories = ['love', 'god', 'wisdom', 'beauty', 'dreams']
 endpoint = "https://famous-quotes4.p.rapidapi.com/random"
 headers = {'x-rapidapi-key': api_key, 'x-rapidapi-host': host}
 querystring = {'category': random.choice(quote_categories), 'count': '1'}

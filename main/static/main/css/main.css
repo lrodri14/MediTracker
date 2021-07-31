@@ -263,6 +263,25 @@ textarea:focus{
     transform: translate(-50%, -50%);
 }
 
+.signup-form__loader{
+    position: absolute;
+    top: 1.5%;
+    right: 1%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top: 2px solid #FFFFFF;
+    visibility: hidden;
+    transition: 0.5s;
+    animation: spin 1s linear infinite;
+}
+
+.signup-form__loader--display{
+    visibility: visible;
+    transition: 0.5s;
+}
+
 .signup-form__wrapper{
     display: grid;
     grid-template-columns: 40% 59%;
@@ -340,6 +359,11 @@ textarea:focus{
 }
 
 /*///////////////////////////////////////////////////// Animations ///////////////////////////////////////////////////*/
+
+@keyframes spin{
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
 
 @keyframes show-up{
     0% {opacity: 0;}

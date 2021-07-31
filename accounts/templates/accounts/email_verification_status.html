@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identity Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'accounts/css/email_verification_status.css' %}">
+</head>
+<body>
+    <img src="{% static 'accounts/logo/seal.svg' %}" alt="Sealena Logo" class="logo">
+    <img src="{% static 'accounts/backgrounds/email_verification_bg.jpg' %}" alt="Email Verification Background" class="email_verification_bg">
+    <div class="status_container">
+        <h1>Email Verification</h1>
+        {% if valid %}
+            <h2>Verification Successful</h2>
+            <p>Your identity verification has been completed successfully, you are now all set up. Feel free to close this tab and log in
+               into Sealena.</p>
+            <p>- Sealena</p>
+        {% else %}
+            {% if confirmed %}
+                <h2>Verified</h2>
+                <p>Your identity has already been verified in the past, please feel free to close this tab and log in into Sealena.</p>
+                <p>If you are facing issues, please contact us at <a href="mailto:sealena-support@sealena.com">sealena-support@sealena.com</a></p>
+            {% else %}
+                <h2>Verification Unsuccessful</h2>
+                <p>Your identity verification could not be completed successfully, we resent you a new verification email, please check your
+                   mail in order to verify your identity.</p>
+                <p>If you continue facing issues, please contact us at <a href="mailto:sealena-support@sealena.com">sealena-support@sealena.com</a></p>
+            {% endif %}
+                <p>- Sealena</p>
+        {% endif %}
+    </div>
+</body>
+</html>

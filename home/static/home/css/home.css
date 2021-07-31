@@ -114,6 +114,11 @@
     grid-gap: 15px;
 }
 
+.confirmed_status{
+    position: absolute;
+    bottom: 0%;
+    left: 1%;
+}
 /*//////////////////////////////////////////////////// Query Results /////////////////////////////////////////////////*/
 
 .data-table__query-results{

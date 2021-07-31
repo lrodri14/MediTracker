@@ -1,0 +1,47 @@
+/* This email_verification_status.css stylesheet is used to style the email_verification_status page, it is divided into
+   three sections, the body, the background itself and the status_container which displays the status of the verification based
+   on the token's validity */
+
+/*/////////////////////////////////////////////////////// Body ///////////////////////////////////////////////////////*/
+
+body{
+    font-family: 'Nunito', sans-serif;
+    color: #FFFFFF;
+}
+
+.logo{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 7%;
+    top: 6%;
+}
+
+a{
+    color: #FFFFFF;
+}
+/*/////////////////////////////////////////////////// Background /////////////////////////////////////////////////////*/
+
+.email_verification_bg{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/*///////////////////////////////////////////// Status Container /////////////////////////////////////////////////////*/
+
+.status_container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    padding: 0px 20px;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}

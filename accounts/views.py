@@ -7,13 +7,13 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from .models import CustomUser, UsersProfile, ContactRequest, Chat, Message, Plan, Subscription
+from .models import CustomUser, Doctor, Assistant, UsersProfile, ContactRequest, Chat, Message, Plan, Subscription
 from utilities.paypal_utilities import cancel_subscription
-from utilities.accounts_utilities import check_requests, send_email
+from utilities.accounts_utilities import check_requests, send_welcome_email, send_verification_email, check_token_validity
 from .forms import DoctorSignUpForm, AssistantSignUpForm, ProfileForm, ProfilePictureForm, MessageForm, \
     UserAccountSettingsForm
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, \
@@ -24,7 +24,6 @@ User = get_user_model()
 
 
 class Login(LoginView):
-
     """
         DOCSTRING:
         This Login class view, is used to display the login and form and to login the user once the user inserts the
@@ -33,7 +32,6 @@ class Login(LoginView):
         _valid method will return a success key to indicate that the user entered the right credentials, and the form-
         _invalid method will return the cleaned form with the proper errors.
     """
-
     template_name = 'accounts/login.html'
 
     def get(self, request, *args, **kwargs):
@@ -192,13 +190,34 @@ def signup(request):
                 user.assign_roll(speciality=False)
                 user.save()
                 user.groups.add(assistant)
-            send_email(user)
+            send_welcome_email(user)
+            send_verification_email(user, request)
         else:
             data['error'] = True
 
     context = {'user_creation_form': user_creation_form, 'profile_creation_form': profile_creation_form}
     data['html'] = render_to_string('accounts/signup.html', context, request)
     return JsonResponse(data)
+
+
+def confirm_identity(request, uidb64, token):
+    """
+        DOCSTRING:
+        This confirm_identity function view is used to confirm users identity through email. A successful or failed
+        verification template will be displayed based on the token validity.
+    """
+    user, valid = check_token_validity(uidb64, token)
+    template = 'accounts/email_verification_status.html'
+    confirmed = user.confirmed is True
+    context = {'valid': valid, 'confirmed': confirmed}
+
+    if valid:
+        user.confirmed = True
+        user.save()
+    else:
+        if not confirmed:
+            send_verification_email(user, request)
+    return render(request, template, context)
 
 
 def manage_subscription(request, action=None):
@@ -238,9 +257,10 @@ def manage_subscription(request, action=None):
                 'response': render_to_string('accounts/subscription_change_response.html', {'subscription':subscription}, request)}
         return JsonResponse(data)
 
+    valid = request.user.confirmed is True
     plan = Plan.objects.all()[0]
     template = 'accounts/manage_subscription.html'
-    context = {'action': action, 'plan': plan}
+    context = {'action': action, 'plan': plan, 'valid': valid}
     data = {'html': render_to_string(template, context, request)}
     return JsonResponse(data)
 

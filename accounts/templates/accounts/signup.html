@@ -2,6 +2,7 @@
 <!-- Sign Up Form -->
 <form method="POST" autocomplete="off" class="signup-form" action="{% url 'accounts:signup' %}">
     {% csrf_token %}
+    <div class="signup-form__loader"></div>
     <div class="signup-form__wrapper">
         {% if profile_creation_form %}
             <!-- Personal Information -->

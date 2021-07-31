@@ -5,13 +5,18 @@
     some initial information will be filled, this file contains two function definitions.
 """
 from django.utils.html import strip_tags
-from accounts.models import UsersProfile, ContactRequest
+from accounts.tokens import generate_token
+from accounts.models import CustomUser, UsersProfile, ContactRequest
 from django.template.loader import render_to_string
-from email.mime.image import MIMEImage
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.smtp import EmailBackend
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
+
 from appointments.models import GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult, \
                                 GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult
+
 from appointments.forms import GeneralConsultCreationForm, AllergyAndImmunologicalConsultCreationForm, DentalConsultCreationForm, \
                                 NeurologicalConsultCreationForm, GynecologicalConsultCreationForm, OphthalmologyConsultCreationForm, \
                                 PsychiatryConsultCreationForm, SurgicalConsultCreationForm, UrologicalConsultCreationForm, \
@@ -42,34 +47,74 @@ speciality_mapping = {
 }
 
 
-def send_email(user):
+def send_welcome_email(user):
     """
-        This send_email function is to send an emails to users when a successful registration has occurred, an account
-        verification is needed or a password change request is been made.
+        DOCSTRING:
+        This send_welcome_email function is used to send emails to new users, it constructs a new email with content based
+        on the user who has been created. The email is sent in HTML format, and as an alternative it's presented as plain
+        text. We make use of the EmailMultiAlternatives class to create and send the email.
     """
-    title = ''
     user_first_name = user.first_name
     roll = user.roll
 
     try:
-        if user.profile is not None:
-            if user.profile.gender == 'MASCULINE':
-                title = 'Mr.'
-            else:
-                title = 'Ms.'
+        title = 'Mr.' if user.profile.gender == 'MASCULINE' else 'Ms.'
     except UsersProfile.DoesNotExist:
-        pass
+        title = ''
 
     context = {'title': title, 'first_name': user_first_name, 'roll': roll}
-    template = 'accounts/email.html'
+    template = 'accounts/welcome_email.html'
     html_content = render_to_string(template, context)
     plain_content = strip_tags(html_content)
     plain_content = plain_content[plain_content.find('Welcome'):]
 
-    email = EmailMultiAlternatives(subject='Welcome to Sealena', body=plain_content, to=[user.email])
+    subject = 'Welcome to Sealena'
+    receiver = user.email
+    email = EmailMultiAlternatives(subject=subject, body=plain_content, to=[receiver])
     email.attach_alternative(html_content, 'text/html')
     email.content_subtype = 'html'
     email.send()
+
+
+def send_verification_email(user, request):
+    """
+        DOCSTRING:
+        The send_verification_email function is used to send an email for identity verification. It contains a token link
+        accessed by the user which redirects to the verification page.
+    """
+    current_site = get_current_site(request)
+
+    context = {'user': user,
+               'domain': current_site,
+               'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+               'token': generate_token.make_token(user)}
+    template = 'accounts/verification_email.html'
+    html_content = render_to_string(template, context)
+    plain_content = strip_tags(html_content)
+    plain_content = plain_content[plain_content.find('Hi'):]
+
+    subject = 'Sealena - Email Verification'
+    receiver = user.email
+    email = EmailMultiAlternatives(subject=subject, body=plain_content, to=[receiver])
+    email.attach_alternative(html_content, 'text/html')
+    email.content_subtype = 'html'
+    email.send()
+
+
+def check_token_validity(uidb64, token):
+    """
+        DOCSTRING:
+        This check_token_validity function is used to check if the token is valid or not expired, it will retrieve the
+        user's id from the base64 encoded value inside the token to retrieve the existing user, the return value is a
+        boolean, if the user exists and the token is valid, returns True.
+    """
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except Exception as e:
+        user = None
+
+    return user, generate_token.check_token(user, token)
 
 
 def set_mailing_credentials(email):

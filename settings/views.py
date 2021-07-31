@@ -63,7 +63,7 @@ def general(request):
 def change_wallpaper(request):
     """
         DOCSTRING:
-        This change_wallpaper view is used to display the background wallpaper of the user, this view will send the
+        This change_wallpaper view is used to display the backgrounds wallpaper of the user, this view will send the
         UserSettingsForm with the account model belonging to the user as an instance if the request's method is a GET,
         if the method is a POST, then the form will be filled with the request data and check if it's valid if the data
         is valid, then a success response will be sent as JSON Response.
