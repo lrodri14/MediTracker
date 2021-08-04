@@ -165,8 +165,8 @@ if (modal){
     modal.addEventListener('mouseover', (e) => {
 
         // This event will be fired when the target is submit, the button-hover class will be added.
-        if (e.target === submitBtn){
-            submitBtn.classList.add('button--active')
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.add('button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be added.
@@ -178,19 +178,14 @@ if (modal){
         if (e.target.classList.contains('login-form__password-reset')){
             e.target.classList.add('login-form__password-reset--hover')
         }
-
-        // This event will be fired when the target's classList contains continue class, the continue class will be added.
-        if (e.target.classList.contains('password_reset_done__continue-button')){
-            e.target.classList.add('password_reset_done__continue-button--hover')
-        }
     })
 
     // MouseOut events
     modal.addEventListener('mouseout', (e) => {
 
-        // This event will be fired when the target is submit, the button-hover class will be removed.
-        if (e.target === submitBtn){
-            submitBtn.classList.remove('button--active')
+        // This event will be fired when the target is submit, the button--active class will be removed.
+        if (e.target.nodeName === 'BUTTON'){
+            e.target.classList.remove('button--active')
         }
 
         // This event will be fired when the target's nodeName is 'INPUT', the input-hover class will be removed.
@@ -198,16 +193,11 @@ if (modal){
             e.target.classList.remove('input-active')
         }
 
-
         // This event will be fired when the target's classList contains new-password-hover class, the new-password-hover class will be removed.
         if (e.target.classList.contains('login-form__password-reset')){
             e.target.classList.remove('login-form__password-reset--hover')
         }
 
-        // This event will be fired when the target's classList contains continue class, the continue class will be removed.
-        if (e.target.classList.contains('password_reset_done__continue-button')){
-            e.target.classList.remove('password_reset_done__continue-button--hover')
-        }
     })
 
 
