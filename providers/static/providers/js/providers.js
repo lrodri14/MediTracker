@@ -312,6 +312,12 @@ if (container){
     // Wrapper Mouseover Events
     container.addEventListener('mouseover', (e) => {
 
+        /* This event will be fired every time a hover occurs over an item with the add-data class in it, it will add the
+           add-data--active class */
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.add('add-data--active')
+        }
+
         /*This mouseover event is fired every time a hover occurs in a 'fa-plus' icon
           it will add the 'fa-plus-hover' class to the target*/
         if (e.target.classList.contains('data-table__create')){
@@ -360,6 +366,12 @@ if (container){
 
     // Wrapper Mouseout Events
     container.addEventListener('mouseout', (e) => {
+
+        /* This event will be fired every time a hover occurs over an item with the add-data class in it, it will remove the
+           add-data--active class */
+        if (e.target.classList.contains('add-data')){
+            e.target.classList.remove('add-data--active')
+        }
 
         /*This mouseout event is fired every time a mouseout event occurs in a 'fa-plus' icon,
           it will remove the 'fa-plus-hover' class to the target*/

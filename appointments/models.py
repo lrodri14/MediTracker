@@ -16,19 +16,19 @@ user = get_user_model()
 # Create your models here.
 
 
-class Cie10Group(models.Model):
+class Icd10Group(models.Model):
     """
         DOCSTRING:
-        The Cie10Group modal is used to create CIE-10 code instances, it's composed of only one attribute, the code itself,
+        The Icd10Group modal is used to create ICD-10 code instances, it's composed of only one attribute, the code itself,
         we also created it's own __str__ dunder method representation, this mode overwrote it's save method, we added
         some functionality to capitalize the code once it reaches the database. It inherits from the models.Model class.
     """
 
-    code = models.CharField('code', max_length=50, blank=False, null=True, help_text='CIE-10 Code')
+    code = models.CharField('code', max_length=50, blank=False, null=True, help_text='Icd-10 Code')
 
     class Meta:
-        verbose_name = 'CIE-10 Group'
-        verbose_name_plural = 'CIE-10 Groups'
+        verbose_name = 'ICD-10 Group'
+        verbose_name_plural = 'ICD-10 Groups'
 
     def __str__(self):
         return self.code
@@ -232,8 +232,8 @@ class BaseConsult(models.Model):
     suffering = models.TextField('Suffering', blank=False, null=True, help_text='What is the patient suffering?')
     charge = models.DecimalField('Charges', blank=False, null=True, max_digits=10, decimal_places=2, help_text='Charge Amount')
     created_by = models.ForeignKey(user, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Created By')
-    cie_10_group = models.OneToOneField(Cie10Group, on_delete=models.CASCADE, blank=True, null=True, help_text='CIE-10 group for the diagnose', verbose_name='CIE-10 Group')
-    cie_10_detail = models.TextField('CIE-10 Detail', blank=True, null=True, help_text='CIE-10 Diagnose Details')
+    icd_10_group = models.ForeignKey(Icd10Group, on_delete=models.CASCADE, blank=True, null=True, help_text='ICD-10 group for the diagnose', verbose_name='ICD-10 Group')
+    icd_10_detail = models.TextField('ICD-10 Detail', blank=True, null=True, help_text='ICD-10 Diagnose Details')
     diagnose = models.TextField('Diagnose', blank=True, null=True, help_text='Diagnose')
     procedure = models.TextField('Procedure', blank=True, null=True, help_text='Procedure')
     analysis = models.TextField('Analysis', blank=True, null=True, help_text='Analysis')

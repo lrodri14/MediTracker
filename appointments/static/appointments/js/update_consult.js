@@ -400,6 +400,7 @@ if (form){
         }
 
         if (unfilledInputs === 0){
+        console.log(unfilledInputs)
         /* If there are no inputs empty, the form will be submitted and the prescription modal will be displayed with
         the prescription in PDF Format, ready for printing, if the server returns errors, the pdf will be not displayed and
         the errors will be shown.*/
@@ -416,8 +417,13 @@ if (form){
                     prescriptionModal.classList.add('prescription-modal--display')
                 }
             })
+            .catch(error => {
+                /* If there are unfilled inputs but an error is sent from the server, we will submit the form to re-render
+                   the page and display the errors.*/
+                form.submit()
+            })
         } else{
-            /*If there are, the confirmation modal will be displayed.*/
+            /* If there are, the confirmation modal will be displayed. */
             if (modalContent.innerHTML !== modalBackUp){
                 modalContent.innerHTML = modalBackUp
             }

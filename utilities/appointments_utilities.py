@@ -157,8 +157,7 @@ def evaluate_consult(consult):
             consult.indications != "" or
             consult.actions != "" or
             consult.testing.all() or
-            consult.instructions is not None)\
-            and consult.lock is True:
+            consult.instructions is not None):
         return True
     return False
 

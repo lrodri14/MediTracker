@@ -2,83 +2,104 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Consults Details{% endblock %}
-{% block return %}{% if referer == "details" %}<a href="{% url 'patients:patients_details' consult.patient.pk %}"><i class="fas fa-long-arrow-alt-left"></i></a>{% else %}<a href="{% url 'records:records' %}"><i class="fas fa-long-arrow-alt-left"></i></a>{% endif %}{% endblock %}{% block home %}{% endblock %}
+{% block return %}{% if referer == "details" %}<a href="{% url 'patients:patients_details' consult.patient.pk %}"><i class="fas fa-long-arrow-alt-left"></i></a>{% else %}<a href="{% url 'records:records' %}"><i class="fas fa-long-arrow-alt-left"></i></a>{% endif %}{% endblock %}
 {% block body_block %}
-{% block content %}{% endblock %}
+<!--{% block home %}{% endblock %}-->
+<!--{% block content %}{% endblock %}-->
 <link rel="stylesheet" href="{%static 'appointments/css/consults_details.css'%}">
-<div id="heading">
-    <h2>{{ consult.patient.first_names }} {{ consult.patient.last_names }}</h2>
-    <h3>Date: {{ consult.datetime }}</h3>
-</div>
 
-{% if consult.prescription.name != '' %} <i class="fas fa-print" data-pdf="{{ MEDIA_URL }}{{consult.prescription.name}}"></i> {% endif %}
-<div class="general-info">
-    <div class="general">
-        <h1>Appointment General Info</h1>
+<div class="details-container">
+    <div class="details-container__sub-container">
+        <h1>General Information{% if consult.prescription.name != '' %} <i class="fas fa-print print-prescription" data-pdf="{{ MEDIA_URL }}{{consult.prescription.name}}"></i> {% endif %}</h1>
         <hr>
-        <h3>Patient: {{ consult.patient.first_names }} {{ consult.patient.last_names }}</h3>
-        <h3>Date: {{ consult.datetime.date }}</h3>
-        <h3>Time: {{ consult.datetime.time }}</h3>
-        <h3>Motive: {{ consult.motive }}</h3>
-        <h3>Suffering: {{ consult.suffering }}</h3>
+        <h2>Patient: {{ consult.patient.first_names }} {{ consult.patient.last_names }}</h2>
+        <p><b>Date and Time:</b> {{ consult.datetime }}</p>
+        <p><b>Motive:</b> {{ consult.motive }}</p>
+        <p><b>Suffering:</b> {{ consult.suffering }}</p>
     </div>
-    <div class="vital-signs">
-        <h1>Vital Signs</h1>
+    {% if user.doctor.speciality == 'IM' or user.doctor.speciality == 'GM' or user.doctor.speciality == 'PED' %}
+        <div class="details-container__sub-container">
+            <h1>Vital Signs</h1>
+            <hr>
+            <p><b>Blood Pressure:</b> {%if consult.blood_pressure %}{{ consult.blood_pressure }}{% else %}----------{% endif %}</p>
+            <p><b>Temperature:</b> {% if consult.temperature %}{{ consult.temperature }}{% else %}----------{% endif %}</p>
+            <p><b>Size:</b> {% if consult.size %}{{ consult.size }}{% else %}----------{% endif %}</p>
+            <p><b>Weight:</b> {% if consult.weight %}{{ consult.weight }}{% else %}----------{% endif %}</p>
+        </div>
+        <div class="details-container__sub-container">
+            <h1>Organ System</h1>
+            <hr>
+            <p><b>Digestive System:</b> {% if consult.digestive_system %}{{ consult.digestive_system }}{% else %}----------{% endif %}</p>
+            <p><b>Endocrine System:</b> {% if consult.endocrine_system %}{{ consult.endocrine_system }}{% else %}----------{% endif %}</p>
+            <p><b>Renal System:</b> {% if consult.renal_system %}{{ consult.renal_system }}{% else %}----------{% endif %}</p>
+            <p><b>Lymphatic System</b>: {% if consult.lymphatic_system %}{{ consult.lymphatic_system }}{% else %}----------{% endif %}</p>
+            <p><b>Respiratory System:</b> {% if consult.respiratory_system %}{{ consult.respiratory_system }}{% else %}----------{% endif %}</p>
+        </div>
+        <div class="details-container__sub-container">
+            <h1>Physical Exploration</h1>
+            <hr>
+            <p><b>Head Exploration:</b> {% if consult.head_exploration %}{{ consult.head_exploration }}{% else %}----------{% endif %}</p>
+            <p><b>Thorax Exploration:</b> {% if consult.thorax_exploration %}{{ consult.thorax_exploration }}{% else %}----------{% endif %}</p>
+        </div>
+    {% else %}
+        <div class="details-container__sub-container">
+            <h1>General Notes</h1>
+            <hr>
+            <p>{% if consult.general_notes %}{{ consult.general_notes|linebreaks }}{% else %}----------{% endif %}</p>
+        </div>
+    {% endif %}
+    <div class="details-container__sub-container">
+        <h1>Diagnose</h1>
         <hr>
-        <h3>Blood Pressure: {%if consult.blood_pressure %}{{ consult.blood_pressure }}{% endif %}</h3>
-        <h3>Temperature: {% if consult.temperature %}{{ consult.temperature }}{% endif %}</h3>
-        <h3>Size: {% if consult.size %}{{ consult.size }}{% endif %}</h3>
-        <h3>Weight: {% if consult.weight %}{{ consult.weight }}{% endif %}</h3>
+        <p><b>ICD-10 Group:</b> {% if consult.icd_10_group %}{{ consult.icd_10_group }}{% else %}----------{% endif %}</p>
+        <p><b>ICD-10 Detail:</b> {% if consult.icd_10_detail %}{{ consult.icd_10_detail }}{% else %}----------{% endif %}</p>
+        <p><b>Diagnose:</b> {% if consult.diagnose %}{{ consult.diagnose }}{% else %}----------{% endif %}</p>
+        <p><b>Procedure:</b> {% if consult.procedure %}{{ consult.procedure }}{% else %}----------{% endif %}</p>
+        <p><b>Analysis:</b> {% if consult.analysis %}{{ consult.analysis }}{% else %}----------{% endif %}</p>
+        <p><b>Notes:</b> {% if consult.notes %}{{ consult.notes }}{% else %}----------{% endif %}</p>
     </div>
-</div>
-<div class="exams">
-    <h1>Exams</h1>
-    <hr>
-    {% for exam in exams %}
-        <p><a href="{{MEDIA_URL}}{{exam.image}}">{{ exam }}</a></p>
-    {% endfor %}
-</div>
-<div class="exploration">
-    <div class="organ-systems">
-        <h1>Organ System</h1>
+    <div class="details-container__sub-container">
+        <h1>Exams</h1>
         <hr>
-        <h3>Digestive System: {{ consult.digestive_system }}</h3>
-        <h3>Endocrine System: {{ consult.endocrine_system }}</h3>
-        <h3>Renal System: {{ consult.renal_system }}</h3>
-        <h3>Lymphatic System: {{ consult.lymphatic_system }}</h3>
-        <h3>Respiratory System: {{ consult.respiratory_system }}</h3>
+        {% if exams %}
+            {% for exam in exams %}
+                <p><a href="{{MEDIA_URL}}{{exam.image}}" class="exam">{{ exam }}</a></p>
+            {% endfor %}
+        {% else %}
+            <p>----------</p>
+        {% endif %}
     </div>
-    <div class="physical">
-        <h1>Physical Exploration</h1>
+    <div class="details-container__sub-container">
+        <h1>Treatment</h1>
         <hr>
-        <h3>Head Exploration: {{ consult.head_exploration }}</h3>
-        <h3>Thorax Exploration: {{ consult.thorax_exploration }}</h3>
+        <h3>Drugs Used:</h3>
+        {% if consult.drugs.all %}
+            {% for drug in consult.drugs.all %}
+                <p>{{ drug }}</p>
+            {% endfor %}
+        {% else %}
+            <p>----------</p>
+        {% endif %}
     </div>
-</div>
-<div class="diagnose">
-    <h1>Diagnose</h1>
-    <hr>
-    <h3>CIE-10 Group: {{ consult.cie_10_group }}</h3>
-    <h3>CIE-10 Detail: {{ consult.cie_10_detail }}</h3>
-    <h3>Diagnose: {{ consult.diagnose }}</h3>
-    <h3>Procedure: {{ consult.procedure }}</h3>
-    <h3>Analysis: {{ consult.analysis }}</h3>
-    <h3>Notes: {{ consult.notes }}</h3>
-</div>
-<div class="treatment">
-<h1>Treatment: {{ consult.treatment }}</h1>
-    <hr>
-    <h3>Drugs Used:</h3>
-    {% for drug in consult.drugs.all %}
-        <p>{{ drug }}</p>
-    {% endfor %}
-    {% for medicine in consult.medicine.splitlines %}
-        <p>{{ medicine }}</p>
-    {% endfor %}
-    <h3>Actions:</h3>
-    {% for actions in consult.actions.splitlines %}
-        <p>{{ actions }}</p>
-    {% endfor %}
+    <div class="details-container__sub-container">
+        <h1>Indications</h1>
+        <hr>
+        {% if consult.indications %}
+            {% for indications in consult.indications.splitlines %}
+                <p>{{ indications }}</p>
+            {% endfor %}
+        {% else %}
+            <p>----------</p>
+        {% endif %}
+        <h3>Actions:</h3>
+        {% if consult.actions %}
+            {% for actions in consult.actions.splitlines %}
+                <p>{{ actions }}</p>
+            {% endfor %}
+        {% else %}
+            <p>----------</p>
+        {% endif %}
+    </div>
 </div>
 
 <div class="prescription-modal">

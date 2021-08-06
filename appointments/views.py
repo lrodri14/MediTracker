@@ -38,8 +38,8 @@ loop = asyncio.new_event_loop()
 def appointments(request):
     """
         DOCSTRING:
-        This appointments() view is used to render the main appointments page, in here the user will be able to see the appointments that are
-        pending for the current date and also the consults that were locked for further changes, it will retrieve the
+        This appointments() view is used to render the main appointments page, in here the user will be able to see the
+        appointments that are pending for the current date and also the consults that were locked for further changes, it will retrieve the
         appointments using a filter, also this view will check if the user who requested this page belongs to the Doctor's
         group, this for editing logic that will be managed in the template. Since the results will be paginated, we need to
         check if the 'page' parameter exists in our 'GET' dictionary, depending of the value of the parameter, the
@@ -47,6 +47,11 @@ def appointments(request):
         rendered, if not, then the context will be rendered and returned as string, so we can send it in a JSON Format.
         It expects only one argument, 'request', it waits for an object request, This view will render the content if
         the page is not a valid number, if it is, the response will be returned in JSON Format.
+
+        # Subscription Logic #
+
+        When users navigate making use of a Basic Account, they are limited to 10 records, a message will be displayed
+        with information about the still available records.
 
         *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
          can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
@@ -79,18 +84,27 @@ def appointments(request):
 def create_appointment(request, pk=None):
     """
         DOCSTRING:
-        This create_appointment() view processes consult instance creation logic, if the request.method is a 'GET' then
-        the view will instantiate the ConsultForm and pass the request.user to the class, this because we need to manage
-        some logic inside this class, such as the displaying of patients only related to the current user, the only thing
-        inside our view context is this form, we will return the data in JSON Format, so the rendering we convert it into a
-        string with the use of the render_to_string() function, and send the data as a JSONResponse, if the request.method is
-        a 'POST', then we populate the form with the content inside the request.POST dictionary, and we check if the form is valid,
-        if it is, then the consult will be saved and added to the agenda so we can then confirm it, edit it or cancel it,
-        if the form is not valid, then we will add a custom error to the context and render the template again so
-        we can send it back as a JSONResponse. This view only expects an argument, 'request', should be a request object.
 
-        *Note: the collection of patients from user with Assistant roll, is based on the indexing syntax, since assistants
-         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
+        This create_appointment function view is used to create consult appointments, based on the doctor's speciality,
+        a specific creation form will be used to create a consult instance (called appointment at this point). We'll
+        retrieve that specific creation form making use of our speciality_mapping dictionary inside our accounts utilities.
+        We'll pass the request.user to the class, this because we need to manage some logic inside this class, such as
+        the displaying of patients only related to the current user, the only thing inside our view context is this form,
+        we will return the data in JSON Format, so the rendering we convert it into a string with the use of the
+        render_to_string() function, and send the data as a JSONResponse. If the request.method is  a 'POST', then we
+        populate the form with the content inside the request.POST dictionary, and we check if the form is valid, if it is,
+        then the consult will be saved and added to the agenda so we can then confirm it, edit it or cancel it, if the form
+        is not valid, then we will add a custom error to the context and render the template again so we can send it back
+        as a JSONResponse. This view only expects an argument, 'request', should be a request object.
+
+        # Subscription Logic #
+
+        When users navigate making use of a Basic Account, they are limited to 10 records, whenever they reach their limit
+        a message will be displayed instead of the form. A different message will be displayed to the Doctor type accounts
+        and the Assistant type accounts.
+
+        * Note: the collection of patients from user with Assistant roll, is based on the indexing syntax, since assistants
+         can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates. *
 
     """
     if request.user.roll == 'DOCTOR':
@@ -166,10 +180,13 @@ def consults_details(request, pk):
         DOCSTRING:
         This consult_details() view is used to display the details of a single consult, as well as the exams related to
         that consult in case there are, this view will also check for the HTTP_REFERER headers, this so it can know where
-        to redirect if the user wants to go to the page it was before. It takes two arguments, 'request' which expects
-        a request object, and 'pk', which expects the pk of a specific consult.
+        to redirect if the user wants to go to the page it was before. There are some things we need to collect before
+        displaying the consult details, and that is the consult model used by the doctor's speciality to create appointments
+        and consults. We'll make use of the speciality_mapping dictionary utility inside our accounts utilities.
+        It takes two arguments, 'request' which expects a request object, and 'pk', which expects the pk of a specific consult.
     """
-    consult = BaseConsult.objects.get(pk=pk)
+    consult_model = speciality_mapping[request.user.doctor.speciality]['model']
+    consult = consult_model.objects.get(pk=pk)
     exams = MedicalTestResult.objects.filter(consult=consult) if len(MedicalTestResult.objects.filter(consult=consult)) > 0 else None
     template = 'appointments/consult_details.html'
     context = {'consult': consult, 'exams': exams}
@@ -200,25 +217,34 @@ def consult_summary(request, pk):
 def update_consult(request, pk):
     """
         DOCSTRING:
-        This update_consult() view is used to fill up consults that were created with the create_consult() view, It is
-        used to fill a consult with real data from the patient, we use 4 different forms inside this view, 'UpdateConsultsForm'
-        used to fill consults with data from the patient, 'MedicalExamsFormset' used to create as many exams instances for
-        this consult as needed, 'DrugsForm' used to create drugs asynchronously and 'DrugCategoryFilterForm' used to filter
-        drugs inside the consult. If the request.method is a 'GET' method, then it will render the template with these 4
-        forms and display it to the user in the response. If the request.method is 'POST' then 'UpdateConsultForm' and the
-        'MedicalExamsFormset' will be populated with the request.POST dictionary content and check if both of them is valid,
-        they won't be saved and commited yet, there are a few things we need to check before, for each exam in the medi-
-        cal exams formset, we need to check if there are any forms with the DELETE attribute set to True, each of them
-        which contains the check will be deleted and not saved and set the consult attribute to the current consult,
-        the rest will be commited, for the consult we will set it's medical_status attribute to True, when this is done
-        we will save the many to many relationship with the drugs if needed. If there was an error with the medical exams,
-        then a custom error will be added to the context and the template will be rendered again. It takes two arguments,
-        'request' which expects a request object and 'pk' which expects a consult's pk Finally, the evaluate_consult function
-        will be called to inspect if any important indications or prescriptions for the patient where made in order to
-        handle the user a receipt for the patient, if this function returns True, then the create_pdf function will be called
-        and the prescription will be created, afterwards the prescription's path will be sent to the user in JsonFormat.
+        This update_consult() function view is used to fill up appointments that were created through the create_consult()
+        function view. The form used to fill the consult contains information of a previously populated consult instance.
+        Therefore we need to collect the model used by the Doctor to create consults. We'll make use of the speciality_mapping
+        dictionary utility to retrieve the model.
+
+        Besides the main consult form, we use three extra forms to attach extra information to the actual consult.
+        'MedicalExamsFormset' used to create as many exams instances for this consult as needed, 'DrugsForm' used to create
+        drugs asynchronously and 'DrugCategoryFilterForm' used to filter drugs inside the consult.
+
+        If the request.method is a 'GET' method, then it will render the template with these 4 forms and display it to
+        the user in the response. If the request.method is 'POST' then 'UpdateConsultForm' and the 'MedicalExamsFormset'
+        will be populated with the request.POST dictionary content and check if both of them is valid, they won't be saved
+        and commited yet, there are a few things we need to check before.
+
+        For each exam in the medical exams formset, we need to check if there are any forms with the DELETE attribute set to True,
+        each of them which contains the check will be deleted and not saved and set the consult attribute to the current consult,
+        the rest will be commited, for the consult we will set it's medical_status attribute to True, when this is done we will
+        save the many to many relationship with the drugs if needed. If there was an error with the medical exams, then a custom error
+        will be added to the context and the template will be rendered again.
+
+        It takes two arguments, 'request' which expects a request object and 'pk' which expects a consult's pk finally,
+        the evaluate_consult function will be called to inspect if any important indications or prescriptions for the
+        patient where made in order to handle the user a receipt for the patient, if this function returns True,
+        then the create_pdf function will be called and the prescription will be created, afterwards the prescription's
+        path will be sent to the user in JsonFormat.
     """
-    consult = BaseConsult.objects.get(pk=pk)
+    consult_model = speciality_mapping[request.user.doctor.speciality]['model']
+    consult = consult_model.objects.get(pk=pk)
     updating_form = speciality_mapping[request.user.doctor.speciality]['updating_form']
     consult_form = updating_form(request.POST or None, user=request.user, instance=consult)
     medical_test_result_formset = MedicalTestResultFormset()
@@ -497,10 +523,7 @@ def appointment_date_update(request, pk):
 
         *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
          can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
-
-
     """
-
     if request.user.roll == 'DOCTOR':
         aimed_user = request.user
     else:
@@ -545,9 +568,7 @@ def confirm_appointment(request, pk):
 
         *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
          can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
-
     """
-
     if request.user.roll == 'DOCTOR':
         aimed_user = request.user
     else:
@@ -583,9 +604,7 @@ def cancel_appointment(request, pk):
 
         *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
          can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
-
     """
-
     if request.user.roll == 'DOCTOR':
         aimed_user = request.user
     else:
@@ -624,8 +643,6 @@ def registers(request):
 
         *Note: the collection of appointments from user with Assistant roll, is based on the indexing syntax, since assistants
          can only be linked to a single doctor, this before we build up the multiple linking functionality in future updates.*
-
-
     """
     # loop.run_until_complete(check_delayed_consults(request.user))
 

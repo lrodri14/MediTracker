@@ -159,12 +159,13 @@ class UpdateBaseConsultForm(forms.ModelForm):
         user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
         self.fields['drugs'].queryset = Drug.objects.filter(created_by=user)
+        self.fields['testing'].queryset = MedicalTest.objects.filter(created_by=user)
 
     def clean(self):
         cleaned_data = super().clean()
-        cie_group = cleaned_data.get('cie_10_group')
-        cie_detail = cleaned_data.get('cie_10_detail')
-        if (cie_group and not cie_detail) or (cie_detail and not cie_group):
+        icd_group = cleaned_data.get('icd_10_group')
+        icd_detail = cleaned_data.get('icd_10_detail')
+        if (icd_group and not icd_detail) or (icd_detail and not icd_group):
             raise ValidationError("CIE-10 diagnose details incomplete", code='invalid_cie_10_details')
         return cleaned_data
 
@@ -173,7 +174,7 @@ class UpdateBaseConsultForm(forms.ModelForm):
         exclude = ('patient', 'datetime', 'motive', 'suffering', 'created_by', 'status', 'medical_status', 'prescription')
         widgets = {
             'charge': forms.NumberInput(attrs={'placeholder': '0.00'}),
-            'general_notes': forms.Textarea(attrs={'rows': 20, 'columns': 120}),
+            'general_notes': forms.Textarea(attrs={'rows': 25, 'columns': 120, 'placeholder': 'Start typing here...'}),
             'digestive_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'endocrine_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'lymphatic_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
@@ -181,7 +182,7 @@ class UpdateBaseConsultForm(forms.ModelForm):
             'renal_system': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'head_exploration': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
             'thorax_exploration': forms.Textarea(attrs={'rows': 2, 'cols': 70}),
-            'cie_10_detail': forms.Textarea(attrs={'rows': 2, 'cols': 150}),
+            'icd_10_detail': forms.Textarea(attrs={'rows': 2, 'cols': 150}),
             'diagnose': forms.Textarea(attrs={'rows': 2, 'cols': 150}),
             'procedure': forms.Textarea(attrs={'rows': 2, 'cols': 150}),
             'analysis': forms.Textarea(attrs={'rows': 2, 'cols': 150}),

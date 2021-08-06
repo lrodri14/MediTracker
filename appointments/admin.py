@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import BaseConsult, GeneralConsult, AllergyAndImmunologicalConsult, DentalConsult, NeurologicalConsult, \
                     GynecologicalConsult, OphthalmologyConsult, PsychiatryConsult, SurgicalConsult, UrologicalConsult,\
-                    Cie10Group, Drug, MedicalTest, MedicalTestResult, Vaccine, VaccineApplication, Surgery
+                    Icd10Group, Drug, MedicalTest, MedicalTestResult, Vaccine, VaccineApplication, Surgery
 
 # Register your models here.
 
@@ -19,7 +19,7 @@ admin.site.register(UrologicalConsult)
 admin.site.register(Vaccine)
 admin.site.register(VaccineApplication)
 admin.site.register(Surgery)
-admin.site.register(Cie10Group)
+admin.site.register(Icd10Group)
 admin.site.register(Drug)
 admin.site.register(MedicalTest)
 admin.site.register(MedicalTestResult)

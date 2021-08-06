@@ -1,86 +1,51 @@
 /*This consults_details.css stylesheet contains all the styles needed to display the consult details view, it is divided
- into   sections:*/
+ into four sections, Body, details container, prescription modal and exam preview.*/
+
+/* //////////////////////////////////////////////////// Body /////////////////////////////////////////////////////// */
 
 body{
     overflow-y: visible;
 }
 
-/*Update*/
+/* //////////////////////////////////////////////////// Details Container /////////////////////////////////////////// */
 
-#heading{
-    text-align: center;
-}
-
-.general-info{
+.details-container{
+    width: 80%;
+    margin-left: 10%;
     display: grid;
-    grid-template-columns: 49.5% 49.5%;
+    grid-template-columns: 50% 50%;
     grid-gap: 1%;
+    text-align: justify;
+    margin-bottom: 20px;
 }
 
-.exploration{
-    display: grid;
-    grid-template-columns: 49.5% 49.5%;
-    grid-gap: 1%;
+.details-container__sub-container{
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 50px;
 }
 
-.general{
-    border: 1px solid #0ff5fc;
-    padding: 10px;
-    max-height: 320px;
-    overflow: auto;
-}
-
-.vital-signs{
-    border: 1px solid #0ff5fc;
-    padding: 10px;
-}
-
-.organ-systems{
-    border: 1px solid #0ff5fc;
-    padding: 10px;
-    max-height: 320px;
-    overflow: auto;
-}
-
-.physical{
-    border: 1px solid #0ff5fc;
-    padding: 10px;
-    max-height: 320px;
-    overflow: auto;
-}
-
-.diagnose{
-    margin-top: 2%;
-    padding: 10px;
-    max-height: 300px;
-    overflow: auto;
-}
-
-.treatment{
-    margin-top: 1%;
-    padding: 10px;
-    max-height: 300px;
-    overflow: auto;
+b{
+    text-decoration: underline;
 }
 
 hr{
-    border: 1px solid #0ff5fc;
+    border: 1px solid #FFFFFF;
 }
 
-.fa-print{
+.print-prescription{
     cursor: pointer;
-    font-size: 32px;
-    margin-bottom: 2%;
+    font-size: 25px;
+    float: right;
     transition: 0.5s;
 }
 
-.fa-print-hover{
-    font-size: 36px;
-    color: green;
+.print-prescription--active{
+    color: #1cd632;
     transition: 0.5s;
 }
 
-/*Prescription Modal*/
+/* ///////////////////////////////////////////////// Prescription Modal ///////////////////////////////////////////// */
 
 .pdfobject-container{
     width: 50%;
@@ -93,13 +58,13 @@ hr{
     height: 100%;
     top: 0;
     left: 0;
-    background-color: rgba(0,0,0,0.7);
     visibility: hidden;
     opacity: 0;
     transition: 0.5s;
 }
 
-.prescription-modal-show{
+.prescription-modal--display{
+    backdrop-filter: blur(10px);
     visibility: visible;
     opacity: 1;
     transition: 0.5s;
@@ -109,7 +74,7 @@ hr{
     margin: auto;
 }
 
-/*Exam Preview*/
+/* ////////////////////////////////////////////////// Exam Preview ////////////////////////////////////////////////// */
 
 .exam-preview{
     position: fixed;
@@ -124,7 +89,7 @@ hr{
     transition: 0.5s;
 }
 
-.exam-preview-show{
+.exam-preview--display{
     visibility: visible;
     opacity: 1;
     transition: 0.5s;
