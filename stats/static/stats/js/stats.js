@@ -228,7 +228,6 @@ function visualizePatientCreationCount(data, container, dimensions, requestedYea
    }
 }
 
-
 function visualizePatientAgeData(data, container, dimensions, ageFrom = null, ageTo = null){
 
     // Collect Data
@@ -350,7 +349,9 @@ function visualizePatientGenData(data, container, dimensions, gender='all'){
     let femenineTotal = 0
     data.forEach((d) => {d.gender === 'M' ? masculineTotal = d.amount : femenineTotal = d.amount})
 
-    let percentages = {'masculine': Math.round((masculineTotal / total) * 100), 'femenine': Math.round((femenineTotal / total) * 100)}
+    let percentages = {'masculine': masculineTotal === 0 ? 0 : Math.round((masculineTotal / total) * 100),
+                       'femenine': femenineTotal === 0 ? 0 : Math.round((femenineTotal / total) * 100)}
+
     let totalCentering
 
     if (total  < 10){
@@ -506,10 +507,10 @@ function visualizeStatusCount(data, container, dimensions, status='all'){
     }
 
     let percentages = {
-        'open': Math.round((totalOpen / total) * 100),
-        'confirmed': Math.round((totalConfirmed / total) * 100),
-        'cancelled': Math.round((totalCancelled / total) * 100),
-        'closed': Math.round((totalClosed / total) * 100),
+        'open': totalOpen === 0 ? 0 : Math.round((totalOpen / total) * 100),
+        'confirmed': totalConfirmed === 0 ? 0 : Math.round((totalConfirmed / total) * 100),
+        'cancelled': totalCancelled === 0 ? 0 : Math.round((totalCancelled / total) * 100),
+        'closed': totalClosed === 0 ? 0 : Math.round((totalClosed / total) * 100),
     }
 
     let totalCentering
@@ -644,7 +645,8 @@ function visualizeMedicalStatusCount(data, container, dimensions, medicalStatus=
     let attendedTotal = 0
     let unattendedTotal = 0
     data.forEach((d) => {d.medicalStatus === true ? attendedTotal = d.amount : unattendedTotal = d.amount})
-    let percentages = {'attended': Math.round((attendedTotal / total) * 100), 'unattended': Math.round((unattendedTotal / total) * 100)}
+    let percentages = {'attended': attendedTotal === 0 ? 0 : Math.round((attendedTotal / total) * 100),
+                       'unattended': unattendedTotal === 0 ? 0 : Math.round((unattendedTotal / total) * 100)}
 
     let totalCentering
     if (total  < 10){
