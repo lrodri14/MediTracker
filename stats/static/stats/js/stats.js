@@ -45,6 +45,17 @@ processConsultsData(consultsDataUrl)
 
 // ################################################ Functions ##########################################################
 
+function cleanUpFullViewVisualizer(clean_filter=false){
+    fullViewBody.html('')
+    fullViewBody.append('text').attr('class', 'header large-widget-header').attr('font-weight', 'bolder')
+    fullViewBody.append('g').attr('class', 'body')
+    fullViewBody.select('.body').append('g').attr('class', 'x-axis')
+    fullViewBody.select('.body').append('g').attr('class', 'y-axis')
+    if (clean_filter){
+        filterFormContainer.innerHTML = ''
+    }
+}
+
 // ########################################## Async Functions ##########################################################
 
 async function requestLayout(url){
