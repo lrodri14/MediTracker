@@ -57,6 +57,6 @@ def populate_consults(iters=5):
 
 if __name__ == '__main__':
     print('Populating Database...')
-    populate_patients(9)
+    BaseConsult.objects.all().delete()
     print('Finished...')
 
